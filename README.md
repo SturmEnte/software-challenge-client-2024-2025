@@ -1,6 +1,7 @@
-# Advent of code
+# Software Challenge client for Season 2024 - 2025
 
-## Repositories
+## Developed by
 
-[GitHub](https://github.com/SturmEnte/software-challenge-client-2024-2025)
-[GitLab](https://gitlab.com/SturmEnte/software-challenge-client-2024-2025)
+- Mika Schießler
+- Jonas Nommensen
+- Nils Marten
