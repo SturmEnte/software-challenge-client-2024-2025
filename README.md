@@ -2,6 +2,6 @@
 
 ## Developed by
 
-- Mika Schießler
+- Mika Schiessler
 - Jonas Nommensen
 - Nils Marten
