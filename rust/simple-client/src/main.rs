@@ -35,28 +35,27 @@ fn main() {
         // Write buffer to file for debugging
         file.write(&buffer[..n]).unwrap();
 
-        // if buffer.starts_with(b"<protocol>") {
-        //     println!("Joined room");
-        //     //game_data.lock().unwrap().room_id = get_room_id(&buffer);
-        //     //println!("Room id: {}", game_data.lock().unwrap().room_id);
-        //     continue;
-        // } else if buffer[n-7..n] == "</room>".as_bytes().to_owned() { // returns true, if the data in the buffer ends with </room>
-        //     global_buffer.write(&buffer[..n]).unwrap();
-        //     global_n += n;
+        if buffer.starts_with(b"<protocol>") { // executes at the beginning of the communication to rertrieve the room id
+            println!("Joined room");
+            //game_data.lock().unwrap().room_id = get_room_id(&buffer);
+            //println!("Room id: {}", game_data.lock().unwrap().room_id);
+            continue;
+        } else if buffer[n-7..n] == "</room>".as_bytes().to_owned() { // executes if a new room tag is closed
+            global_buffer.write(&buffer[..n]).unwrap();
 
-        //     /*let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
+            /*let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
 
-        //     if game_end {
-        //         break;
-        //     }*/
+            if game_end {
+                break;
+            }*/
 
-        //     global_buffer = Cursor::new([0; 5000]);
-        //     global_n = 0usize;
+            // Reset the global buffer after a room tag was processed
+            global_buffer = Cursor::new([0; 5000]);
             
-        //     continue;
-        // } 
+            continue;
+        } 
 
-        // Add buffer data to the global buffer and add n to the global n
+        // Add the buffer data to the global buffer if no room tag was closed
         global_buffer.write(&buffer[..n]).unwrap();
         global_n += n;
     }
