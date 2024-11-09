@@ -1,4 +1,6 @@
 mod utils;
+mod parse_message;
+
 
 use std::fs::{File, remove_file};
 use std::net::TcpStream;
@@ -6,13 +8,15 @@ use std::io::{Write, Read, Cursor};
 
 use utils::get_cmd_args::get_join_info;
 
+use parse_message::parse_message;
+
 fn main() {
     let join_info: (String, String) = get_join_info();
     let server_address: &str = join_info.0.as_str();
     let join_msg: &str = join_info.1.as_str();
      
     let mut global_buffer: Cursor<[u8; 5000]> = Cursor::new([0; 5000]);
-    // let mut global_n: usize = 0usize;
+    let mut global_n: usize = 0usize;
     let mut _msg: i32 = 0;
 
     let mut stream = TcpStream::connect(server_address).unwrap();
@@ -42,23 +46,23 @@ fn main() {
             continue;
         } else if buffer[n-7..n] == "</room>".as_bytes().to_owned() { // executes if a new room tag is closed
             global_buffer.write(&buffer[..n]).unwrap();
-            // global_n += n;
+            global_n += n;
 
-            /*let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
+            let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
 
             if game_end {
                 break;
-            }*/
+            }
 
             // Reset the global buffer after a room tag was processed
             global_buffer = Cursor::new([0; 5000]);
-            // global_n = 0usize;
+            global_n = 0usize;
             
             continue;
         } 
 
         // Add the buffer data to the global buffer if no room tag was closed
         global_buffer.write(&buffer[..n]).unwrap();
-        // global_n += n;
+        global_n += n;
     }
 }
