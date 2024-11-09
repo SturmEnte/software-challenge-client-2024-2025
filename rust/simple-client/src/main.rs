@@ -1,5 +1,6 @@
 mod utils;
 
+use std::fs::{File, remove_file};
 use std::net::TcpStream;
 use std::io::{Write, Read, Cursor};
 
@@ -19,7 +20,12 @@ fn main() {
     // Send join message
     stream.write(join_msg.as_bytes()).unwrap();
 
-    let mut file = File::create("buffer.txt").unwrap();
+    // Delete old and create new buffer file for debugging
+    match remove_file("buffer.xml") {
+        Ok(_) => println!("File deleted successfully"),
+        Err(e) => println!("Error deleting file: {}", e),
+    }
+    let mut file = File::create("buffer.xml").unwrap();
 
     // Continuesly read messages from the server and react to them
     loop {
@@ -27,7 +33,6 @@ fn main() {
         let n: usize = stream.read(&mut buffer[..]).unwrap();
         
         // Write buffer to file for debugging
-        
         file.write(&buffer[..n]).unwrap();
 
         // if buffer.starts_with(b"<protocol>") {
