@@ -12,7 +12,7 @@ fn main() {
     let join_msg: &str = join_info.1.as_str();
      
     let mut global_buffer: Cursor<[u8; 5000]> = Cursor::new([0; 5000]);
-    let mut global_n: usize = 0usize;
+    // let mut global_n: usize = 0usize;
     let mut _msg: i32 = 0;
 
     let mut stream = TcpStream::connect(server_address).unwrap();
@@ -42,6 +42,7 @@ fn main() {
             continue;
         } else if buffer[n-7..n] == "</room>".as_bytes().to_owned() { // executes if a new room tag is closed
             global_buffer.write(&buffer[..n]).unwrap();
+            // global_n += n;
 
             /*let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
 
@@ -51,12 +52,13 @@ fn main() {
 
             // Reset the global buffer after a room tag was processed
             global_buffer = Cursor::new([0; 5000]);
+            // global_n = 0usize;
             
             continue;
         } 
 
         // Add the buffer data to the global buffer if no room tag was closed
         global_buffer.write(&buffer[..n]).unwrap();
-        global_n += n;
+        // global_n += n;
     }
 }
