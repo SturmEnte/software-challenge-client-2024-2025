@@ -1,6 +1,7 @@
 mod utils;
 mod parse_message;
-
+mod board;
+mod field_type;
 
 use std::fs::{File, remove_file};
 use std::net::TcpStream;
