@@ -1,4 +1,5 @@
-enum FieldType {
+#[derive(Copy, Clone)]
+pub enum FieldType {
     START,
     CARROTS,
     HARE,
@@ -8,4 +9,5 @@ enum FieldType {
     POSITION_1,
     POSITION_2,
     GOAL,
+    UNDEFINED,
 }
