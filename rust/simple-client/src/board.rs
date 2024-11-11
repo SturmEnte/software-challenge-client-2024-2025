@@ -42,7 +42,7 @@ impl Board {
                 FieldType::CARROTS => print!("🥕"),
                 FieldType::HARE => print!("🐇"),
                 FieldType::SALAD => print!("🥬"),
-                FieldType::MARKET => print!("💹"),
+                FieldType::MARKET => print!("🏪"),
                 FieldType::HEDGEHOG => print!("🦔"),
                 FieldType::POSITION_1 => print!("1️⃣"),
                 FieldType::POSITION_2 => print!("2️⃣"),
