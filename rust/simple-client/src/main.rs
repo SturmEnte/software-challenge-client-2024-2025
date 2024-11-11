@@ -8,8 +8,7 @@ use std::net::TcpStream;
 use std::io::{Write, Read, Cursor};
 
 use utils::get_cmd_args::get_join_info;
-
-// use parse_message::parse_message;
+use parse_message::parse_message;
 
 fn main() {
     let join_info: (String, String) = get_join_info();
@@ -46,8 +45,11 @@ fn main() {
             //println!("Room id: {}", game_data.lock().unwrap().room_id);
             continue;
         } else if buffer[n-7..n] == "</room>".as_bytes().to_owned() { // executes if a new room tag is closed
+            // Add new data to the global buffer
             global_buffer.write(&buffer[..n]).unwrap();
             global_n += n;
+
+            parse_message(global_buffer.into_inner(), global_n, &mut Some(&mut stream));
 
             // let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
 
