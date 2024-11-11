@@ -8,7 +8,7 @@ use std::io::{Write, Read, Cursor};
 
 use utils::get_cmd_args::get_join_info;
 
-use parse_message::parse_message;
+// use parse_message::parse_message;
 
 fn main() {
     let join_info: (String, String) = get_join_info();
@@ -48,11 +48,11 @@ fn main() {
             global_buffer.write(&buffer[..n]).unwrap();
             global_n += n;
 
-            let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
+            // let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
 
-            if game_end {
-                break;
-            }
+            // if game_end {
+            //     break;
+            // }
 
             // Reset the global buffer after a room tag was processed
             global_buffer = Cursor::new([0; 5000]);
