@@ -35,7 +35,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, /*game_data: &Mutex<GameData>
                     QName(b"data") => {
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
                             let class = attr.unwrap().unescape_value().unwrap().to_string();
-                            println!("Class attribute: {}", class);
+                            println!("Class attribute: {}", class); // This is only temporary for developement. This will either be removed or put into debug mode
                         }
                     },
                     _ => (),
