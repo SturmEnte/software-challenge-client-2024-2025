@@ -12,7 +12,7 @@ pub struct GameData {
 
 impl GameData {
     pub fn new() -> GameData {
-        GameData { initialized: false, board: None, start_team: 0, our_team: 0, opponent_team: 0, turn: 1, game_over: false }
+        GameData { initialized: false, board: Board::new(), start_team: 0, our_team: 0, opponent_team: 0, turn: 0, game_over: false }
     }
 
     pub fn set_team(&mut self, team: &str) {
