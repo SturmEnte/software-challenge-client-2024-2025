@@ -19,7 +19,6 @@ fn main() {
      
     let mut global_buffer: Cursor<[u8; 5000]> = Cursor::new([0; 5000]);
     let mut global_n: usize = 0usize;
-    let mut _msg: i32 = 0;
 
     let mut stream = TcpStream::connect(server_address).unwrap();
 
