@@ -17,14 +17,16 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, /*game_data: &Mutex<GameData>
 
     // Remove empty bytes from the buffer
     let message: &[u8] = &buffer[..n];
-
-    // Print the buffer as a string
+    // Turn the buffer into a string (message)
     let message_str: String = String::from_utf8(message.to_vec()).unwrap();
-    println!("{}", message_str);
 
+    if crate::DEBUGGING {
+        // Print the buffer as a string
+        println!("{}", message_str);
+    }
+
+    // Create the XML reader
     let mut reader = Reader::from_str(&message_str);
-    // reader.trim_text(true);
-
 
     loop {
         match reader.read_event() {
