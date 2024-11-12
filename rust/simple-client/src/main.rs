@@ -10,6 +10,8 @@ use std::io::{Write, Read, Cursor};
 use utils::get_cmd_args::get_join_info;
 use parse_message::parse_message;
 
+pub const DEBUGGING: bool = true;
+
 fn main() {
     let join_info: (String, String) = get_join_info();
     let server_address: &str = join_info.0.as_str();
@@ -23,21 +25,30 @@ fn main() {
 
     // Send join message
     stream.write(join_msg.as_bytes()).unwrap();
-
-    // Delete old and create new buffer file for debugging
-    match remove_file("buffer.xml") {
-        Ok(_) => println!("File deleted successfully"),
-        Err(e) => println!("Error deleting file: {}", e),
+    
+    // Debugging file
+    let mut file: Option<File> = None;
+    if DEBUGGING {
+        // Delete old and create new buffer file for debugging
+        match remove_file("buffer.xml") {
+            Ok(_) => println!("File deleted successfully"),
+            Err(e) => println!("Error deleting file: {}", e),
+        }
+        
+        file = Some(File::create("buffer.xml").unwrap());
     }
-    let mut file = File::create("buffer.xml").unwrap();
 
     // Continuesly read messages from the server and react to them
     loop {
         let mut buffer: [u8; 5000] = [0; 5000];
         let n: usize = stream.read(&mut buffer[..]).unwrap();
         
-        // Write buffer to file for debugging
-        file.write(&buffer[..n]).unwrap();
+        if DEBUGGING {
+            // Write buffer to file for debugging
+            if let Some(ref mut file) = file {
+                file.write(&buffer[..n]).unwrap();
+            }
+        }
 
         if buffer.starts_with(b"<protocol>") { // executes at the beginning of the communication to rertrieve the room id
             println!("Joined room");
