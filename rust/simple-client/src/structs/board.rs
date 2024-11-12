@@ -1,4 +1,4 @@
-use crate::field_type::FieldType;
+use crate::enums::field_type::FieldType;
 
 pub struct Board {
 	pub board: [FieldType; 34],
