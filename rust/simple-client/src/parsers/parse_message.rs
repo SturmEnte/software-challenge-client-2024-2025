@@ -4,9 +4,9 @@ use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
 
-use crate::game_data::GameData;
-use crate::utils::parse_welcome_message::parse_welcome_message;
-use crate::parse_memento::parse_memento;
+use crate::structs::game_data::GameData;
+use super::parse_welcome_message::parse_welcome_message;
+use super::parse_memento::parse_memento;
 
 // use crate::board::Board;
 

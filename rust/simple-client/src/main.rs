@@ -1,19 +1,16 @@
+mod enums;
+mod parsers;
+mod structs;
 mod utils;
-mod parse_message;
-mod parse_memento;
-mod board;
-mod field_type;
-mod game_data;
-mod team;
 
 use std::fs::{File, remove_file};
 use std::net::TcpStream;
 use std::io::{Write, Read, Cursor};
 
-use game_data::GameData;
+use structs::game_data::GameData;
 
 use utils::get_cmd_args::get_join_info;
-use parse_message::parse_message;
+use parsers::parse_message::parse_message;
 
 pub const DEBUGGING: bool = true;
 

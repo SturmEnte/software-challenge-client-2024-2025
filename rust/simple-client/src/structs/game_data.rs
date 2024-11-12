@@ -1,5 +1,5 @@
-use crate::board::Board;
-use crate::team::Team;
+use crate::structs::board::Board;
+use crate::enums::team::Team;
 
 pub struct GameData {
     pub initialized: bool,
