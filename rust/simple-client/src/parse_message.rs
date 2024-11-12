@@ -1,19 +1,53 @@
 // use std::sync::Mutex;
-// use std::net::TcpStream;
+use std::net::TcpStream;
 // use std::io::Write;
 
-// use quick_xml::Reader;
-// use quick_xml::events::{Event, BytesStart};
+use quick_xml::Reader;
+use quick_xml::events::{Event, BytesStart};
+use quick_xml::name::QName;
 
 // use crate::parse_memento::parse_memento;
 // use crate::GameData;
 // use crate::compute::compute_move;
 // use crate::Move;
 
-// pub fn parse_message(buffer: [u8; 5000], n: usize, game_data: &Mutex<GameData>, stream: &mut Option<&mut TcpStream>) -> bool {
+use crate::board::Board;
 
-//     let message: &[u8] = &buffer[..n];
+pub fn parse_message(buffer: [u8; 5000], n: usize, /*game_data: &Mutex<GameData>,*/ stream: &mut Option<&mut TcpStream>) {
 
+    // Remove empty bytes from the buffer
+    let message: &[u8] = &buffer[..n];
+
+    // Print the buffer as a string
+    let message_str: String = String::from_utf8(message.to_vec()).unwrap();
+    println!("{}", message_str);
+
+    let mut reader = Reader::from_str(&message_str);
+    // reader.trim_text(true);
+
+    let mut buf: Vec<u8> = Vec::new();
+
+    loop {
+        match reader.read_event() {
+            Ok(Event::Start(ref e)) => {
+                match e.name() {
+                    QName(b"data") => {
+                        if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
+                            let attr = attr.unwrap();
+                            let class = attr.unescape_value().unwrap();
+                            let class_str = class.to_string();
+                            println!("Class attribute: {}", class_str);
+                        }
+                    },
+                    _ => (),
+                }
+            },
+            Ok(Event::Eof) => break, // exits the loop when reaching end of file
+            Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
+            _ => (), // There are several other `Event`s we do not consider here
+        }
+        buf.clear();
+    }
 //     let mut reader: Reader<&[u8]> = Reader::from_bytes(&message);
 //     reader.trim_text(true);
 //     reader.expand_empty_elements(true);
@@ -65,7 +99,7 @@
 //         buf.clear();
 //     }
 //     false
-// }
+}
 
 // fn welcome_message(e: &BytesStart, data: &Mutex<GameData>) {
 //     let team = String::from_utf8(e.try_get_attribute("color").unwrap().unwrap().value.to_vec()).unwrap();
