@@ -1,0 +1,1 @@
+- [] Reduce buffer size (according to Nils is the biggest message received 2600 bytes long)
