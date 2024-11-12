@@ -49,6 +49,8 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                 },
                                 "result" => {
                                     println!("Result");
+                                    // Set the game to be done if a result is received
+                                    game_data.game_over = true;
                                 },
                                 _ => {
                                     println!("Unknown class: {}", class);
