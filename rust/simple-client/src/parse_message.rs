@@ -25,7 +25,6 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, /*game_data: &Mutex<GameData>
     let mut reader = Reader::from_str(&message_str);
     // reader.trim_text(true);
 
-    let mut buf: Vec<u8> = Vec::new();
 
     loop {
         match reader.read_event() {
@@ -44,7 +43,6 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, /*game_data: &Mutex<GameData>
             Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
             _ => (),
         }
-        buf.clear();
     }
 //     let mut reader: Reader<&[u8]> = Reader::from_bytes(&message);
 //     reader.trim_text(true);
