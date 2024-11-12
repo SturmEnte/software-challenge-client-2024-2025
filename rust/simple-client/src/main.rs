@@ -1,5 +1,6 @@
 mod utils;
 mod parse_message;
+mod parse_memento;
 mod board;
 mod field_type;
 mod game_data;

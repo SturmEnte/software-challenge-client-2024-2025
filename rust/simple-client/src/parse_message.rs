@@ -6,6 +6,7 @@ use quick_xml::name::QName;
 
 use crate::game_data::GameData;
 use crate::utils::parse_welcome_message::parse_welcome_message;
+use crate::parse_memento::parse_memento;
 
 // use crate::board::Board;
 
@@ -43,6 +44,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                 },
                                 "memento" => {
                                     println!("Memento");
+                                    parse_memento(&message_str, &mut game_data);
                                 },
                                 "moveRequest" => {
                                     println!("Move Request");
