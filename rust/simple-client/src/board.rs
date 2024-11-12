@@ -7,7 +7,7 @@ pub struct Board {
 
 impl Board {
 	pub fn new() -> Board {
-		Board { board: [FieldType::UNDEFINED; 34], initialized: false }
+		Board { board: [FieldType::Undefined; 34], initialized: false }
 	}
 
 	pub fn get_field(&self, x: usize) -> FieldType {
@@ -38,16 +38,16 @@ impl Board {
             }
             
             match field_type {
-                FieldType::START => print!("🚩"),
-                FieldType::CARROTS => print!("🥕"),
-                FieldType::HARE => print!("🐇"),
-                FieldType::SALAD => print!("🥬"),
-                FieldType::MARKET => print!("🏪"),
-                FieldType::HEDGEHOG => print!("🦔"),
-                FieldType::POSITION_1 => print!("1️⃣"),
-                FieldType::POSITION_2 => print!("2️⃣"),
-                FieldType::GOAL => print!("🏁"),
-                FieldType::UNDEFINED => print!("?"),
+                FieldType::Start => print!("🚩"),
+                FieldType::Carrots => print!("🥕"),
+                FieldType::Hare => print!("🐇"),
+                FieldType::Salad => print!("🥬"),
+                FieldType::Market => print!("🏪"),
+                FieldType::Hedgehog => print!("🦔"),
+                FieldType::Position1 => print!("1️⃣"),
+                FieldType::Position2 => print!("2️⃣"),
+                FieldType::Goal => print!("🏁"),
+                FieldType::Undefined => print!("?"),
             }
 
 			print!("\n");

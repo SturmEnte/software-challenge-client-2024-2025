@@ -1,13 +1,13 @@
 #[derive(Copy, Clone)]
 pub enum FieldType {
-    START,
-    CARROTS,
-    HARE,
-    SALAD,
-    MARKET,
-    HEDGEHOG,
-    POSITION_1,
-    POSITION_2,
-    GOAL,
-    UNDEFINED,
+    Start,
+    Carrots,
+    Hare,
+    Salad,
+    Market,
+    Hedgehog,
+    Position1,
+    Position2,
+    Goal,
+    Undefined,
 }
