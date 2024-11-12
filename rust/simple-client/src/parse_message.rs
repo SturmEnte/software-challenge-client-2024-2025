@@ -1,10 +1,11 @@
 use std::net::TcpStream;
 
 use quick_xml::Reader;
-use quick_xml::events::{Event, BytesStart};
+use quick_xml::events::Event;
 use quick_xml::name::QName;
 
 use crate::game_data::GameData;
+use crate::utils::parse_welcome_message::parse_welcome_message;
 
 // use crate::board::Board;
 
@@ -36,6 +37,9 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                             match class.as_str() {
                                 "welcomeMessage" => {
                                     println!("Welcome message");
+                                    // Parse the welcome message
+                                    // This will set our own team and the opponent team in the game data
+                                    parse_welcome_message(&e, &mut game_data);
                                 },
                                 "memento" => {
                                     println!("Memento");
@@ -50,6 +54,9 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                     println!("Unknown class: {}", class);
                                 },
                             }
+
+                            // Break after finding the data type and processing it
+                            break; // Remider to myself: This could cause problems but I dont think it will
                         }
                     },
                     _ => (),
