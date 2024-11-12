@@ -66,11 +66,10 @@ fn main() {
 
             parse_message(global_buffer.into_inner(), global_n, &mut game_data ,&mut Some(&mut stream));
 
-            // let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
-
-            // if game_end {
-            //     break;
-            // }
+            // Stop the program / client if the game is over
+            if game_data.game_over {
+                break;
+            }
 
             // Reset the global buffer after a room tag was processed
             global_buffer = Cursor::new([0; 5000]);
