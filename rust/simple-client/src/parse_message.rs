@@ -4,9 +4,11 @@ use quick_xml::Reader;
 use quick_xml::events::{Event, BytesStart};
 use quick_xml::name::QName;
 
-use crate::board::Board;
+use crate::game_data::GameData;
 
-pub fn parse_message(buffer: [u8; 5000], n: usize, /*game_data: &Mutex<GameData>,*/ stream: &mut Option<&mut TcpStream>) {
+// use crate::board::Board;
+
+pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData, stream: &mut Option<&mut TcpStream>) {
 
     // Remove empty bytes from the buffer
     let message: &[u8] = &buffer[..n];
