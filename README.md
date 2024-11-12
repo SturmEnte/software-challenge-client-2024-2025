@@ -3,5 +3,5 @@
 ## Developed by
 
 - Mika Schiessler
-- Jonas Nommensen
+- [Jonas Nommensen / SturmEnte](https://github.com/SturmEnte)
 - Nils Marten
