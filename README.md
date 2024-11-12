@@ -2,6 +2,6 @@
 
 ## Developed by
 
-- Mika Schiessler
+- [Mika Schiessler / Unbekannt28](https://github.com/Unbekannt28)
 - [Jonas Nommensen / SturmEnte](https://github.com/SturmEnte)
-- Nils Marten
+- [Nils Marten / NichtNil5](https://github.com/NichtNil5)
