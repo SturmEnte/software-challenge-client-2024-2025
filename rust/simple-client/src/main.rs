@@ -2,10 +2,13 @@ mod utils;
 mod parse_message;
 mod board;
 mod field_type;
+mod game_data;
 
 use std::fs::{File, remove_file};
 use std::net::TcpStream;
 use std::io::{Write, Read, Cursor};
+
+use game_data::GameData;
 
 use utils::get_cmd_args::get_join_info;
 use parse_message::parse_message;
@@ -19,7 +22,8 @@ fn main() {
      
     let mut global_buffer: Cursor<[u8; 5000]> = Cursor::new([0; 5000]);
     let mut global_n: usize = 0usize;
-    let mut _msg: i32 = 0;
+
+    let mut game_data: GameData = GameData::new();
 
     let mut stream = TcpStream::connect(server_address).unwrap();
 
@@ -60,7 +64,7 @@ fn main() {
             global_buffer.write(&buffer[..n]).unwrap();
             global_n += n;
 
-            parse_message(global_buffer.into_inner(), global_n, &mut Some(&mut stream));
+            parse_message(global_buffer.into_inner(), global_n, &mut game_data ,&mut Some(&mut stream));
 
             // let game_end: bool = parse_message(global_buffer.into_inner(), global_n, &game_data, &mut Some(&mut stream));
 
