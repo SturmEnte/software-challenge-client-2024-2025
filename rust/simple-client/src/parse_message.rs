@@ -29,22 +29,20 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, /*game_data: &Mutex<GameData>
 
     loop {
         match reader.read_event() {
-            Ok(Event::Start(ref e)) => {
+            Ok(Event::Start(ref e)) | Ok(Event::Empty(ref e)) => {
                 match e.name() {
                     QName(b"data") => {
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
-                            let attr = attr.unwrap();
-                            let class = attr.unescape_value().unwrap();
-                            let class_str = class.to_string();
-                            println!("Class attribute: {}", class_str);
+                            let class = attr.unwrap().unescape_value().unwrap().to_string();
+                            println!("Class attribute: {}", class);
                         }
                     },
                     _ => (),
                 }
             },
-            Ok(Event::Eof) => break, // exits the loop when reaching end of file
+            Ok(Event::Eof) => break, // Exits the loop when reaching end of file
             Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
-            _ => (), // There are several other `Event`s we do not consider here
+            _ => (),
         }
         buf.clear();
     }
