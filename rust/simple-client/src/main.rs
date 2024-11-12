@@ -4,6 +4,7 @@ mod parse_memento;
 mod board;
 mod field_type;
 mod game_data;
+mod team;
 
 use std::fs::{File, remove_file};
 use std::net::TcpStream;
