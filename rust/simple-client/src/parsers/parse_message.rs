@@ -8,8 +8,6 @@ use crate::structs::game_data::GameData;
 use super::parse_welcome_message::parse_welcome_message;
 use super::parse_memento::parse_memento;
 
-// use crate::board::Board;
-
 pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData, stream: &mut Option<&mut TcpStream>) {
 
     // Remove empty bytes from the buffer
