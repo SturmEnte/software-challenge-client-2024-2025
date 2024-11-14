@@ -13,6 +13,7 @@ use utils::get_cmd_args::get_join_info;
 use parsers::parse_message::parse_message;
 
 pub const DEBUGGING: bool = true;
+pub const FIELD_COUNT: usize = 65;
 
 fn main() {
     let join_info: (String, String) = get_join_info();
