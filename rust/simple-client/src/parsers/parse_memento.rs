@@ -5,7 +5,7 @@ use quick_xml::name::QName;
 use crate::enums::team::Team;
 use crate::structs::game_data::GameData;
 
-pub fn parse_memento(message: &String, mut game_data: &mut GameData) {
+pub fn parse_memento(message: &String, game_data: &mut GameData) {
      // Create the XML reader
      let mut reader = Reader::from_str(&message);
 
