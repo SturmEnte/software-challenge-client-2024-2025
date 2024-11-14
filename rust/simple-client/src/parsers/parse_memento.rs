@@ -2,7 +2,7 @@ use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
 
-use crate::enums::team::{self, Team};
+use crate::enums::team::Team;
 use crate::structs::game_data::GameData;
 
 pub fn parse_memento(message: &String, mut game_data: &mut GameData) {
