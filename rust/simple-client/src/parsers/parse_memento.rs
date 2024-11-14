@@ -70,6 +70,36 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             println!("Hare: Missing attributes");
                         }
                     },
+                    QName(b"board") => {
+                        // Iterator variable                        
+                        let mut i: usize = 0;
+
+                        // Iterate over the child elements of the board
+                        loop {
+                            match reader.read_event() {
+                                Ok(Event::Start(ref e)) | Ok(Event::Empty(ref e)) => {
+                                    if e.name() == QName(b"field") {
+                                        // Retrieve the text content of the field
+                                        if let Ok(Event::Text(e)) = reader.read_event() {
+                                            let field_text: String = e.unescape().unwrap().into_owned();
+                                            game_data.board.set_field(i, field_text.as_str());
+                                            println!("Field {}: {}", i, field_text);
+                                            i += 1;
+                                        }
+                                    }
+                                },
+                                Ok(Event::End(ref e)) if e.name() == QName(b"board") => {
+                                    break;
+                                },
+                                Ok(Event::Eof) => {
+                                    break;
+                                },
+                                _ => (),
+                            }
+                        }
+
+                        game_data.board.print();
+                    },
                     _ => (),
                 }
             },
