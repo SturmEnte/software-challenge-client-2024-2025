@@ -35,39 +35,35 @@ impl Board {
 	}
 
 	pub fn print(&self) {
-		let mut i: usize = 0;
+		
+        for i in 0..crate::FIELD_COUNT {
+            print!("{:2} ", i);
+        }
+
+        println!("");
+        
+        let mut i: usize = 0;
 		for field_type in self.board {
-			
-			if i == 0 {
-                for j in 0..17 {
-                    print!("{} ", j);
-                }
-                print!("\n");
-            }
-
-            if i == 18 {
-                print!("\n\n");
-                for j in 18..33 {
-                    print!("{} ", j);
-                }
-                print!("\n");
-            }
             
-            match field_type {
-                FieldType::Start => print!("🚩"),
-                FieldType::Carrots => print!("🥕"),
-                FieldType::Hare => print!("🐇"),
-                FieldType::Salad => print!("🥬"),
-                FieldType::Market => print!("🏪"),
-                FieldType::Hedgehog => print!("🦔"),
-                FieldType::Position1 => print!("1️⃣"),
-                FieldType::Position2 => print!("2️⃣"),
-                FieldType::Goal => print!("🏁"),
-                FieldType::Undefined => print!("?"),
-            }
+            let emoji: &str;
 
-			print!("\n");
+            match field_type {
+                FieldType::Start => emoji = "🚩",
+                FieldType::Carrots => emoji = "🥕",
+                FieldType::Hare => emoji = "🐇",
+                FieldType::Salad => emoji = "🥬",
+                FieldType::Market => emoji = "🏪",
+                FieldType::Hedgehog => emoji = "🦔",
+                FieldType::Position1 => emoji = "1️⃣ ",
+                FieldType::Position2 => emoji = "2️⃣ ",
+                FieldType::Goal => emoji = "🏁",
+                FieldType::Undefined => emoji = "?",
+            }   
+            print!("{} ", emoji);
+
 			i += 1;
 		}
+
+        println!("");
 	}
 }
