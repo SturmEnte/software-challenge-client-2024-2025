@@ -71,6 +71,11 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         }
                     },
                     QName(b"board") => {
+                        // Only parse the board, if it is not initialized yet
+                        if game_data.board.initialized {
+                            continue;
+                        }
+                        
                         // Iterator variable                        
                         let mut i: usize = 0;
 
@@ -97,6 +102,8 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 _ => (),
                             }
                         }
+
+                        game_data.board.initialized = true;
 
                         game_data.board.print();
                     },
