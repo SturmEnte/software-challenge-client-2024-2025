@@ -42,7 +42,6 @@ impl Board {
 
         println!("");
         
-        let mut i: usize = 0;
 		for field_type in self.board {
             
             let emoji: &str;
@@ -58,10 +57,9 @@ impl Board {
                 FieldType::Position2 => emoji = "2️⃣ ",
                 FieldType::Goal => emoji = "🏁",
                 FieldType::Undefined => emoji = "?",
-            }   
+            }
+            
             print!("{} ", emoji);
-
-			i += 1;
 		}
 
         println!("");
