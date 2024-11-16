@@ -40,10 +40,12 @@ impl Board {
             print!("{:2} ", i);
         }
 
+        // End the field number line
         println!("");
         
 		for field_type in self.board {
             
+            // Get the emoji coresponding to the current fields type
             let emoji: &str;
 
             match field_type {
@@ -59,9 +61,11 @@ impl Board {
                 FieldType::Undefined => emoji = "?",
             }
             
+            // Print the emoji
             print!("{} ", emoji);
 		}
 
+        // End the emoji line
         println!("");
 	}
 }
