@@ -21,7 +21,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         }
 
                         // Retreive the starting team if it is not defined yet
-                        if game_data.start_team == Team::Undefined {
+                        if game_data.start_team.is_some() {
                             continue;
                         }
 
@@ -65,12 +65,12 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         // Set the hare's attributes in the game data if all attributes were successfully retreived
                         if team.is_some() && position.is_some() && salads.is_some() && carrots.is_some() {
                             // println!("Hare: Team: {:?}, Position: {}, Salads: {}, Carrots: {}", team.clone().unwrap(), position.unwrap(), salads.unwrap(), carrots.unwrap()); 
-                            if game_data.our_hare.team == team.clone().unwrap() {
+                            if game_data.our_hare.team.clone().unwrap().clone() == team.clone().unwrap() {
                                 game_data.our_hare.position = position.unwrap();
                                 game_data.our_hare.salads = salads.unwrap();
                                 game_data.our_hare.carrots = carrots.unwrap();
                             } else {
-                                game_data.enemy_hare.team = team.clone().unwrap();
+                                game_data.enemy_hare.team = Some(team.clone().unwrap());
                                 game_data.enemy_hare.position = position.unwrap();
                                 game_data.enemy_hare.salads = salads.unwrap();
                                 game_data.enemy_hare.carrots = carrots.unwrap();
