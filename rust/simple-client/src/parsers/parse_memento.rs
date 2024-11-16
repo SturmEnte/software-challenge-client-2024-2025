@@ -113,7 +113,6 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         }
 
                         game_data.board.initialized = true;
-
                         game_data.board.print();
                     },
                     _ => (),
