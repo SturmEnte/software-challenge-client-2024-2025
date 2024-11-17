@@ -9,5 +9,4 @@ pub enum FieldType {
     Position1,
     Position2,
     Goal,
-    Undefined,
 }

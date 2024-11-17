@@ -17,8 +17,17 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         // Retreive the turn
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"turn")) {
                             let turn: i8 = attr.unwrap().unescape_value().unwrap().parse().unwrap();
-                            // println!("Turn: {}", turn);
                             game_data.turn = turn;
+                        }
+
+                        // Retreive the starting team if it is not defined yet
+                        if game_data.start_team.is_some() {
+                            continue;
+                        }
+
+                        if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"startTeam")) {
+                            let team: String = attr.unwrap().unescape_value().unwrap().parse().unwrap();
+                            game_data.set_start_team(team.as_str());
                         }
                     },
                     QName(b"hare") => {
@@ -56,12 +65,12 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         // Set the hare's attributes in the game data if all attributes were successfully retreived
                         if team.is_some() && position.is_some() && salads.is_some() && carrots.is_some() {
                             // println!("Hare: Team: {:?}, Position: {}, Salads: {}, Carrots: {}", team.clone().unwrap(), position.unwrap(), salads.unwrap(), carrots.unwrap()); 
-                            if game_data.our_hare.team == team.clone().unwrap() {
+                            if game_data.our_hare.team.clone().unwrap().clone() == team.clone().unwrap() {
                                 game_data.our_hare.position = position.unwrap();
                                 game_data.our_hare.salads = salads.unwrap();
                                 game_data.our_hare.carrots = carrots.unwrap();
                             } else {
-                                game_data.enemy_hare.team = team.clone().unwrap();
+                                game_data.enemy_hare.team = Some(team.clone().unwrap());
                                 game_data.enemy_hare.position = position.unwrap();
                                 game_data.enemy_hare.salads = salads.unwrap();
                                 game_data.enemy_hare.carrots = carrots.unwrap();
@@ -71,6 +80,11 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         }
                     },
                     QName(b"board") => {
+                        // Only parse the board, if it is not initialized yet
+                        if game_data.board.initialized {
+                            continue;
+                        }
+                        
                         // Iterator variable                        
                         let mut i: usize = 0;
 
@@ -98,6 +112,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                         }
 
+                        game_data.board.initialized = true;
                         game_data.board.print();
                     },
                     _ => (),
