@@ -1,4 +1,4 @@
 - [] Reduce buffer size (according to Nils is the biggest message received 2600 bytes long)
-- [] Remove "Undefined" enum entry
+- [x] Remove "Undefined" enum entry
 - [] Fix the last printed emoji in the board print function 🏁
   - This Problem only exists on Windows
