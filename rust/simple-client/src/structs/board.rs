@@ -1,35 +1,32 @@
 use crate::enums::field_type::FieldType;
 
 pub struct Board {
-	pub board: [FieldType; crate::FIELD_COUNT],
+	pub board: [Option<FieldType>; crate::FIELD_COUNT],
 	pub initialized: bool,
 }
 
 impl Board {
 	pub fn new() -> Board {
-		Board { board: [FieldType::Undefined; crate::FIELD_COUNT], initialized: false }
+		Board { board: [None; crate::FIELD_COUNT], initialized: false }
 	}
 
-	pub fn get_field(&self, x: usize) -> FieldType {
+	pub fn get_field(&self, x: usize) -> Option<FieldType> {
 		self.board[x]
 	}
 
-	pub fn set_field(&mut self, x: usize, value: &str) {
-		// self.board[x] = value;
-
-        match value {
-            "START" => self.board[x] = FieldType::Start,
-            "CARROTS" => self.board[x] = FieldType::Carrots,
-            "HARE" => self.board[x] = FieldType::Hare,
-            "SALAD" => self.board[x] = FieldType::Salad,
-            "MARKET" => self.board[x] = FieldType::Market,
-            "HEDGEHOG" => self.board[x] = FieldType::Hedgehog,
-            "POSITION_1" => self.board[x] = FieldType::Position1,
-            "POSITION_2" => self.board[x] = FieldType::Position2,
-            "GOAL" => self.board[x] = FieldType::Goal,
+	pub fn set_field(&mut self, x: usize, field_string: &str) {
+        match field_string {
+            "START" => self.board[x] = Some(FieldType::Start),
+            "CARROTS" => self.board[x] = Some(FieldType::Carrots),
+            "HARE" => self.board[x] = Some(FieldType::Hare),
+            "SALAD" => self.board[x] = Some(FieldType::Salad),
+            "MARKET" => self.board[x] = Some(FieldType::Market),
+            "HEDGEHOG" => self.board[x] = Some(FieldType::Hedgehog),
+            "POSITION_1" => self.board[x] = Some(FieldType::Position1),
+            "POSITION_2" => self.board[x] = Some(FieldType::Position2),
+            "GOAL" => self.board[x] = Some(FieldType::Goal),
             _ => {
-                println!("Unknown field type in position {}: {}", x, value);
-                self.board[x] = FieldType::Undefined;
+                println!("Unknown field type in position {}: {}", x, field_string);
             }
         }
 	}
@@ -48,17 +45,20 @@ impl Board {
             // Get the emoji coresponding to the current fields type
             let emoji: &str;
 
-            match field_type {
-                FieldType::Start => emoji = "🚩",
-                FieldType::Carrots => emoji = "🥕",
-                FieldType::Hare => emoji = "🐇",
-                FieldType::Salad => emoji = "🥬",
-                FieldType::Market => emoji = "🏪",
-                FieldType::Hedgehog => emoji = "🦔",
-                FieldType::Position1 => emoji = "1️⃣ ",
-                FieldType::Position2 => emoji = "2️⃣ ",
-                FieldType::Goal => emoji = "🏁",
-                FieldType::Undefined => emoji = "?",
+            if field_type.is_some() {
+                match field_type.unwrap() {
+                    FieldType::Start => emoji = "🚩",
+                    FieldType::Carrots => emoji = "🥕",
+                    FieldType::Hare => emoji = "🐇",
+                    FieldType::Salad => emoji = "🥬",
+                    FieldType::Market => emoji = "🏪",
+                    FieldType::Hedgehog => emoji = "🦔",
+                    FieldType::Position1 => emoji = "1️⃣ ",
+                    FieldType::Position2 => emoji = "2️⃣ ",
+                    FieldType::Goal => emoji = "🏁",
+                }
+            } else {
+                emoji = "?";
             }
             
             // Print the emoji
