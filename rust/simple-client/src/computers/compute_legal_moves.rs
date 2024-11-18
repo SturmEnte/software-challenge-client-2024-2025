@@ -13,8 +13,6 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     // Calculate moves that just advance
     // Iterate through all distances from 1 to 44
     for distance in 1..45 {
-        println!("Distance: {}", distance);
-
         // Check if our hare has enough carrots to move the distance
         if (game_data.our_hare.carrots as u16) < RENNKARTE[distance as usize - 1] {
             continue; // Move is invalid
@@ -27,12 +25,15 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
 
         let new_field: FieldType = game_data.board.get_field((game_data.our_hare.position + distance) as usize).unwrap();
 
+        print!("Distance: {}", distance);
         match new_field {
             FieldType::Position1 | FieldType::Position2 | FieldType::Carrots => {
                 // legal_moves.push(Move::new(vec![Box::new(Advance::new(distance))]));
                 legal_moves.push(Box::new(AdvanceMove::new(distance)));
+                println!(" - legal");
             },
             _ => {
+                println!(" - illegal");
                 continue; // Move is invalid
                 // Some moves are not computed yet
             }
