@@ -1,13 +1,36 @@
-use crate::structs::action::Action;
-
-pub struct Move {
-    pub actions: Vec<Box<dyn Action>>,
+pub trait Move {
+    fn to_string(&self) -> String; 
 }
 
-impl Move {
-    pub fn new(actions: Vec<Box<dyn Action>>) -> Move {
-        Move {
-            actions: actions,
+pub struct AdvanceMove {
+    pub distance: i8,
+}
+
+impl AdvanceMove {
+    pub fn new(distance: i8) -> AdvanceMove {
+        AdvanceMove {
+            distance: distance,
         }
     }
 }
+
+impl Move for AdvanceMove {
+    fn to_string(&self) -> String {
+        format!("<data class=\"advance\" distance=\"{}\"/>", self.distance)
+    }
+}
+
+// Old code befor the docs were updated
+// use crate::structs::action::Action;
+
+// pub struct Move {
+//     pub actions: Vec<Box<dyn Action>>,
+// }
+
+// impl Move {
+//     pub fn new(actions: Vec<Box<dyn Action>>) -> Move {
+//         Move {
+//             actions: actions,
+//         }
+//     }
+// }
