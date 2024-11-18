@@ -3,6 +3,7 @@ use super::hare::Hare;
 use crate::enums::team::Team;
 
 pub struct GameData {
+    pub room_id: String,
     pub board: Board,
     pub our_hare: Hare,
     pub enemy_hare: Hare,
@@ -13,7 +14,7 @@ pub struct GameData {
 
 impl GameData {
     pub fn new() -> GameData {
-        GameData { board: Board::new(), start_team: None, our_hare: Hare::new(), enemy_hare: Hare::new(), turn: 0, game_over: false }
+        GameData { room_id: String::new(), board: Board::new(), start_team: None, our_hare: Hare::new(), enemy_hare: Hare::new(), turn: 0, game_over: false }
     }
 
     pub fn set_team(&mut self, team: &str) {
