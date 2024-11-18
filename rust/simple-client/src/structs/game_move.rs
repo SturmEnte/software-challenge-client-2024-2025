@@ -2,6 +2,7 @@ pub trait Move {
     fn to_string(&self) -> String; 
 }
 
+// Advance Move
 pub struct AdvanceMove {
     pub distance: i8,
 }
@@ -17,6 +18,21 @@ impl AdvanceMove {
 impl Move for AdvanceMove {
     fn to_string(&self) -> String {
         format!("<data class=\"advance\" distance=\"{}\"/>", self.distance)
+    }
+}
+
+// Fallback Move
+pub struct FallbackMove {}
+
+impl FallbackMove {
+    pub fn new() -> FallbackMove {
+        FallbackMove {}
+    }
+}
+
+impl Move for FallbackMove {
+    fn to_string(&self) -> String {
+        format!("<data class=\"fallback\"/>")
     }
 }
 
