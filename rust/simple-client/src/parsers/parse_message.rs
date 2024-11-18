@@ -1,14 +1,19 @@
 use std::net::TcpStream;
+use std::io::Write;
 
 use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
 
+use crate::structs::action;
 use crate::structs::game_data::GameData;
 use super::parse_welcome_message::parse_welcome_message;
 use super::parse_memento::parse_memento;
+use crate::computers::compute_legal_moves::compute_legal_moves;
+use crate::structs::game_move::Move;
+use crate::utils::get_room_id::get_room_id;
 
-pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData, stream: &mut Option<&mut TcpStream>) {
+pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData, mut stream: &mut TcpStream) {
 
     // Remove empty bytes from the buffer
     let message: &[u8] = &buffer[..n];
@@ -46,6 +51,27 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                 },
                                 "moveRequest" => {
                                     println!("Move Request");
+                                    let moves = compute_legal_moves(&game_data);
+
+                                    // Select a random valid move
+                                    use rand::Rng;
+                                    let mut rng = rand::thread_rng();
+                                    let random_number: u32 = rng.gen_range(0..moves.len() as u32);
+
+                                    let random_move: &Move = &moves[random_number as usize];
+
+                                    let mut actions: String = String::new();
+
+                                    let mut i: i8 = 0;
+                                    for action in &random_move.actions {
+                                        actions.push_str(action.to_string(&i).as_str());
+                                        i += 1;
+                                    }
+
+                                    let move_message = format!("<room roomId=\"{}\"><data class=\"move\">{}</move></room>", game_data.room_id, actions);
+                                    println!("Move: {}", move_message);
+
+                                    _ = stream.write(move_message.as_bytes());
                                 },
                                 "result" => {
                                     println!("Result");

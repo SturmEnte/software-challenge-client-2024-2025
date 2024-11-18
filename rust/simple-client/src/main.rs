@@ -65,7 +65,7 @@ fn main() {
             global_buffer.write(&buffer[..n]).unwrap();
             global_n += n;
 
-            parse_message(global_buffer.into_inner(), global_n, &mut game_data ,&mut Some(&mut stream));
+            parse_message(global_buffer.into_inner(), global_n, &mut game_data ,&mut stream);
 
             // Stop the program / client if the game is over
             if game_data.game_over {
