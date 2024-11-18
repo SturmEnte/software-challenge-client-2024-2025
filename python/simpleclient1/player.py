@@ -7,23 +7,33 @@ except:
     RESET = ""
 
 class Player():
-    def __init__(self, team, direction, speed, coal, passengers, freeTurns, points):
+    def __init__(self, team, position, salads, carrots):
+        ''' Player class
+
+            available teams:
+            - ONE
+            - TWO
+
+            available positions:
+            0 - 64
+
+            available salads:
+            0 - 5
+
+            available carrots:
+            0 - ?
+        
+        '''
         self.team = team
-        self.direction = direction
-        self.speed = speed
-        self.coal = coal
-        self.passengers = passengers
-        self.freeTurns = freeTurns
-        self.points = points
-        self.position = {}
+        self.position = position
+        self.salads = salads
+        self.carrots = carrots
     
-    def setPosition(self, q, r, s):
-        self.position['q'] = q
-        self.position['r'] = r
-        self.position['s'] = s
+    def set_position(self, x):
+        self.position = x
     
-    def getPosition(self):
-        return self.position['q'], self.position['r'], self.position['s']
+    def get_position(self):
+        return self.position
     
     def __str__(self):
         out = ""
@@ -31,7 +41,7 @@ class Player():
         if self.team == "ONE":
             out = RED + "S1"
         else:
-            out = RED + "S2" # dont know what color to use, as background is already blue
+            out = RED + "S2"
         
         out += RESET
         return out
