@@ -1,3 +1,4 @@
+mod computers;
 mod enums;
 mod parsers;
 mod structs;
