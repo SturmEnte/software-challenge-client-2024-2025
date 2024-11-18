@@ -20,7 +20,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
 
     if crate::DEBUGGING {
         // Print the buffer as a string
-        println!("{}", message_str);
+        //println!("{}", message_str);
     }
 
     // Create the XML reader
