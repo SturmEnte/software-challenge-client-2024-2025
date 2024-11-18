@@ -51,6 +51,11 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                     println!("Move Request");
                                     let moves = compute_legal_moves(&game_data);
 
+                                    // Check if there are any legal moves
+                                    if moves.len() == 0 {
+                                        panic!("No legal moves found");
+                                    }
+
                                     // Select a random valid move
                                     use rand::Rng;
                                     let mut rng = rand::thread_rng();
