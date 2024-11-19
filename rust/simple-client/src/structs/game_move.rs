@@ -36,6 +36,38 @@ impl Move for FallbackMove {
     }
 }
 
+// Eat Salad Move
+pub struct EatSaladMove {}
+
+impl EatSaladMove {
+    pub fn new() -> EatSaladMove {
+        EatSaladMove {}
+    }
+}
+
+impl Move for EatSaladMove {
+    fn to_string(&self) -> String {
+        format!("<data class=\"eatsalad\"/>")
+    }
+}
+
+// Exchange Carrots Move
+pub struct ExchangeCarrotsMove {
+    pub amount: i8,
+}
+
+impl ExchangeCarrotsMove {
+    pub fn new(amount: i8) -> ExchangeCarrotsMove {
+        ExchangeCarrotsMove {amount: amount}
+    }
+}
+
+impl Move for ExchangeCarrotsMove {
+    fn to_string(&self) -> String {
+        format!("<data class=\"exchangecarrots\" amount=\"{}\"/>", self.amount)
+    }
+}
+
 // Old code befor the docs were updated
 // use crate::structs::action::Action;
 
