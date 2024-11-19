@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::net::TcpStream;
 use std::io::Write;
 
@@ -61,7 +62,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                     let mut rng = rand::thread_rng();
                                     let random_number: u32 = rng.gen_range(0..moves.len() as u32);
 
-                                    let random_move: &dyn Move = &*moves[random_number as usize];
+                                    let mut random_move: &dyn Move = &*moves[random_number as usize];
 
                                     // let mut actions: String = String::new();
 
@@ -73,6 +74,11 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
 
                                     for m in &moves {
                                         println!("{}", m.to_string());
+
+                                        if m.to_string().contains("eatsalad") {
+                                            random_move = m.as_ref();
+                                            break;
+                                        }
                                     }
 
                                     let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, random_move.to_string()); //<data class=\"move\"></data>
