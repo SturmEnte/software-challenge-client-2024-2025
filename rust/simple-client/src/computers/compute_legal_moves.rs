@@ -38,7 +38,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         }
 
         // Check if the enemy hare is on the new field after the move
-        if game_data.our_hare.position == game_data.enemy_hare.position + distance {
+        if game_data.our_hare.position + distance == game_data.enemy_hare.position {
             continue; // Move is invalid
         }
 
