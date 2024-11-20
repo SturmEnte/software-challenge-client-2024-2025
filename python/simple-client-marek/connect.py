@@ -29,10 +29,13 @@ class ServerConnection ():
             pass
 
     def receiveData(self):
-        data = self.client.recv()
+        data = self.client.recv(1022)
         print(data.decode())
         pass
 
 # Temporary Main
 serverConnection = ServerConnection()
 serverConnection.joinRoom()
+
+while True:
+    serverConnection.receiveData()
