@@ -50,6 +50,12 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     // Calculate moves that just advance
     // Iterate through all distances from 1 to 44
     for distance in 1..45 {
+
+        // Check if the hare would still be on the game board after moving that distance
+        if game_data.our_hare.position + distance > 44 {
+            continue; // Move is invalid
+        }
+
         // Check if our hare has enough carrots to move the distance
         if (game_data.our_hare.carrots as u16) < RENNKARTE[distance as usize - 1] {
             continue; // Move is invalid
