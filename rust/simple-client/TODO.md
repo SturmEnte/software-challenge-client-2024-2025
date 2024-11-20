@@ -2,3 +2,4 @@
 - [x] Remove "Undefined" enum entry
 - [] Fix the last printed emoji in the board print function 🏁
   - This Problem only exists on Windows
+- [] Replace "Rennkarte" with triangular numbers sequenze function
