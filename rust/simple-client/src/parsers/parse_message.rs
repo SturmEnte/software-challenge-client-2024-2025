@@ -81,7 +81,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                         }
                                     }
 
-                                    let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, random_move.to_string()); //<data class=\"move\"></data>
+                                    let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, random_move.to_string());
                                     println!("Move: {}", move_message);
 
                                     _ = stream.write(move_message.as_bytes());
