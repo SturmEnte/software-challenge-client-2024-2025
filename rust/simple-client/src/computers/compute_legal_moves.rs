@@ -37,8 +37,6 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         }
     }
 
-    let mut fallback_possible: bool = false;
-
     // Loop through all fields that are behind the hare, starting at the first field behind the hare
     // until the closest hedgehog field is found and then checking if our hare can fallback on it
     for i in (1..game_data.our_hare.position).rev() {
@@ -49,18 +47,14 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             continue;
         }
 
-        // Check validity of the fallback move
+        // Check validity of the fallback move and add the fallbackmove to the legal moves
         if game_data.our_hare.position > i      // Is the enemy hare not on this hedgehog field
         && game_data.enemy_hare.position != i { // Is the hedgehog behind our hare
-            fallback_possible = true;
+            legal_moves.push(Box::new(FallbackMove::new()));
         }
 
         // If a hedgehog field is found, stop the loop not matter if a falback is possible or not
         break;
-    }
-
-    if fallback_possible {
-        legal_moves.push(Box::new(FallbackMove::new()));
     }
 
     // Calculate moves that just advance
