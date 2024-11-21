@@ -1,8 +1,10 @@
 use std::any::Any;
 
 use crate::enums::field_type::FieldType;
+use crate::enums::move_type::MoveType;
 
 use crate::GameData;
+
 use crate::structs::game_move::Move;
 use crate::structs::game_move::AdvanceMove;
 use crate::structs::game_move::FallbackMove;
@@ -20,10 +22,14 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     if game_data.our_hare.salads > 0 
         && game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad 
         && game_data.our_hare.last_move.is_some() 
-        && game_data.our_hare.last_move.as_ref().unwrap().type_id() == std::any::TypeId::of::<AdvanceMove>() {         
+        && game_data.our_hare.last_move_type == Some(MoveType::Advance) {      // This line does not work    
         
         legal_moves.push(Box::new(EatSaladMove::new()));
         return legal_moves;
+    } else if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad  {
+        println!("Salad move not allowed but standing on salad field");
+        println!("Is some? {}", game_data.our_hare.last_move.is_some());
+        println!("Type id matching? {}", game_data.our_hare.last_move_type == Some(MoveType::Advance));
     }
 
     // Check if carrot exchange is possible
@@ -81,14 +87,14 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                 legal_moves.push(Box::new(AdvanceMove::new(distance)));
                 println!(" - legal");
             },
-            /*FieldType::Salad => {
+            FieldType::Salad => {
                 if game_data.our_hare.salads > 0 {
                     legal_moves.push(Box::new(AdvanceMove::new(distance)));
                     println!(" - legal");
                 } else {
                     println!(" - illegal");
                 }
-            },*/
+            },
             _ => {
                 println!(" - illegal");
                 continue; // Move is invalid

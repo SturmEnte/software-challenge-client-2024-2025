@@ -2,6 +2,7 @@ use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
 
+use crate::enums::move_type::MoveType;
 use crate::enums::team::Team;
 use crate::structs::game_data::GameData;
 
@@ -92,22 +93,27 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             let class: String = attr.unwrap().unescape_value().unwrap().to_string();
                             let distance: Option<u8> = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"distance")).map(|a| a.unwrap().unescape_value().unwrap().parse().unwrap());
 
-                            let last_move: Box<dyn Move>;
+                            let last_move: Option<Box<dyn Move>>;
+                            let last_move_type: Option<MoveType>;
 
                             match class.as_str() {
                                 "advance" => {
-                                    last_move = Box::new(AdvanceMove::new(distance.unwrap()));
+                                    last_move = Some(Box::new(AdvanceMove::new(distance.unwrap())));
+                                    last_move_type = Some(MoveType::Advance);
                                 },
                                 _ => {
                                     println!("Unknown last action class: {}", class);
-                                    continue; // Return if the move couln't be parsed
+                                    last_move = None;
+                                    last_move_type = None;
                                 }
                             }
                             
                             if currentTeam == game_data.our_hare.team {
-                                game_data.our_hare.last_move = Some(last_move);
+                                game_data.our_hare.last_move = last_move;
+                                game_data.our_hare.last_move_type = last_move_type;
                             } else {
-                                game_data.enemy_hare.last_move = Some(last_move);
+                                game_data.enemy_hare.last_move = last_move;
+                                game_data.enemy_hare.last_move_type = last_move_type;
                             }
                         }
                     },
