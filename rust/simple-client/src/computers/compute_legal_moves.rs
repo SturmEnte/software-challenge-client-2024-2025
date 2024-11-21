@@ -17,26 +17,31 @@ const RENNKARTE : [u16; 44] = [1,3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,1
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
 
-    // Check if eating a salad is possible
-    // A salad move is possible if our hare is on a salad field and it has moved on it in the last move
-    if game_data.our_hare.salads > 0 
-        && game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad 
-        && game_data.our_hare.last_move.is_some() 
-        && game_data.our_hare.last_move_type == Some(MoveType::Advance) {      // This line does not work    
-        
+    // Eat salad move
+    // Check if the last move was an advance move and if the hare is on a salad field
+    // If so, is the hare forced to eat a salad
+    if  game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad    // Check if the current field is a salad field
+        && game_data.our_hare.last_move.is_some()                                                   // Check if the hare has a last move
+        && game_data.our_hare.last_move_type == Some(MoveType::Advance) {                           // Check if the hare's last move was an advance move    
+
         legal_moves.push(Box::new(EatSaladMove::new()));
+        // This line returns the legal moves array with only the eat salad move and so the hare is forced to eat a salad
         return legal_moves;
     }
 
-    // Check if carrot exchange is possible
+    // Exchange carrots move
+    // Check if the hare is on a carrot field
     if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Carrots {
+        // If so add a exchange carrots move to the legal moves that adds 10 carrots to the hare's carrots
         legal_moves.push(Box::new(ExchangeCarrotsMove::new(10)));
 
+        // Also add a exchange carrots move that subtracts 10 carrots from the hare's carrots if the hare has at least 10 carrots
         if game_data.our_hare.carrots >= 10 {
             legal_moves.push(Box::new(ExchangeCarrotsMove::new(-10)));
         }
     }
 
+    // Fallback move
     // Loop through all fields that are behind the hare, starting at the first field behind the hare
     // until the closest hedgehog field is found and then checking if our hare can fallback on it
     for i in (1..game_data.our_hare.position).rev() {
@@ -57,40 +62,44 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         break;
     }
 
-    // Calculate moves that just advance
-    // Iterate through all distances from 1 to 44
+    // Advance move
+    // Iterate through all distances from 1 to 44 and evaluate if the move is possible
     for distance in 1..45 {
 
         // Check if the hare would still be on the game board after moving that distance
         if game_data.our_hare.position + distance > 44 {
-            continue; // Move is invalid
+            continue;
         }
 
         // Check if our hare has enough carrots to move the distance
         if (game_data.our_hare.carrots as u16) < RENNKARTE[distance as usize - 1] {
-            continue; // Move is invalid
+            continue;
         }
 
         // Check if the enemy hare is on the new field after the move
         if game_data.our_hare.position + distance == game_data.enemy_hare.position {
-            continue; // Move is invalid
+            continue;
         }
 
+        // Get the field on which the hare would be after moving the current distance
         let new_field: FieldType = game_data.board.get_field((game_data.our_hare.position + distance) as usize).unwrap();
 
+        // Match the type of the field
         match new_field {
+            // If the field is a pos. 1, pos. 2 or carrots field is the move always possible
             FieldType::Position1 | FieldType::Position2 | FieldType::Carrots => {
-                // legal_moves.push(Move::new(vec![Box::new(Advance::new(distance))]));
                 legal_moves.push(Box::new(AdvanceMove::new(distance)));
             },
+            // If the field is a salad field does our hare has too have at least one salad
             FieldType::Salad => {
                 if game_data.our_hare.salads > 0 {
                     legal_moves.push(Box::new(AdvanceMove::new(distance)));
                 }
             },
             _ => {
-                continue; // Move is invalid
-                // Some moves are not computed yet
+                // If none of these match then print the current field type and continue to the next field
+                println!("Unevaluated field: {:?}", new_field);
+                continue;
             }
         }
     }
