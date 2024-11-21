@@ -26,10 +26,6 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         
         legal_moves.push(Box::new(EatSaladMove::new()));
         return legal_moves;
-    } else if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad  {
-        println!("Salad move not allowed but standing on salad field");
-        println!("Is some? {}", game_data.our_hare.last_move.is_some());
-        println!("Type id matching? {}", game_data.our_hare.last_move_type == Some(MoveType::Advance));
     }
 
     // Check if carrot exchange is possible
@@ -80,23 +76,17 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
 
         let new_field: FieldType = game_data.board.get_field((game_data.our_hare.position + distance) as usize).unwrap();
 
-        print!("Distance: {}", distance);
         match new_field {
             FieldType::Position1 | FieldType::Position2 | FieldType::Carrots => {
                 // legal_moves.push(Move::new(vec![Box::new(Advance::new(distance))]));
                 legal_moves.push(Box::new(AdvanceMove::new(distance)));
-                println!(" - legal");
             },
             FieldType::Salad => {
                 if game_data.our_hare.salads > 0 {
                     legal_moves.push(Box::new(AdvanceMove::new(distance)));
-                    println!(" - legal");
-                } else {
-                    println!(" - illegal");
                 }
             },
             _ => {
-                println!(" - illegal");
                 continue; // Move is invalid
                 // Some moves are not computed yet
             }
