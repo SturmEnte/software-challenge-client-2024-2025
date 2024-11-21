@@ -5,9 +5,14 @@ use quick_xml::name::QName;
 use crate::enums::team::Team;
 use crate::structs::game_data::GameData;
 
+use crate::structs::game_move::Move;
+use crate::structs::game_move::AdvanceMove;
+
 pub fn parse_memento(message: &String, game_data: &mut GameData) {
      // Create the XML reader
      let mut reader = Reader::from_str(&message);
+
+    let mut currentTeam: Option<Team> = None;
 
      loop {
         match reader.read_event() {
@@ -45,6 +50,8 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             } else {
                                 team = Some(Team::Two);
                             }
+
+                            currentTeam = team.clone();
                         }
 
                         // Retreive the position
@@ -77,6 +84,31 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                         } else {
                             println!("Hare: Missing attributes");
+                        }
+                    },
+                    QName(b"lastAction") => {
+                        // Retreiive the class of the last action
+                        if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
+                            let class: String = attr.unwrap().unescape_value().unwrap().to_string();
+                            let distance: Option<u8> = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"distance")).map(|a| a.unwrap().unescape_value().unwrap().parse().unwrap());
+
+                            let last_move: Box<dyn Move>;
+
+                            match class.as_str() {
+                                "advance" => {
+                                    last_move = Box::new(AdvanceMove::new(distance.unwrap()));
+                                },
+                                _ => {
+                                    println!("Unknown last action class: {}", class);
+                                    continue; // Return if the move couln't be parsed
+                                }
+                            }
+                            
+                            if currentTeam == game_data.our_hare.team {
+                                game_data.our_hare.last_move = Some(last_move);
+                            } else {
+                                game_data.enemy_hare.last_move = Some(last_move);
+                            }
                         }
                     },
                     QName(b"board") => {

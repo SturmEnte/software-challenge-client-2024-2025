@@ -6,3 +6,4 @@
 - [] Retreive cards
 - [] Fix casing errors (snake case...)
 - [] Parse the other last actions
+- [] Fallback is only possible, if the enemy is not standing on that field
