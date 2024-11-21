@@ -4,3 +4,4 @@
   - This Problem only exists on Windows
 - [] Replace "Rennkarte" with triangular numbers sequenze function
 - [] Retreive cards
+- [] Fix casing errors (snake case...)
