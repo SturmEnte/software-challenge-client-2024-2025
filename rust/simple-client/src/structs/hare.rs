@@ -2,9 +2,9 @@ use crate::enums::team::Team;
 
 pub struct Hare {
     pub team: Option<Team>,
-    pub position: i8,
-    pub salads: i8,
-    pub carrots: i8, 
+    pub position: u8,
+    pub salads: u8,
+    pub carrots: u8, 
 }
 
 impl Hare {
