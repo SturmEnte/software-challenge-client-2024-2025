@@ -6,7 +6,7 @@ pub struct Hare {
     pub team: Option<Team>,
     pub position: u8,
     pub salads: u8,
-    pub carrots: u8, 
+    pub carrots: u16, 
     pub last_move: Option<Box<dyn Move>>,
     pub last_move_type: Option<MoveType>
 }
