@@ -37,18 +37,26 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         }
     }
 
-    // Check if a fallback mvoe is possible
     let mut fallback_possible: bool = false;
-    let mut i: u8 = 0;
-    for field in game_data.board.board {
+
+    // Loop through all fields that are behind the hare, starting at the first field behind the hare
+    // until the closest hedgehog field is found and then checking if our hare can fallback on it
+    for i in (1..game_data.our_hare.position).rev() {
+        println!("{}",i);
         
-        // Also check if enemy is on that field
-        if field.unwrap() == FieldType::Hedgehog && game_data.our_hare.position > i {
-            fallback_possible = true;
-            break;
+        // If the current field is nota hedgehog field, continue with the next field
+        if game_data.board.board[i as usize].unwrap() != FieldType::Hedgehog {                               
+            continue;
         }
 
-        i += 1;
+        // Check validity of the fallback move
+        if game_data.our_hare.position > i      // Is the enemy hare not on this hedgehog field
+        && game_data.enemy_hare.position != i { // Is the hedgehog behind our hare
+            fallback_possible = true;
+        }
+
+        // If a hedgehog field is found, stop the loop not matter if a falback is possible or not
+        break;
     }
 
     if fallback_possible {
