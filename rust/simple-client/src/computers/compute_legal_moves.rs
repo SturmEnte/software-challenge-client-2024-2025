@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use crate::enums::field_type::FieldType;
 
 use crate::GameData;
@@ -12,13 +14,17 @@ const RENNKARTE : [u16; 44] = [1,3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,1
 
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
-    
+
     // Check if eating a salad is possible
     // A salad move is possible if our hare is on a salad field and it has moved on it in the last move
-    /*if game_data.our_hare.salads > 0 && game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad {
+    if game_data.our_hare.salads > 0 
+        && game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad 
+        && game_data.our_hare.last_move.is_some() 
+        && game_data.our_hare.last_move.as_ref().unwrap().type_id() == std::any::TypeId::of::<AdvanceMove>() {         
+        
         legal_moves.push(Box::new(EatSaladMove::new()));
         return legal_moves;
-    }*/
+    }
 
     // Check if carrot exchange is possible
     if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Carrots {
