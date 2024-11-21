@@ -32,9 +32,9 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                     },
                     QName(b"hare") => {
                         let mut team: Option<Team> = None;
-                        let mut position: Option<i8> = None;
-                        let mut salads: Option<i8> = None;
-                        let mut carrots: Option<i8> = None;
+                        let mut position: Option<u8> = None;
+                        let mut salads: Option<u8> = None;
+                        let mut carrots: Option<u8> = None;
 
                         // Retreive the team
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"team")) {

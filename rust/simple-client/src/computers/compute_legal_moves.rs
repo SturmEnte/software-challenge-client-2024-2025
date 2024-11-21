@@ -31,7 +31,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
 
     // Check if a fallback mvoe is possible
     let mut fallback_possible: bool = false;
-    let mut i: i8 = 0;
+    let mut i: u8 = 0;
     for field in game_data.board.board {
         
         // Also check if enemy is on that field

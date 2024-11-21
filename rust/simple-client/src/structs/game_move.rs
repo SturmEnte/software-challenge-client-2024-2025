@@ -4,11 +4,11 @@ pub trait Move {
 
 // Advance Move
 pub struct AdvanceMove {
-    pub distance: i8,
+    pub distance: u8,
 }
 
 impl AdvanceMove {
-    pub fn new(distance: i8) -> AdvanceMove {
+    pub fn new(distance: u8) -> AdvanceMove {
         AdvanceMove {
             distance: distance,
         }
