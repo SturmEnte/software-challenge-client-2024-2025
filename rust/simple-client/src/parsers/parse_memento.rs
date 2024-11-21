@@ -2,12 +2,18 @@ use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
 
+use crate::enums::move_type::MoveType;
 use crate::enums::team::Team;
 use crate::structs::game_data::GameData;
+
+use crate::structs::game_move::Move;
+use crate::structs::game_move::AdvanceMove;
 
 pub fn parse_memento(message: &String, game_data: &mut GameData) {
      // Create the XML reader
      let mut reader = Reader::from_str(&message);
+
+    let mut currentTeam: Option<Team> = None;
 
      loop {
         match reader.read_event() {
@@ -32,9 +38,9 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                     },
                     QName(b"hare") => {
                         let mut team: Option<Team> = None;
-                        let mut position: Option<i8> = None;
-                        let mut salads: Option<i8> = None;
-                        let mut carrots: Option<i8> = None;
+                        let mut position: Option<u8> = None;
+                        let mut salads: Option<u8> = None;
+                        let mut carrots: Option<u8> = None;
 
                         // Retreive the team
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"team")) {
@@ -45,6 +51,8 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             } else {
                                 team = Some(Team::Two);
                             }
+
+                            currentTeam = team.clone();
                         }
 
                         // Retreive the position
@@ -77,6 +85,36 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                         } else {
                             println!("Hare: Missing attributes");
+                        }
+                    },
+                    QName(b"lastAction") => {
+                        // Retreiive the class of the last action
+                        if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
+                            let class: String = attr.unwrap().unescape_value().unwrap().to_string();
+                            let distance: Option<u8> = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"distance")).map(|a| a.unwrap().unescape_value().unwrap().parse().unwrap());
+
+                            let last_move: Option<Box<dyn Move>>;
+                            let last_move_type: Option<MoveType>;
+
+                            match class.as_str() {
+                                "advance" => {
+                                    last_move = Some(Box::new(AdvanceMove::new(distance.unwrap())));
+                                    last_move_type = Some(MoveType::Advance);
+                                },
+                                _ => {
+                                    println!("Unknown last action class: {}", class);
+                                    last_move = None;
+                                    last_move_type = None;
+                                }
+                            }
+                            
+                            if currentTeam == game_data.our_hare.team {
+                                game_data.our_hare.last_move = last_move;
+                                game_data.our_hare.last_move_type = last_move_type;
+                            } else {
+                                game_data.enemy_hare.last_move = last_move;
+                                game_data.enemy_hare.last_move_type = last_move_type;
+                            }
                         }
                     },
                     QName(b"board") => {

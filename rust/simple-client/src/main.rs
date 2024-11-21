@@ -1,3 +1,4 @@
+mod computers;
 mod enums;
 mod parsers;
 mod structs;
@@ -11,6 +12,7 @@ use structs::game_data::GameData;
 
 use utils::get_cmd_args::get_join_info;
 use parsers::parse_message::parse_message;
+use utils::get_room_id::get_room_id;
 
 pub const DEBUGGING: bool = true;
 pub const FIELD_COUNT: usize = 65;
@@ -56,15 +58,14 @@ fn main() {
 
         if buffer.starts_with(b"<protocol>") { // executes at the beginning of the communication to rertrieve the room id
             println!("Joined room");
-            //game_data.lock().unwrap().room_id = get_room_id(&buffer);
-            //println!("Room id: {}", game_data.lock().unwrap().room_id);
+            game_data.room_id = get_room_id(&buffer, &n);
             continue;
         } else if buffer[n-7..n] == "</room>".as_bytes().to_owned() { // executes if a new room tag is closed
             // Add new data to the global buffer
             global_buffer.write(&buffer[..n]).unwrap();
             global_n += n;
 
-            parse_message(global_buffer.into_inner(), global_n, &mut game_data ,&mut Some(&mut stream));
+            parse_message(global_buffer.into_inner(), global_n, &mut game_data ,&mut stream);
 
             // Stop the program / client if the game is over
             if game_data.game_over {

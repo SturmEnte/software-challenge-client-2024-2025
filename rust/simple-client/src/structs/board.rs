@@ -45,20 +45,17 @@ impl Board {
             // Get the emoji coresponding to the current fields type
             let emoji: &str;
 
-            if field_type.is_some() {
-                match field_type.unwrap() {
-                    FieldType::Start => emoji = "🚩",
-                    FieldType::Carrots => emoji = "🥕",
-                    FieldType::Hare => emoji = "🐇",
-                    FieldType::Salad => emoji = "🥬",
-                    FieldType::Market => emoji = "🏪",
-                    FieldType::Hedgehog => emoji = "🦔",
-                    FieldType::Position1 => emoji = "1️⃣ ",
-                    FieldType::Position2 => emoji = "2️⃣ ",
-                    FieldType::Goal => emoji = "🏁",
-                }
-            } else {
-                emoji = "?";
+            match field_type {
+                Some(FieldType::Start) => emoji = "🚩",
+                Some(FieldType::Carrots) => emoji = "🥕",
+                Some(FieldType::Hare) => emoji = "🐇",
+                Some(FieldType::Salad) => emoji = "🥬",
+                Some(FieldType::Market) => emoji = "🏪",
+                Some(FieldType::Hedgehog) => emoji = "🦔",
+                Some(FieldType::Position1) => emoji = "1️⃣ ",
+                Some(FieldType::Position2) => emoji = "2️⃣ ",
+                Some(FieldType::Goal) => emoji = "🏁",
+                None => emoji = "?"
             }
             
             // Print the emoji
