@@ -64,12 +64,12 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
 
         // Check if the hare would still be on the game board after moving that distance
         if game_data.our_hare.position + distance > 44 {
-            continue;
+            break; // All moves after this one will be outside the map
         }
 
         // Check if our hare has enough carrots to move the distance
         if (game_data.our_hare.carrots as u16) < triangular_number(distance as u16) {
-            continue;
+            break; // All moves after this one will also be too expensive
         }
 
         // Check if the enemy hare is on the new field after the move
