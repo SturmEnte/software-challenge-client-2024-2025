@@ -1,8 +1,7 @@
-use std::any::Any;
-
 use crate::enums::field_type::FieldType;
 use crate::enums::move_type::MoveType;
 
+use crate::utils::triangular_number::triangular_number;
 use crate::GameData;
 
 use crate::structs::game_move::Move;
@@ -10,9 +9,6 @@ use crate::structs::game_move::AdvanceMove;
 use crate::structs::game_move::FallbackMove;
 use crate::structs::game_move::EatSaladMove;
 use crate::structs::game_move::ExchangeCarrotsMove;
-
-// A array with the distances from 1 to 44 with their carrot costs
-const RENNKARTE : [u16; 44] = [1,3,6,10,15,21,28,36,45,55,66,78,91,105,120,136,153,171,190,210,231,253,276,300,325,351,378,406,435,465,496,528,561,595,630,666,703,741,780,820,861,903,946,990];
 
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
@@ -64,7 +60,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
 
     // Advance move
     // Iterate through all distances from 1 to 44 and evaluate if the move is possible
-    for distance in 1..45 {
+    for distance in 1..(crate::FIELD_COUNT as u8 - game_data.our_hare.position) {
 
         // Check if the hare would still be on the game board after moving that distance
         if game_data.our_hare.position + distance > 44 {
@@ -72,7 +68,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         }
 
         // Check if our hare has enough carrots to move the distance
-        if (game_data.our_hare.carrots as u16) < RENNKARTE[distance as usize - 1] {
+        if (game_data.our_hare.carrots as u16) < triangular_number(distance as u16) {
             continue;
         }
 
