@@ -10,6 +10,8 @@ use crate::structs::game_move::FallbackMove;
 use crate::structs::game_move::EatSaladMove;
 use crate::structs::game_move::ExchangeCarrotsMove;
 
+use crate::enums::card::Card;
+
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
 
@@ -67,8 +69,10 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             break; // All moves after this one will be outside the map
         }
 
+        let move_carrot_price: u16 = triangular_number(distance as u16);
+
         // Check if our hare has enough carrots to move the distance
-        if (game_data.our_hare.carrots as u16) < triangular_number(distance as u16) {
+        if (game_data.our_hare.carrots as u16) < move_carrot_price {
             break; // All moves after this one will also be too expensive
         }
 
@@ -84,12 +88,21 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         match new_field {
             // If the field is a pos. 1, pos. 2 or carrots field is the move always possible
             FieldType::Position1 | FieldType::Position2 | FieldType::Carrots => {
-                legal_moves.push(Box::new(AdvanceMove::new(distance)));
+                legal_moves.push(Box::new(AdvanceMove::new(distance, None)));
             },
             // If the field is a salad field does our hare has too have at least one salad
             FieldType::Salad => {
                 if game_data.our_hare.salads > 0 {
-                    legal_moves.push(Box::new(AdvanceMove::new(distance)));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, None)));
+                }
+            },
+            // If the field is a market field does our hare has too have at least an aditional 10 carrots
+            FieldType::Market => {
+                if game_data.our_hare.carrots >= move_carrot_price + 10 {
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::EatSalad))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::FallBack))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::HurryAhead))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
                 }
             },
             _ => {

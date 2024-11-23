@@ -1,3 +1,7 @@
+use crate::enums::card;
+use crate::enums::card::Card;
+use crate::enums::card::card_to_string;
+
 pub trait Move {
     fn to_string(&self) -> String; 
 }
@@ -5,18 +9,25 @@ pub trait Move {
 // Advance Move
 pub struct AdvanceMove {
     pub distance: u8,
+    pub card: Option<Card>,
 }
 
 impl AdvanceMove {
-    pub fn new(distance: u8) -> AdvanceMove {
+    pub fn new(distance: u8, card: Option<Card>) -> AdvanceMove {
         AdvanceMove {
             distance: distance,
+            card: card,
         }
     }
 }
 
 impl Move for AdvanceMove {
     fn to_string(&self) -> String {
+
+        if self.card.is_some() {
+            return format!("<advance distance=\"{}\"><card>{}<card/><advance/>", self.distance, card_to_string(self.card.as_ref().unwrap()));
+        }
+
         format!("<data class=\"advance\" distance=\"{}\"/>", self.distance)
     }
 }
