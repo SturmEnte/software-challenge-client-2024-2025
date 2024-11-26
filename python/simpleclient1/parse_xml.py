@@ -45,15 +45,10 @@ def parse_memento_start(state):
     return start_team, board, players
 
 def parse_memento(state):
-    board_tag = state.find('board')
-
-    # parse board (propably not required, as board doesn't change)
-    board = parse_board(board_tag)
-
     # parse players
     players = parse_players(state.findall('hare'))
 
-    return board, players
+    return players
 
 def parse_result(data, state):
     score_one = data.find('scores').findall('entry')[0]

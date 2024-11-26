@@ -2,7 +2,7 @@
 
 from network import Connection
 from state import State
-from compute import computeMove
+from compute import compute_move
 from parse_xml import parse_memento, parse_memento_start, parse_result, parse_error
 
 from xml.etree.ElementTree import fromstring, tostring
@@ -43,7 +43,7 @@ while True:
         data = msg.find('data')
         msgType = data.attrib['class']
         if msgType == "moveRequest":
-            move = computeMove(state)
+            move = compute_move(state)
             conn.sendMove(move)
         elif msgType == "memento":
             t1 = time()
@@ -53,8 +53,8 @@ while True:
                 start_team, board, players = parse_memento_start(xmlState)
                 state = State(conn.team, turn, start_team, board, players)
             else:
-                board, players = parse_memento(xmlState)
-                state.set_data(turn, board, players)
+                players = parse_memento(xmlState)
+                state.set_data(turn, players)
             t2 = time()
             print(f"Zeit: {t2-t1}   Zug: {turn}")
             state.print_state()

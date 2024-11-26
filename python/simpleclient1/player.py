@@ -28,6 +28,7 @@ class Player():
         self.position = position
         self.salads = salads
         self.carrots = carrots
+        self.cards = []
     
     def set_position(self, x):
         self.position = x
