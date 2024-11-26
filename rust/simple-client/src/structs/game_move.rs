@@ -25,7 +25,7 @@ impl Move for AdvanceMove {
     fn to_string(&self) -> String {
 
         if self.card.is_some() {
-            return format!("<data class=\"advance\" distance=\"{}\"><card>{}<card/><data/>", self.distance, card_to_string(self.card.as_ref().unwrap()));
+            return format!("<data class=\"advance\" distance=\"{}\"><card>{}</card></data>", self.distance, card_to_string(self.card.as_ref().unwrap()));
         }
 
         format!("<data class=\"advance\" distance=\"{}\"/>", self.distance)
