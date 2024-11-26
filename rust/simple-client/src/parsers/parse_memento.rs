@@ -40,7 +40,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         let mut team: Option<Team> = None;
                         let mut position: Option<u8> = None;
                         let mut salads: Option<u8> = None;
-                        let mut carrots: Option<u8> = None;
+                        let mut carrots: Option<u16> = None;
 
                         // Retreive the team
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"team")) {
@@ -98,7 +98,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
 
                             match class.as_str() {
                                 "advance" => {
-                                    last_move = Some(Box::new(AdvanceMove::new(distance.unwrap())));
+                                    last_move = Some(Box::new(AdvanceMove::new(distance.unwrap(), None)));
                                     last_move_type = Some(MoveType::Advance);
                                 },
                                 _ => {
