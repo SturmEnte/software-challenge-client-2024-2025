@@ -48,12 +48,24 @@ class Connection():
         self.roomId = fromstring(joinedMsg).attrib['roomId']
         
     def sendMove(self, move):
-        xml = f'<room roomId="{self.roomId}"><data class="move"><actions>'
+        xml = f'<room roomId="{self.roomId}">'
         
-        for action in move.actions:
-            xml += action
+        xml += f'<data class="{move.type}"'
 
-        xml += '</actions></data></room>'
+        for parameter in move.parameters:
+            xml += f' {parameter}="{move.parameters[parameter]}"'
+        
+        if len(move.cards) > 0:
+            xml += ">"
+
+            for card in move.cards:
+                xml += f'<card>{card}</card>'
+
+            xml += "</data>"
+        else:
+            xml += "/>"
+
+        xml += '</room>'
         self.send(xml)
                 
     def recvGameplay(self):

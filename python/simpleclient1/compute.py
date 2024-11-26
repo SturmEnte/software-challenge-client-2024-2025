@@ -13,26 +13,19 @@ def getPossibleMoves(state):
     return pmvs
 
 def getRandomMove(state):
-    return getAStarMove(state, positionDictToTuple(state.player.position), state.board.getRandomCoords())
+    pass
    
 def getBestMove(state):
-    return getAStarMove(state, positionDictToTuple(state.player.position), state.board.farthestField)
+    pass # TODO: implement a cool algorithm like minimax
 
 def computeMove(state):
     t_start = time()
-    move, move_possible, coalNeeded = getBestMove(state)
+    move = getRandomMove(state)
 
-    bestMove = move
-
-    if not move_possible:
-        while time() - t_start < TIME_LIMIT:
-            move, move_possible, coalNeeded = getNextMove(state)
-            if move_possible and coalNeeded < minCoalNeeded:
-                minCoalNeeded = coalNeeded
-                bestMove = move
+    
 
 
     # print(f"movementPoints: {movementPoints}, freeTurns: {freeTurns}, coalNeeded: {coalNeeded}")
-    print(bestMove)
+    print(move)
 
-    return bestMove
+    return move
