@@ -18,7 +18,7 @@ except:
 
 class Field():
     def __init__(self, type, index):
-        ''' Board class
+        ''' Field class
             
             available field types:
             - START
