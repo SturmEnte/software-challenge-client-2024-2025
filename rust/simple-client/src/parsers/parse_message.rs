@@ -9,7 +9,7 @@ use quick_xml::name::QName;
 use crate::structs::game_data::GameData;
 use super::parse_welcome_message::parse_welcome_message;
 use super::parse_memento::parse_memento;
-use crate::computers::compute_legal_moves::compute_legal_moves;
+use crate::computers::compute_move::compute_move;
 use crate::structs::game_move::Move;
 
 pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData, stream: &mut TcpStream) {
@@ -50,19 +50,8 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                 },
                                 "moveRequest" => {
                                     println!("Move Request");
-                                    let moves = compute_legal_moves(&game_data);
-
-                                    // Check if there are any legal moves
-                                    if moves.len() == 0 {
-                                        panic!("No legal moves found");
-                                    }
-
-                                    // Select a random valid move
-                                    use rand::Rng;
-                                    let mut rng = rand::thread_rng();
-                                    let random_number: u32 = rng.gen_range(0..moves.len() as u32);
-
-                                    let mut random_move: &dyn Move = &*moves[random_number as usize];
+                                    
+                                    let m: Box<dyn Move> = compute_move(&game_data);
 
                                     // let mut actions: String = String::new();
 
@@ -72,16 +61,16 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                     //     i += 1;
                                     // }
 
-                                    for m in &moves {
-                                        println!("{}", m.to_string());
+                                    // for m in &moves {
+                                    //     println!("{}", m.to_string());
 
-                                        if m.to_string().contains("eatsalad") {
-                                            random_move = m.as_ref();
-                                            break;
-                                        }
-                                    }
+                                    //     if m.to_string().contains("eatsalad") {
+                                    //         random_move = m.as_ref();
+                                    //         break;
+                                    //     }
+                                    // }
 
-                                    let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, random_move.to_string());
+                                    let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, m.to_string());
                                     println!("Move: {}", move_message);
 
                                     _ = stream.write(move_message.as_bytes());
