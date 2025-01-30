@@ -1,3 +1,4 @@
+use crate::enums::card::card_to_string;
 use crate::enums::field_type::FieldType;
 use crate::enums::move_type::MoveType;
 
@@ -103,6 +104,12 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                     legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::FallBack))));
                     legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::HurryAhead))));
                     legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
+                }
+            },
+            // If the field is a hare field check if the hare has cards and if they are legal to be played
+            FieldType::Hare => {
+                for card in &game_data.our_hare.cards {
+                    println!("{:?}", card_to_string(&card));
                 }
             },
             _ => {
