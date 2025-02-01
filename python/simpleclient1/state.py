@@ -38,11 +38,11 @@ class State():
 
         # if the accessed field is a hare field (card has to be played)
         if new_field.type == "HARE":
-            play_card(move, player, other_player)
+            self.play_card(move, player, other_player)
         
         # if the accessed field is a market field (card has to be bought and +10 carrots)
         elif new_field.type == "MARKET":
-            buy_card(move, player)
+            self.buy_card(move, player)
     
     def buy_card(self, move, player):
         card = move.cards.pop(1)
@@ -74,7 +74,7 @@ class State():
         
         # check for market or hare field
         if card == "HURRY_AHEAD" or card == "FALL_BACK":
-            market_or_hare_field(move, player, other_player)
+            self.market_or_hare_field(move, player, other_player)
     
     def apply_move(self, move, own_player=True):
         '''Applies a move to the board using the selected team.'''
@@ -104,7 +104,7 @@ class State():
             player.carrots -= get_needed_carrots(distance)
 
             # the same code needs to be executed if a hare / market field is accessed using a card instead of an advance move
-            market_or_hare_field(move, player, other_player)                
+            self.market_or_hare_field(move, player, other_player)                
         
         elif move.type == "fallback":
             hedgehog_field, distance = get_hedgehog_field(self, player.position)
