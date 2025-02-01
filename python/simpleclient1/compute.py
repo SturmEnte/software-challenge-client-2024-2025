@@ -26,9 +26,48 @@ def get_hedgehog_field(state, position):
     
     return None, None
 
-def get_possible_moves(state):
+def get_possible_moves(state, use_opponent=False):
+    if use_opponent:
+        player = state.opponent
+        opponent = state.player
+    else:
+        player = state.player
+        opponent = state.opponent
     
+    pmvs = []
 
+    # eat salad move
+    if state.board.getField(player.position).type == "SALAD":
+        move = Move()
+        move.type = "eatsalad"
+        pmvs.append(move)
+        return pmvs
+    
+    # fallback move
+    field, index = get_hedgehog_field(state, player.position)
+
+    if field != None and index != opponent.index:
+        move = Move()
+        move.type = "fallback"
+        pmvs.append(move)
+    
+    # exchange carrots move
+    if state.board.getField(player.position).type == "CARROT":
+        move = Move()
+        move.type = "exchangecarrots"
+        move.parameters["amount"] = "10"
+        pmvs.append(move)
+
+        if player.carrots >= 10:
+            move = Move()
+            move.type = "exchangecarrots"
+            move.parameters["amount"] = "-10"
+            pmvs.append(move)
+    
+    # advance move
+    for i in range(player.position + 1, 65):
+        
+    
     return pmvs
 
 def get_random_move(state):
