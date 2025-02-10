@@ -16,6 +16,16 @@ use crate::enums::card::Card;
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
 
+    if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad {
+        println!("We are on a salad field");
+        if game_data.our_hare.last_move.is_some() {
+            println!("We have a last move");
+            if game_data.our_hare.last_move_type == Some(MoveType::Advance) {
+                println!("Our last move was an advance move");
+            }
+        }
+    }  
+
     // Eat salad move
     // Check if the last move was an advance move and if the hare is on a salad field
     // If so, is the hare forced to eat a salad
@@ -25,6 +35,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
 
         legal_moves.push(Box::new(EatSaladMove::new()));
         // This line returns the legal moves array with only the eat salad move and so the hare is forced to eat a salad
+
         return legal_moves;
     }
 
@@ -44,7 +55,9 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     // Loop through all fields that are behind the hare, starting at the first field behind the hare
     // until the closest hedgehog field is found and then checking if our hare can fallback on it
     for i in (1..game_data.our_hare.position).rev() {
-        println!("{}",i);
+        if crate::DEBUGGING {
+            println!("{}",i);
+        }
         
         // If the current field is nota hedgehog field, continue with the next field
         if game_data.board.board[i as usize].unwrap() != FieldType::Hedgehog {                               
@@ -110,6 +123,8 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             FieldType::Hare => {
                 for card in &game_data.our_hare.cards {
                     println!("{:?}", card_to_string(&card));
+
+                    // TBD
                 }
             },
             _ => {

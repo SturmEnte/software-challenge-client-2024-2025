@@ -1,4 +1,3 @@
-use std::any::Any;
 use std::net::TcpStream;
 use std::io::Write;
 
@@ -18,11 +17,6 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
     let message: &[u8] = &buffer[..n];
     // Turn the buffer into a string (message)
     let message_str: String = String::from_utf8(message.to_vec()).unwrap();
-
-    if crate::DEBUGGING {
-        // Print the buffer as a string
-        //println!("{}", message_str);
-    }
 
     // Create the XML reader
     let mut reader = Reader::from_str(&message_str);
@@ -51,28 +45,22 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                 "moveRequest" => {
                                     println!("Move Request");
                                     
+                                    // The move that should be executed
                                     let m: Box<dyn Move> = compute_move(&game_data);
 
-                                    // let mut actions: String = String::new();
-
-                                    // let mut i: i8 = 0;
-                                    // for action in &random_move.actions {
-                                    //     actions.push_str(action.to_string(&i).as_str());
-                                    //     i += 1;
-                                    // }
-
-                                    // for m in &moves {
-                                    //     println!("{}", m.to_string());
-
-                                    //     if m.to_string().contains("eatsalad") {
-                                    //         random_move = m.as_ref();
-                                    //         break;
-                                    //     }
-                                    // }
-
+                                    // Create the move message string from the selected move
                                     let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, m.to_string());
-                                    println!("Move: {}", move_message);
+                                    
+                                    // Print the move for debugging
+                                    if crate::DEBUGGING {
+                                        println!("{}", move_message);
+                                    }
 
+                                    // Save the move in the game data
+                                    game_data.our_hare.last_move_type = Some(m.get_type());
+                                    game_data.our_hare.last_move = Some(m);
+
+                                    // Send the move to the server
                                     _ = stream.write(move_message.as_bytes());
                                 },
                                 "result" => {
@@ -86,7 +74,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                             }
 
                             // Break after finding the data type and processing it
-                            break; // Remider to myself: This could cause problems but I dont think it will
+                            break;
                         }
                     },
                     _ => (),
