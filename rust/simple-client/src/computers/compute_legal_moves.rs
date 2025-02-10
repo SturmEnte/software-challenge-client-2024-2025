@@ -36,7 +36,6 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         legal_moves.push(Box::new(EatSaladMove::new()));
         // This line returns the legal moves array with only the eat salad move and so the hare is forced to eat a salad
 
-        println!("Wi MUST eat se sälad!");
         return legal_moves;
     }
 
@@ -56,7 +55,9 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     // Loop through all fields that are behind the hare, starting at the first field behind the hare
     // until the closest hedgehog field is found and then checking if our hare can fallback on it
     for i in (1..game_data.our_hare.position).rev() {
-        println!("{}",i);
+        if crate::DEBUGGING {
+            println!("{}",i);
+        }
         
         // If the current field is nota hedgehog field, continue with the next field
         if game_data.board.board[i as usize].unwrap() != FieldType::Hedgehog {                               
@@ -122,6 +123,8 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             FieldType::Hare => {
                 for card in &game_data.our_hare.cards {
                     println!("{:?}", card_to_string(&card));
+
+                    // TBD
                 }
             },
             _ => {

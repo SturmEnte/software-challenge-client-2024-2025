@@ -1,4 +1,3 @@
-use crate::enums::card;
 use crate::enums::card::Card;
 use crate::enums::card::card_to_string;
 use crate::enums::move_type::MoveType;
@@ -96,41 +95,3 @@ impl Move for ExchangeCarrotsMove {
         MoveType::ExchangeCarrots
     }
 }
-
-// Old code befor the docs were updated
-// use crate::structs::action::Action;
-
-// pub struct Move {
-//     pub actions: Vec<Box<dyn Action>>,
-// }
-
-// impl Move {
-//     pub fn new(actions: Vec<Box<dyn Action>>) -> Move {
-//         Move {
-//             actions: actions,
-//         }
-//     }
-// }
-
-// Old action file:
-/*pub trait Action {
-    fn to_string(&self, index: &i8) -> String; 
-}
-
-pub struct Advance {
-    pub distance: i8,
-}
-
-impl Advance {
-    pub fn new(distance: i8) -> Advance {
-        Advance {
-            distance: distance,
-        }
-    }
-}
-
-impl Action for Advance {
-    fn to_string(&self, index: &i8) -> String {
-        format!("<advance order=\"{}\" distance=\"{}\"/>", index, self.distance)
-    }
-}*/

@@ -1,4 +1,3 @@
-use std::any::Any;
 use std::net::TcpStream;
 use std::io::Write;
 
@@ -18,11 +17,6 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
     let message: &[u8] = &buffer[..n];
     // Turn the buffer into a string (message)
     let message_str: String = String::from_utf8(message.to_vec()).unwrap();
-
-    if crate::DEBUGGING {
-        // Print the buffer as a string
-        //println!("{}", message_str);
-    }
 
     // Create the XML reader
     let mut reader = Reader::from_str(&message_str);
@@ -58,7 +52,9 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                     let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, m.to_string());
                                     
                                     // Print the move for debugging
-                                    println!("Move: {}", move_message);
+                                    if crate::DEBUGGING {
+                                        println!("{}", move_message);
+                                    }
 
                                     // Save the move in the game data
                                     game_data.our_hare.last_move_type = Some(m.get_type());
@@ -78,7 +74,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                             }
 
                             // Break after finding the data type and processing it
-                            break; // Remider to myself: This could cause problems but I dont think it will
+                            break;
                         }
                     },
                     _ => (),

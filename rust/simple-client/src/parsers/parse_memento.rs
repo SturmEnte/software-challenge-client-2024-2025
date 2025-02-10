@@ -16,10 +16,6 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
      let mut reader = Reader::from_str(&message);
 
     let mut current_team: Option<Team> = None;  // The team of the hare that is currently being parsed 
-    // let mut hares_cards = false;
-    // let mut inside_card = false;
-
-    // let mut last_text: String = String::new();
 
      loop {
         match reader.read_event() {
@@ -129,26 +125,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                         }
                     },
-                    // QName(b"cards") => {
-                    //     hares_cards = true;
-                    // },
-                    // QName(b"card") => {
-                    //     inside_card = true;
-
-                    //     //println!("Card: {}", e.unescape().unwrap().into_owned());
-                    //     println!("Card: {}", &last_text);
-
-                    //     //let card: String = e.unescape().unwrap().into_owned();
-                        
-                    //     if currentTeam == game_data.our_hare.team {
-                    //         game_data.our_hare.cards.push(string_to_card(&last_text));
-                    //     } else {
-                    //         game_data.enemy_hare.cards.push(string_to_card(&last_text));
-                    //     }
-                    // },
                     QName(b"lastAction") => {
-                        // hares_cards = false;
-
                         // Retreiive the class of the last action
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
                             let class: String = attr.unwrap().unescape_value().unwrap().to_string();
@@ -170,9 +147,6 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                             
                             if current_team == game_data.our_hare.team {
-                                // game_data.our_hare.last_move = last_move;
-                                // game_data.our_hare.last_move_type = last_move_type;
-                            } else {
                                 game_data.enemy_hare.last_move = last_move;
                                 game_data.enemy_hare.last_move_type = last_move_type;
                             }
@@ -217,23 +191,6 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                     _ => (),
                 }
             },
-            // Ok(Event::Text(e)) => {
-            //     last_text = e.unescape().unwrap().into_owned();
-            //     /*if inside_card && hares_cards {
-
-            //         println!("Card: {}", e.unescape().unwrap().into_owned());
-
-            //         let card: String = e.unescape().unwrap().into_owned();
-                    
-            //         if currentTeam == game_data.our_hare.team {
-            //             game_data.our_hare.cards.push(string_to_card(&card));
-            //         } else {
-            //             game_data.enemy_hare.cards.push(string_to_card(&card));
-            //         }
-
-            //         inside_card = false;
-            //     }*/
-            // }
             Ok(Event::Eof) => break, // Exits the loop when reaching end of file
             Err(e) => panic!("Error at position {}: {:?}", reader.buffer_position(), e),
             _ => (),
