@@ -1,9 +1,11 @@
 use crate::enums::card;
 use crate::enums::card::Card;
 use crate::enums::card::card_to_string;
+use crate::enums::move_type::MoveType;
 
 pub trait Move {
     fn to_string(&self) -> String; 
+    fn get_type(&self) -> MoveType;
 }
 
 // Advance Move
@@ -30,6 +32,10 @@ impl Move for AdvanceMove {
 
         format!("<data class=\"advance\" distance=\"{}\"/>", self.distance)
     }
+
+    fn get_type(&self) -> MoveType {
+        MoveType::Advance
+    }
 }
 
 // Fallback Move
@@ -45,6 +51,10 @@ impl Move for FallbackMove {
     fn to_string(&self) -> String {
         format!("<data class=\"fallback\"/>")
     }
+
+    fn get_type(&self) -> MoveType {
+        MoveType::Fallback
+    }
 }
 
 // Eat Salad Move
@@ -59,6 +69,10 @@ impl EatSaladMove {
 impl Move for EatSaladMove {
     fn to_string(&self) -> String {
         format!("<data class=\"eatsalad\"/>")
+    }
+
+    fn get_type(&self) -> MoveType {
+        MoveType::EatSalad
     }
 }
 
@@ -76,6 +90,10 @@ impl ExchangeCarrotsMove {
 impl Move for ExchangeCarrotsMove {
     fn to_string(&self) -> String {
         format!("<data class=\"exchangecarrots\" amount=\"{}\"/>", self.amount)
+    }
+
+    fn get_type(&self) -> MoveType {
+        MoveType::ExchangeCarrots
     }
 }
 
