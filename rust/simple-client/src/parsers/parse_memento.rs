@@ -1,3 +1,4 @@
+use colored::Colorize;
 use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
@@ -25,6 +26,9 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         // Retreive the turn
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"turn")) {
                             let turn: i8 = attr.unwrap().unescape_value().unwrap().parse().unwrap();
+                            if crate::DEBUGGING {
+                                println!("{}{}", "Turn: ".on_blue(), turn.to_string().on_yellow());
+                            }
                             game_data.turn = turn;
                         }
 

@@ -1,3 +1,5 @@
+use colored::Colorize;
+
 use crate::enums::card::card_to_string;
 use crate::enums::field_type::FieldType;
 use crate::enums::move_type::MoveType;
@@ -122,8 +124,8 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             // If the field is a hare field check if the hare has cards and if they are legal to be played
             FieldType::Hare => {
                 for card in &game_data.our_hare.cards {
-                    println!("{:?}", card_to_string(&card));
-
+                    // println!("{:?}", card_to_string(&card));
+                    println!("{}", "Hare move not implemented".red());
                     // TBD
                 }
             },

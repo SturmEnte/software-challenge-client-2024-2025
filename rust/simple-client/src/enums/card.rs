@@ -16,9 +16,6 @@ pub fn card_to_string(card: &Card) -> String {
 }
 
 pub fn string_to_card(string: &str) -> Card {
-
-    println!("Try to convert this string to a card: {}", string);
-
     match string {
         "SWAP_CARROTS" => return Card::SwapCarrots,
         "HURRY_AHEAD" => return Card::HurryAhead,

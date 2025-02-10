@@ -33,18 +33,23 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                             // Execute the corresponding function based on the class attribute
                             match class.as_str() {
                                 "welcomeMessage" => {
-                                    println!("Welcome message");
+                                    if crate::DEBUGGING {
+                                        println!("Welcome message");
+                                    }
                                     // Parse the welcome message
                                     // This will set our own team and the opponent team in the game data
                                     parse_welcome_message(&e, &mut game_data);
                                 },
                                 "memento" => {
-                                    println!("Memento");
+                                    if crate::DEBUGGING {
+                                        println!("Memento");
+                                    }
                                     parse_memento(&message_str, &mut game_data);
                                 },
                                 "moveRequest" => {
-                                    println!("Move Request");
-                                    
+                                    if crate::DEBUGGING {
+                                        println!("Move Request");
+                                    }
                                     // The move that should be executed
                                     let m: Box<dyn Move> = compute_move(&game_data);
 
@@ -64,7 +69,9 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                     _ = stream.write(move_message.as_bytes());
                                 },
                                 "result" => {
-                                    println!("Result");
+                                    if crate::DEBUGGING {
+                                        println!("Result");
+                                    }
                                     // Set the game to be done if a result is received
                                     game_data.game_over = true;
                                 },

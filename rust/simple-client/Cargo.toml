@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+colored = "3.0.0"
 quick-xml = "0.37.0"
 rand = "0.8"
