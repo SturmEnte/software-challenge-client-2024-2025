@@ -88,7 +88,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         let move_carrot_price: u16 = triangular_number(distance as u16);
 
         // Check if our hare has enough carrots to move the distance
-        if (game_data.our_hare.carrots as u16) < move_carrot_price {
+        if (game_data.our_hare.carrots as u16) <= move_carrot_price {
             break; // All moves after this one will also be too expensive
         }
 
@@ -124,11 +124,17 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             // If the field is a hare field check if the hare has cards and if they are legal to be played
             FieldType::Hare => {
                 for card in &game_data.our_hare.cards {
-                    // println!("{:?}", card_to_string(&card));
+                    println!("{:?}", card_to_string(&card));
                     println!("{}", "Hare move not implemented".red());
                     // TBD
                 }
             },
+            // If the field is a goal field check if our hare has at most 10 carrots and no salads
+            FieldType::Goal => {
+                if game_data.our_hare.carrots <= 10 && game_data.our_hare.salads == 0 {
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, None)));
+                }
+            }
             _ => {
                 // If none of these match then print the current field type and continue to the next field
                 println!("Unevaluated field: {:?}", new_field);
