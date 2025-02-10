@@ -170,8 +170,8 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                             
                             if current_team == game_data.our_hare.team {
-                                game_data.our_hare.last_move = last_move;
-                                game_data.our_hare.last_move_type = last_move_type;
+                                // game_data.our_hare.last_move = last_move;
+                                // game_data.our_hare.last_move_type = last_move_type;
                             } else {
                                 game_data.enemy_hare.last_move = last_move;
                                 game_data.enemy_hare.last_move_type = last_move_type;

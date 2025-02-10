@@ -51,28 +51,20 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
                                 "moveRequest" => {
                                     println!("Move Request");
                                     
+                                    // The move that should be executed
                                     let m: Box<dyn Move> = compute_move(&game_data);
 
-                                    // let mut actions: String = String::new();
-
-                                    // let mut i: i8 = 0;
-                                    // for action in &random_move.actions {
-                                    //     actions.push_str(action.to_string(&i).as_str());
-                                    //     i += 1;
-                                    // }
-
-                                    // for m in &moves {
-                                    //     println!("{}", m.to_string());
-
-                                    //     if m.to_string().contains("eatsalad") {
-                                    //         random_move = m.as_ref();
-                                    //         break;
-                                    //     }
-                                    // }
-
+                                    // Create the move message string from the selected move
                                     let move_message = format!("<room roomId=\"{}\">{}</room>", game_data.room_id, m.to_string());
+                                    
+                                    // Print the move for debugging
                                     println!("Move: {}", move_message);
 
+                                    // Save the move in the game data
+                                    game_data.our_hare.last_move_type = Some(m.get_type());
+                                    game_data.our_hare.last_move = Some(m);
+
+                                    // Send the move to the server
                                     _ = stream.write(move_message.as_bytes());
                                 },
                                 "result" => {
