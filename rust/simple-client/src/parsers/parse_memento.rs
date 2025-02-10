@@ -102,6 +102,14 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                     
                                     if e.name() == QName(b"cards") {
                                         cards = true;
+
+                                        // Reset the card array of the current hare
+                                        if current_team == game_data.our_hare.team {
+                                            game_data.our_hare.cards = Vec::new();
+                                        } else {
+                                            game_data.enemy_hare.cards = Vec::new();
+                                        }
+                                        
                                     } else if e.name() == QName(b"cards") {
                                         cards = false;
                                     } else if e.name() == QName(b"card") {

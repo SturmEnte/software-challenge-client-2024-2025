@@ -125,7 +125,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             FieldType::Hare => {
                 for card in &game_data.our_hare.cards {
                     println!("{:?}", card_to_string(&card));
-                    println!("{}", "Hare move not implemented".red());
+                    println!("{}{}", "Hare move not implemented. Distance: ".red(), distance);
                     // TBD
                 }
             },
