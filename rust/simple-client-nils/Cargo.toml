@@ -1,0 +1,8 @@
+[package]
+name = "hase_und_igel_client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+thiserror = "2.0.3"
+xml = "0.8.20"
