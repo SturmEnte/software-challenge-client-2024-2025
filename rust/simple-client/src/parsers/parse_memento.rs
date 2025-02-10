@@ -15,7 +15,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
      // Create the XML reader
      let mut reader = Reader::from_str(&message);
 
-    let mut current_team: Option<Team> = None;
+    let mut current_team: Option<Team> = None;  // The team of the hare that is currently being parsed 
     // let mut hares_cards = false;
     // let mut inside_card = false;
 
