@@ -16,7 +16,7 @@ class Move():
     def advance(self, distance: int):
         '''Advance forwards by given number of fields.'''
         self.type = "advance"
-        self.parameters["distance"] = distance
+        self.parameters["distance"] = str(distance)
     
     def fallback(self):
         '''Fallback to last hedgehog field.'''
@@ -29,7 +29,7 @@ class Move():
     def exchange_carrots(self, amount: int):
         '''Deposit or receive the given amount of carrots. To deposit the amount has to be negative.'''
         self.type = "exchangecarrots"
-        self.parameters["amount"] = amount
+        self.parameters["amount"] = str(amount)
     
     def play_card(self, type: str):
         self.cards.append(type)

@@ -1,5 +1,4 @@
-# TODO: manage coal when turning
-# TODO: prevent ship from reaching speeds below 1
+from random import choice
 
 from move import Move
 from time import time
@@ -19,7 +18,7 @@ def get_hedgehog_field(state, position):
 
     while field_index > 0:
         field_index -= 1
-        field = state.board.getField(field_index)
+        field = state.board.get_field(field_index)
 
         if field.type == "HEDGEHOG":
             return field, position - field_index
@@ -37,41 +36,62 @@ def get_possible_moves(state, use_opponent=False):
     pmvs = []
 
     # eat salad move
-    if state.board.getField(player.position).type == "SALAD":
+    if state.board.get_field(player.position).type == "SALAD" and state.last_move.type != "eatsalad":
         move = Move()
-        move.type = "eatsalad"
+        move.eat_salad()
         pmvs.append(move)
         return pmvs
     
     # fallback move
     field, index = get_hedgehog_field(state, player.position)
 
-    if field != None and index != opponent.index:
+    if field != None and field.index != opponent.position:
         move = Move()
-        move.type = "fallback"
+        move.fallback()
         pmvs.append(move)
     
     # exchange carrots move
-    if state.board.getField(player.position).type == "CARROT":
+    if state.board.get_field(player.position).type == "CARROT":
         move = Move()
-        move.type = "exchangecarrots"
-        move.parameters["amount"] = "10"
+        move.exchange_carrots(10)
         pmvs.append(move)
 
         if player.carrots >= 10:
             move = Move()
-            move.type = "exchangecarrots"
-            move.parameters["amount"] = "-10"
+            move.exchange_carrots(-10)
             pmvs.append(move)
     
     # advance move
     for i in range(player.position + 1, 65):
-        
+        needed_carrots = get_needed_carrots(i - player.position)
+        field = state.board.get_field(i)
+
+        if field.type == "HEDGEHOG":
+            continue
+
+        if opponent.position == i:
+            continue
+
+        if field.type == "GOAL":
+            if player.carrots > 10 or player.salads > 0:
+                continue
+
+        if field.type == "HARE": #TODO: check hare field conditions
+            continue
+
+        if field.type == "MARKET": #TODO: check market field conditions
+            continue
+
+        if (needed_carrots <= player.carrots):
+            move = Move()
+            move.advance(i - player.position)
+            pmvs.append(move)
     
     return pmvs
 
 def get_random_move(state):
-    pass
+    pmvs = get_possible_moves(state)
+    return choice(pmvs)
    
 def get_best_move(state):
     pass # TODO: implement a cool algorithm like minimax

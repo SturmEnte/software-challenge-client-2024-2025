@@ -1,4 +1,5 @@
 from compute import get_hedgehog_field, get_needed_carrots
+from move import Move
 
 class State():
     def __init__(self, team, turn, start_team, board, players):
@@ -8,6 +9,7 @@ class State():
         self.board = board
         self.game_over = False
         self.winner = None
+        self.last_move = Move()
 
         if self.team == "ONE":
             self.opponent_team = "TWO"

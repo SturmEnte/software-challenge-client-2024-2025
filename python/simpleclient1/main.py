@@ -39,12 +39,13 @@ print("Connected and joined room:", conn.roomId)
 while True:
     msgList = conn.recvGameplay()
     for msg in msgList:
-        print("\nNEW MESSAGE:\n" + tostring(msg).decode("utf-8") + "\n" + "-"*35)
+        #print("\nNEW MESSAGE:\n" + tostring(msg).decode("utf-8") + "\n" + "-"*35)
         data = msg.find('data')
         msgType = data.attrib['class']
         if msgType == "moveRequest":
             move = compute_move(state)
             conn.sendMove(move)
+            state.last_move = move
         elif msgType == "memento":
             t1 = time()
             xmlState = data.find('state')
