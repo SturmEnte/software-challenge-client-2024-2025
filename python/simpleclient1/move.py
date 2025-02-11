@@ -1,30 +1,49 @@
 class Move():
     def __init__(self):
-        self.actions = []
+        ''' Move class
+           
+            available move types:
+            - advance
+            - fallback
+            - eatsalad
+            - exchangecarrots
+            - missmove? or will no move request be sent in that case? TODO: test this situation
+        '''
+        self.cards = []
+        self.type = ""
+        self.parameters = {}
     
     def advance(self, distance: int):
-        '''Advance in the current direction by given number of fields.'''
-        self.actions.append(f'<advance distance="{distance}" />')
-        
-    def turn(self, direction: str):
-        '''The direction you want to turn to.'''
-        self.actions.append(f'<turn direction="{direction}" />')
+        '''Advance forwards by given number of fields.'''
+        self.type = "advance"
+        self.parameters["distance"] = str(distance)
     
-    def acceleration(self, acc: int):
-        '''Change the current speed by given number. Can be positive or negative. 1 or -1 don't cost any coal (per move). Only use once per move; will be at the top of the actions list.'''
-        self.actions = [f'<acceleration acc="{acc}" />'] + self.actions
+    def fallback(self):
+        '''Fallback to last hedgehog field.'''
+        self.type = "fallback"
     
-    def push(self, direction: str):
-        '''The direction you want to push the opponent, if you get onto the same field.'''
-        self.actions.append(f'<push direction="{direction}" />')
+    def eat_salad(self):
+        '''Eat a salad. Only allowed (and forced to) when on salad field. This move can't be used multiple times in a row.'''
+        self.type = "eatsalad"
     
-    def undo(self):
-        '''removes the last action from the move'''
-        self.actions.pop(-1)
+    def exchange_carrots(self, amount: int):
+        '''Deposit or receive the given amount of carrots. To deposit the amount has to be negative.'''
+        self.type = "exchangecarrots"
+        self.parameters["amount"] = str(amount)
+    
+    def play_card(self, type: str):
+        self.cards.append(type)
     
     def __repr__(self) -> str:
-        out = "<actions>\n"
-        for action in self.actions:
-            out += "    " + action + "\n"
-        out += "</actions>"
+        out = "----- Move -----\n"
+        out += "Type: " + self.type + "\n"
+        
+        for parameter in self.parameters:
+            out += parameter + ": " + self.parameters[parameter] + "\n"
+        
+        if len(self.cards) > 0:
+            out += "\nCards:\n"
+            for card in self.cards:
+                out += card + "\n"
+
         return out

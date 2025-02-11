@@ -3,44 +3,59 @@ try:
     GREEN = Back.GREEN
     YELLOW = Back.YELLOW
     BLACK = Back.BLACK
-    RED = Back.RED
     BLUE = Back.BLUE
-    LIGHTCYAN = Back.LIGHTCYAN_EX
     RESET = Back.RESET
+    WHITE = Back.WHITE
+    RED = Back.RED
 except:
     GREEN = ""
     YELLOW = ""
     BLACK = ""
-    RED = ""
     BLUE = ""
-    LIGHTCYAN = ""
     RESET = ""
+    WHITE = ""
+    RED = ""
 
 class Field():
-    def __init__(self, type, passengerDirection=None, passengers=0):
-        # self.q = q
-        # self.r = r
-        # self.s = s
-        self.type = type # can be water, passenger, island
-        self.passengerDirection = passengerDirection
-        self.passengers = passengers
-        self.currentField = False
+    def __init__(self, type, index):
+        ''' Field class
+            
+            available field types:
+            - START
+            - CARROT
+            - HARE
+            - POSITION_1
+            - POSITION_2
+            - SALAD
+            - HEDGEHOG
+            - MARKET
+            - GOAL
+
+            available indecies:
+            0 - 64
+        '''
+        self.type = type
+        self.index = index
     
     def __str__(self):
         out = "XX"
-        if self.type == "water":
-            if self.currentField:
-                out = LIGHTCYAN
-            else:
-                out = BLUE
-            out += "~~"
-        elif self.type == "island":
-            out = GREEN + "IS"
-        elif self.type == "passenger":
-            out = YELLOW + "P" + str(self.passengers)
-        elif self.type == "goal":
-            out = BLACK + "$$"
-        elif self.type == "path":                           # only for testing purposes
-            out = RED + "!!"                           #
+        if self.type == "START":
+            out = BLACK + "ST"
+        elif self.type == "CARROTS":
+            out = YELLOW + "CR"
+        elif self.type == "HARE":
+            out = WHITE + "HA"
+        elif self.type == "POSITION_1":
+            out = BLUE + "P1"
+        elif self.type == "POSITION_2":
+            out = BLUE + "P2"
+        elif self.type == "SALAD":
+            out = GREEN + "SL"
+        elif self.type == "HEDGEHOG":
+            out = WHITE + "HE"
+        elif self.type == "MARKET":
+            out = RED + "MK"
+        elif self.type == "GOAL":
+            out = BLACK + "##"
         out += RESET
         return out

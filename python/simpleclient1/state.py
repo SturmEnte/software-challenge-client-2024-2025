@@ -1,10 +1,20 @@
+from compute import get_hedgehog_field, get_needed_carrots
+from move import Move
+
 class State():
-    def __init__(self, team, turn, startTeam, board, nextDirection, players):
+    def __init__(self, team, turn, start_team, board, players):
         self.team = team
         self.turn = turn
-        self.startTeam = startTeam
+        self.start_team = start_team
         self.board = board
-        self.nextDirection = nextDirection
+        self.game_over = False
+        self.winner = None
+        self.last_move = Move()
+
+        if self.team == "ONE":
+            self.opponent_team = "TWO"
+        else:
+            self.opponent_team = "ONE"
 
         if players[0].team == self.team:
             self.player = players[0]
@@ -13,11 +23,10 @@ class State():
             self.player = players[1]
             self.opponent = players[0]
     
-    def setData(self, turn, board, nextDirection, players):
+    def set_data(self, turn, players):
         '''Updates all variable state values'''
+
         self.turn = turn
-        self.nextDirection = nextDirection
-        self.board = board
         
         if players[0].team == self.team:
             self.player = players[0]
@@ -26,67 +35,141 @@ class State():
             self.player = players[1]
             self.opponent = players[0]
     
-    def printBoard(self):
-        board_2d = {}
+    def market_or_hare_field(self, move, player, other_player):
+        new_field = self.board.getField(player.position)
 
-        x_min = 999999
-        y_min = 999999
-        x_max = -999999
-        y_max = -999999
-
-        player_xy = self.board.axialToDoubleheight(
-            self.player.position['q'],
-            self.player.position['r'],
-            self.player.position['s']
-        )
-        opponent_xy = self.board.axialToDoubleheight(
-            self.opponent.position['q'],
-            self.opponent.position['r'],
-            self.opponent.position['s']
-        )
-
-        for q in self.board.board:
-            for r in self.board.board[q]:
-                for s in self.board.board[q][r]:
-                    x, y = self.board.axialToDoubleheight(q, r, s)
-
-                    if y not in board_2d:
-                        board_2d[y] = {}
-                    board_2d[y][x] = self.board.board[q][r][s]
-
-                    if x > x_max:
-                        x_max = x
-                    elif x < x_min:
-                        x_min = x
-                    
-                    if y > y_max:
-                        y_max = y
-                    elif y < y_min:
-                        y_min = y
+        # if the accessed field is a hare field (card has to be played)
+        if new_field.type == "HARE":
+            self.play_card(move, player, other_player)
         
-        out = "----------Board-----------\n"
-
-        for y in range(y_min, y_max+1):
-            for x in range(x_min, x_max+1):
-                if y in board_2d:
-                    if x in board_2d[y]:
-                        if player_xy == (x, y):
-                            out += str(self.player)
-                            continue
-                        elif opponent_xy == (x, y):
-                            out += str(self.opponent)
-                            continue
-                        out += str(board_2d[y][x])
-                        continue
-                out += "  "
-            out += "\n"
-        
-        print(out)
+        # if the accessed field is a market field (card has to be bought and +10 carrots)
+        elif new_field.type == "MARKET":
+            self.buy_card(move, player)
     
-    def printPlayer(self, printOwnPlayer=True):
+    def buy_card(self, move, player):
+        card = move.cards.pop(1)
+
+        player.carrots -= 10
+        player.cards.append(card)
+    
+    def play_card(self, move, player, other_player):
+        card = move.cards.pop(1)
+
+        if card == "EAT_SALAD":
+            player.salads -= 1
+            
+            if other_player.position > player.position:
+                player.carrots += 30
+            else:
+                player.carrots += 10
+        
+        elif card == "HURRY_AHEAD":
+            player.position = other_player.position + 1
+        
+        elif card == "FALL_BACK":
+            player.position = other_player.position - 1
+        
+        elif card == "SWAP_CARROTS":
+            carrots = player.carrots
+            player.carrots = other_player.carrots
+            other_player.carrots = carrots
+        
+        # check for market or hare field
+        if card == "HURRY_AHEAD" or card == "FALL_BACK":
+            self.market_or_hare_field(move, player, other_player)
+    
+    def apply_move(self, move, own_player=True):
+        '''Applies a move to the board using the selected team.'''
+
+        self.turn += 1
+
+        # select player to apply move for
+        if own_player:
+            player = self.player
+            other_player = self.opponent
+        else:
+            player = self.opponent
+            other_player = self.player
+
+        current_field = self.board.getField(player.position)
+
+        # add carrots, if a contition for a position 1 / 2 field is met
+        if current_field.type == "POSITION_1" and other_player.position < player.position:
+            player.carrots += 10
+        elif current_field.type == "POSITION_2" and other_player.position > player.position:
+            player.carrots += 30
+
+        # apply the given move
+        if move.type == "advance":
+            distance = move.parameters["distance"]
+            player.position += distance
+            player.carrots -= get_needed_carrots(distance)
+
+            # the same code needs to be executed if a hare / market field is accessed using a card instead of an advance move
+            self.market_or_hare_field(move, player, other_player)                
+        
+        elif move.type == "fallback":
+            hedgehog_field, distance = get_hedgehog_field(self, player.position)
+            player.position = hedgehog_field.index
+            player.carrots += distance * 10
+        
+        elif move.type == "exchangecarrots":
+            player.carrots += move.parameters["amount"]
+        
+        elif move.type == "eatsalad":
+            player.salads -= 1
+            
+            if other_player.position > player.position:
+                player.carrots += 30
+            else:
+                player.carrots += 10
+        else:
+            print("Unknown Move:", move.type)
+        
+        # check if game over condition is met
+        if self.turn == 60 or player.position == 64 or other_player.position == 64:
+            self.game_over = True
+        
+            # if the game has reached the turn limit
+            if self.turn == 60:
+                if self.player.position > self.opponent.position:
+                    self.winner = self.team
+                else:
+                    self.winner = self.opponent_team
+            
+            # if we reached the goal
+            elif self.player.position == 64:
+                self.winner = self.team
+
+            # if the opponent reached the goal
+            else:
+                self.winner = self.opponent_team
+            
+    def print_board(self):
+        
+        out1 = "----------Board-----------\n"
+        out = ""
+        out2 = ""
+
+        for field in self.board.board:
+            out1 += str(field.index).ljust(2, ' ')
+            if self.player.position == field.index:
+                out2 += str(self.player)
+            elif self.opponent.position == field.index:
+                out2 += str(self.opponent)
+            else:
+                out2 += "  "
+            out += str(field)
+            out += " "
+            out1 += " "
+            out2 += " "
+        
+        print(out1 + "\n" + out + "\n" + out2)
+    
+    def print_player(self, print_own_player=True):
         player = None
 
-        if printOwnPlayer:
+        if print_own_player:
             player = self.player
         else:
             player = self.opponent
@@ -94,26 +177,17 @@ class State():
         out = f"""
 ----------Player----------
 Team:       {player.team}
-Position:   q: {player.position['q']}, r: {player.position['r']}, s: {player.position['s']}
-Direction:  {player.direction}
-Speed:      {player.speed}
-Coal:       {player.coal}
-Passengers: {player.passengers}
-Free Turns: {player.freeTurns}
-Points:     {player.points}
+Position:   {player.position}
+Salads:     {player.salads}
+Carrots:    {player.carrots}
+Cards:
 """
 
         print(out)
 
-    def printState(self):
+    def print_state(self):
         print("---------------State---------------\n")
-        self.printBoard()
-        self.printPlayer()
-        self.printPlayer(False)
+        self.print_board()
+        self.print_player()
+        self.print_player(False)
         print("-----------------------------------")
-    
-    def printBoardSegments(self):
-        for i, segment in enumerate(self.board.segments):
-            print(f"SEGMENT {i}:")
-            for field in segment:
-                print(f"    {field[1].type}")

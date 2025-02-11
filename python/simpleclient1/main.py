@@ -2,8 +2,8 @@
 
 from network import Connection
 from state import State
-from compute import computeMove
-from parse_xml import parseMemento, parseMementoStart, parseResult, parseError
+from compute import compute_move
+from parse_xml import parse_memento, parse_memento_start, parse_result, parse_error
 
 from xml.etree.ElementTree import fromstring, tostring
 import os.path
@@ -39,35 +39,36 @@ print("Connected and joined room:", conn.roomId)
 while True:
     msgList = conn.recvGameplay()
     for msg in msgList:
-        # print("\nNEW MESSAGE:\n" + tostring(msg).decode("utf-8") + "\n" + "-"*35)
+        #print("\nNEW MESSAGE:\n" + tostring(msg).decode("utf-8") + "\n" + "-"*35)
         data = msg.find('data')
         msgType = data.attrib['class']
         if msgType == "moveRequest":
-            move = computeMove(state)
+            move = compute_move(state)
             conn.sendMove(move)
+            state.last_move = move
         elif msgType == "memento":
             t1 = time()
             xmlState = data.find('state')
             turn = int(xmlState.attrib['turn'])
             if turn == 0:
-                startTeam, board, nextDirection, players = parseMementoStart(xmlState)
-                state = State(conn.team, turn, startTeam, board, nextDirection, players)
+                start_team, board, players = parse_memento_start(xmlState)
+                state = State(conn.team, turn, start_team, board, players)
             else:
-                board, nextDirection, players = parseMemento(xmlState)
-                state.setData(turn, board, nextDirection, players)
+                players = parse_memento(xmlState)
+                state.set_data(turn, players)
             t2 = time()
             print(f"Zeit: {t2-t1}   Zug: {turn}")
-            state.printState()
+            state.print_state()
         elif msgType == "welcomeMessage":
             conn.team = data.attrib['color']
         elif msgType == "result":
-            result, csv = parseResult(data, state)
+            result, csv = parse_result(data, state)
             print(result)
             if os.path.isfile("../test/result.csv"):
                 with open("../test/result.csv", "a") as f:
                     f.write("\n"+csv)
             exit()
         elif msgType == "error":
-            print(parseError(data))
+            print(parse_error(data))
         else:
             print("ERROR! UNKNOWN MESSAGE: "+msgType)
