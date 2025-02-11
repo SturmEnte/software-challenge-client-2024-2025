@@ -11,11 +11,11 @@ class Board():
     
     def set_field(self, x, field):
         '''set a field to a new value'''
-        pass
+        self.board[x] = field
 
     def get_field(self, x):
         '''get a fields value'''
-        pass
+        return self.board[x]
 
     
     # very old
