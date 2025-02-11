@@ -231,7 +231,6 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                         if let Ok(Event::Text(e)) = reader.read_event() {
                                             let field_text: String = e.unescape().unwrap().into_owned();
                                             game_data.board.set_field(i, field_text.as_str());
-                                            println!("Field {}: {}", i, field_text);
                                             i += 1;
                                         }
                                     }
