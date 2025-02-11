@@ -165,8 +165,8 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         }
                     },
                     QName(b"board") => {
-                        // Only parse the board, if it is not initialized yet
-                        if game_data.board.initialized {
+                        // Only parse the board on turn 0
+                        if game_data.turn > 0 {
                             continue;
                         }
                         
@@ -197,8 +197,9 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                         }
 
-                        game_data.board.initialized = true;
-                        game_data.board.print();
+                        if crate::DEBUGGING {
+                            game_data.board.print();
+                        }
                     },
                     _ => (),
                 }
