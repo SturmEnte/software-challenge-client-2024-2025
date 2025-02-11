@@ -63,7 +63,7 @@ pub fn parse_message(buffer: [u8; 5000], n: usize, mut game_data: &mut GameData,
 
                                     // Save the move in the game data
                                     game_data.our_hare.last_move_type = Some(m.get_type());
-                                    game_data.our_hare.last_move = Some(m);
+                                    // game_data.our_hare.last_move = Some(m);
 
                                     // Send the move to the server
                                     _ = stream.write(move_message.as_bytes());

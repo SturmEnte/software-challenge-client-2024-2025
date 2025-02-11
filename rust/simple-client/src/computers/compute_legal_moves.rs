@@ -18,21 +18,21 @@ use crate::enums::card::Card;
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
 
-    if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad {
-        println!("We are on a salad field");
-        if game_data.our_hare.last_move.is_some() {
-            println!("We have a last move");
-            if game_data.our_hare.last_move_type == Some(MoveType::Advance) {
-                println!("Our last move was an advance move");
-            }
-        }
-    }  
+    // if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad {
+    //     println!("We are on a salad field");
+    //     if game_data.our_hare.last_move_type.is_some() {
+    //         println!("We have a last move");
+    //         if game_data.our_hare.last_move_type == Some(MoveType::Advance) {
+    //             println!("Our last move was an advance move");
+    //         }
+    //     }
+    // }  
 
     // Eat salad move
     // Check if the last move was an advance move and if the hare is on a salad field
     // If so, is the hare forced to eat a salad
     if  game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad    // Check if the current field is a salad field
-        && game_data.our_hare.last_move.is_some()                                                   // Check if the hare has a last move
+        && game_data.our_hare.last_move_type.is_some()                                              // Check if the hare has a last move
         && game_data.our_hare.last_move_type == Some(MoveType::Advance) {                           // Check if the hare's last move was an advance move    
 
         legal_moves.push(Box::new(EatSaladMove::new()));

@@ -3,10 +3,14 @@ use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
 
+use crate::computers::compute_new_game_data::compute_new_game_data;
 use crate::enums::move_type::MoveType;
 use crate::enums::team::Team;
 use crate::structs::game_data::GameData;
 
+use crate::structs::game_move::EatSaladMove;
+use crate::structs::game_move::ExchangeCarrotsMove;
+use crate::structs::game_move::FallbackMove;
 use crate::structs::game_move::Move;
 use crate::structs::game_move::AdvanceMove;
 
@@ -38,6 +42,44 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 let team: String = attr.unwrap().unescape_value().unwrap().parse().unwrap();
                                 game_data.set_start_team(team.as_str());
                             }
+                        }
+                    },
+                    QName(b"lastMove") => {
+                        if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
+                            let class: String = attr.unwrap().unescape_value().unwrap().parse().unwrap();
+                            
+                            if crate::DEBUGGING {
+                                println!("{}{}", "Last Move Class: ".green(), class.to_string().cyan());
+                            }
+                            
+                            let mut last_move: Option<Box<dyn Move>> = None;
+
+                            match class.as_str() {
+                                "advance" => {
+                                    if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"distance")) {
+                                        let distance: u8 = attr.unwrap().unescape_value().unwrap().parse().unwrap();
+                                        
+                                        // TBD Check for cards
+
+                                        last_move = Some(Box::new(AdvanceMove::new(distance, None)));
+                                    }
+                                },
+                                "eatsalad" => {
+                                    last_move = Some(Box::new(EatSaladMove::new()));
+                                },
+                                "fallback" => {
+                                    last_move = Some(Box::new(FallbackMove::new()));
+                                },
+                                "exchangecarrots" => {
+                                    //last_move = Some(Box::new(ExchangeCarrotsMove::new()));
+                                },
+                                _ => {
+                                    println!("{}{}", "Unknown last move class: ".red(), class);
+                                }
+                            }
+
+                            let new_game_data: GameData = compute_new_game_data(&game_data, &(last_move.unwrap()));
+                            *game_data = new_game_data;
                         }
                     },
                     /*

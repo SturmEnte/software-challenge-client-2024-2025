@@ -1,5 +1,6 @@
 use crate::enums::field_type::FieldType;
 
+#[derive(Clone)]
 pub struct Board {
 	pub board: [Option<FieldType>; crate::FIELD_COUNT],
 }

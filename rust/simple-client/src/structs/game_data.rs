@@ -2,6 +2,7 @@ use super::board::Board;
 use super::hare::Hare;
 use crate::enums::team::Team;
 
+#[derive(Clone)]
 pub struct GameData {
     pub room_id: String,
     pub board: Board,
