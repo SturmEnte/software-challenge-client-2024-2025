@@ -16,7 +16,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
      // Create the XML reader
      let mut reader = Reader::from_str(&message);
 
-    let mut current_team: Option<Team> = None;  // The team of the hare that is currently being parsed 
+    // let mut current_team: Option<Team> = None;  // The team of the hare that is currently being parsed 
 
      loop {
         match reader.read_event() {
@@ -40,6 +40,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                         }
                     },
+                    /*
                     QName(b"hare") => {
                         let mut team: Option<Team> = None;
                         let mut position: Option<u8> = None;
@@ -162,6 +163,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             }
                         }
                     },
+                    */
                     QName(b"board") => {
                         // Only parse the board on turn 0
                         if game_data.turn > 0 {
