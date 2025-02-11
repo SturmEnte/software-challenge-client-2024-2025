@@ -82,8 +82,13 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             *game_data = new_game_data;
                         }
                     },
-                    /*
                     QName(b"hare") => {
+
+                        // Only read hare data if it's turn 0
+                        if game_data.turn > 0 {
+                            continue;
+                        }
+
                         let mut team: Option<Team> = None;
                         let mut position: Option<u8> = None;
                         let mut salads: Option<u8> = None;
@@ -98,8 +103,6 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             } else {
                                 team = Some(Team::Two);
                             }
-
-                            current_team = team.clone();
                         }
 
                         // Retreive the position
@@ -134,6 +137,9 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             println!("Hare: Missing attributes");
                         }
 
+                        println!("{}{:?}{}", "Read hare data (Hare ".green(), team.unwrap(), ")".green());
+
+                        /* 
                         // Iterate over the child elements of the board
                         let mut cards = false;
 
@@ -176,8 +182,9 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 },
                                 _ => (),
                             }
-                        }
+                        } */
                     },
+                    /*
                     QName(b"lastAction") => {
                         // Retreiive the class of the last action
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"class")) {
