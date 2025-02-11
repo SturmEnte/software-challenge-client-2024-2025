@@ -134,13 +134,17 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                                 legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::EatSalad))));
                             }
                         },
-                        Card::SwapCarrots => {
-                            if game_data.our_hare.carrots >= move_carrot_price + 10 {
-                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
-                            }
-                        },
+                        // Card::SwapCarrots => {
+                        //     if game_data.our_hare.carrots >= move_carrot_price + 10 {
+                        //         legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
+                        //     }
+                        // },
+                        // Card::FallBack => {
+                        // },
+                        // Card::HurryAhead => {
+                        // },
                         _ => {
-                            println!("{}{:?}", "Invalid card: ".red(), card);
+                            println!("{}{:?}", "Invalid / Unimplemented card: ".red(), card);
                         }
                     }
                 }
