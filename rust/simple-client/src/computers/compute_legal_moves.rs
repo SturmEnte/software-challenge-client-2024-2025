@@ -127,6 +127,22 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                     println!("{:?}", card_to_string(&card));
                     println!("{}{}", "Hare move not implemented. Distance: ".red(), distance);
                     // TBD
+
+                    match card {
+                        Card::EatSalad => {
+                            if game_data.our_hare.salads > 0 {
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::EatSalad))));
+                            }
+                        },
+                        Card::SwapCarrots => {
+                            if game_data.our_hare.carrots >= move_carrot_price + 10 {
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
+                            }
+                        },
+                        _ => {
+                            println!("{}{:?}", "Invalid card: ".red(), card);
+                        }
+                    }
                 }
             },
             // If the field is a goal field check if our hare has at most 10 carrots and no salads
