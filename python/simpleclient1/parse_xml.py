@@ -78,7 +78,7 @@ def parse_result(data, state):
     our_stats = our_score.find('score').findall('part')
     opponent_stats = opponent_score.find('score').findall('part')
     
-    csv = f'{state.startTeam},{state.team},{state.opponent.team},{team},{regular},{our_stats[0].text},{our_stats[1].text},{our_stats[2].text},{opponent_stats[0].text},{opponent_stats[1].text},{opponent_stats[2].text},{reason}'
+    csv = f'{state.start_team},{state.team},{state.opponent.team},{team},{regular},{our_stats[0].text},{our_stats[1].text},{our_stats[2].text},{opponent_stats[0].text},{opponent_stats[1].text},{opponent_stats[2].text},{reason}'
     
     result = f'''--------------Result---------------
 WINNER: {playername} (Team {team})
@@ -88,13 +88,13 @@ Reason: {reason}
 
 ----------Player----------
 Siegespunkte: {our_stats[0].text}
-Punkte:       {our_stats[1].text}
-Passagiere:   {our_stats[2].text}
+Position:     {our_stats[1].text}
+Karotten:     {our_stats[2].text}
 
 ---------Opponent---------
 Siegespunkte: {opponent_stats[0].text}
-Punkte:       {opponent_stats[1].text}
-Passagiere:   {opponent_stats[2].text}
+Position:     {opponent_stats[1].text}
+Karotten:     {opponent_stats[2].text}
 
 -----------------------------------'''
 
