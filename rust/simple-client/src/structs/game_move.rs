@@ -5,6 +5,7 @@ use crate::enums::move_type::MoveType;
 pub trait Move {
     fn to_string(&self) -> String; 
     fn get_type(&self) -> MoveType;
+    fn as_any(&self) -> &dyn std::any::Any;
 }
 
 // Advance Move
@@ -35,6 +36,10 @@ impl Move for AdvanceMove {
     fn get_type(&self) -> MoveType {
         MoveType::Advance
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 // Fallback Move
@@ -54,6 +59,10 @@ impl Move for FallbackMove {
     fn get_type(&self) -> MoveType {
         MoveType::Fallback
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 // Eat Salad Move
@@ -72,6 +81,10 @@ impl Move for EatSaladMove {
 
     fn get_type(&self) -> MoveType {
         MoveType::EatSalad
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
 
@@ -93,5 +106,9 @@ impl Move for ExchangeCarrotsMove {
 
     fn get_type(&self) -> MoveType {
         MoveType::ExchangeCarrots
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }

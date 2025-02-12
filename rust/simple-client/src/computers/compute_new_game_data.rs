@@ -8,7 +8,8 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
 
     match m.get_type() {
         MoveType::Advance => {
-            current_hare.position += m.distance;
+            let advance_move = m.as_any().downcast_ref::<AdvanceMove>().unwrap();
+            current_hare.position += advance_move.distance;
         },
         MoveType::EatSalad => {
 
