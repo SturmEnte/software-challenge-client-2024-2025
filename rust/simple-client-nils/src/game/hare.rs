@@ -1,4 +1,6 @@
 
+use crate::utils::triangular_numbers::calculate_triangular_number;
+
 use super::{cards::Card, field_type::FieldType, game_error::GameError};
 
 #[derive(Debug)]
@@ -130,4 +132,28 @@ impl Hare {
         }
         return Ok(())
     }
+
+    /// Advances the position of the Hare by a distance.
+    /// 
+    /// Increases the position of the Hare by the distance and deducts carrots accordingly.
+    /// This function does not check whether the player can stand on the new field!
+    ///
+    /// # Parameters
+    /// - `distance`: A `u8` representing the distance to advance. This value must be
+    ///   within the bounds of the game board.
+    ///
+    /// # Returns
+    /// - `Result<(), GameError>`: Returns `Ok(())` if the advancement is successful.
+    ///   - `GameError::OutOfBounce`: Returned if advancing the position would exceed
+    ///     the maximum position of 64 on the game board.
+    ///   - `GameError::NotEnoughCarrots`: Returned if the Hare does not have enough
+    ///     carrots to pay for the advancement.
+    pub fn advance(&mut self, distance: u8) -> Result<(), GameError> {
+        if self.position + distance > 64 {return Err(GameError::OutOfBounce);}
+        if calculate_triangular_number(distance as u16) > self.carrots {return Err(GameError::NotEnoughCarrots);}
+        self.position += distance;
+        self.carrots -= calculate_triangular_number(distance as u16);
+        Ok(())
+    }
 }
+
