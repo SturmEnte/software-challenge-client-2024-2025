@@ -41,46 +41,27 @@ impl Hare {
     /// Consumes a specified card, decrementing its count in the game state.
     ///
     /// This function makes the Hare to consume one of its cards (depending on the card parameter).
-    /// If the Hare attempts to consume a card that is not available, an error will be returned.
+    /// This function dose not check if the Hare hase cards.
     /// This function ony reduces the number of one of the card types that the Hare has by one.
     ///
     /// # Parameters
     ///
     /// - `card`: A reference to the `Card` enum that represents the card to be consumed.
-    ///
-    /// # Returns
-    ///
-    /// - `Result<(), GameError>`: Returns `Ok(())` if the card was successfully consumed. If the card
-    ///   cannot be consumed due to insufficient quantity, it returns a `GameError` indicating the
-    ///   specific issue (e.g., `MissingCardSwapCarrots`, `MissingCardEatSalad`, etc.).
-    ///
-    /// # Errors
-    ///
-    /// This function may return the following errors:
-    /// - `GameError::MissingCardSwapCarrots`: Returned if there are no remaining Swap Carrots cards.
-    /// - `GameError::MissingCardEatSalad`: Returned if there are no remaining Eat Salad cards.
-    /// - `GameError::MissingCardFallBack`: Returned if there are no remaining Fall Back cards.
-    /// - `GameError::MissingCardHurryAhead`: Returned if there are no remaining Hurry Ahead cards.
-    pub fn consume_card(&mut self, card: &Card) -> Result<(), GameError> {
+    pub fn consume_card(&mut self, card: &Card) {
         match card {
             Card::SwapCarrots => {
-                if self.card_swap_carrots == 0 {return Err(GameError::MissingCardSwapCarrots)}
                 self.card_swap_carrots -= 1;
             },
             Card::EatSalad => {
-                if self.card_swap_carrots == 0 {return Err(GameError::MissingCardEatSalad)}
                 self.card_eat_salad -= 1
             },
             Card::FallBack => {
-                if self.card_swap_carrots == 0 {return Err(GameError::MissingCardFallBack)}
                 self.card_fall_back -= 1
             },
             Card::HurryAhead => {
-                if self.card_swap_carrots == 0 {return Err(GameError::MissingCardHurryAhead)}
                 self.card_hurry_ahead -=1
             },
         }
-        Ok(())
     }
 
     pub fn can_stand_on_without_cards(&self, field: &FieldType, carrot_cost: u16) -> Result<(), GameError> {
