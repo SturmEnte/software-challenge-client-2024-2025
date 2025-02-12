@@ -36,12 +36,15 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             game_data.turn = turn;
                         }
 
-                        // Retreive the starting team if it's turn 0
-                        if game_data.turn == 0 {
-                            if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"startTeam")) {
-                                let team: String = attr.unwrap().unescape_value().unwrap().parse().unwrap();
-                                game_data.set_start_team(team.as_str());
-                            }
+                        // Continue if it's not turn 0
+                        if game_data.turn != 0 {
+                            continue;
+                        }
+
+                        // Retreive the starting team
+                        if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"startTeam")) {
+                            let team: String = attr.unwrap().unescape_value().unwrap().parse().unwrap();
+                            game_data.set_start_team(team.as_str());
                         }
                     },
                     QName(b"lastMove") => {
@@ -94,7 +97,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             *game_data = new_game_data;
                         }
                     },
-                    QName(b"hare") => {
+                    /*QName(b"hare") => {
 
                         // Only read hare data if it's turn 0
                         if game_data.turn > 0 {
@@ -195,7 +198,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 _ => (),
                             }
                         } */
-                    },
+                    },*/
                     /*
                     QName(b"lastAction") => {
                         // Retreiive the class of the last action

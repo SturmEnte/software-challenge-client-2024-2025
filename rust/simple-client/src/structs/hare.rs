@@ -18,11 +18,12 @@ pub struct Hare {
 
 impl Hare {
     pub fn new() -> Hare {
+        // Create with default values
         Hare {
             team: None,
             position: 0,
-            salads: 0,
-            carrots: 0,
+            salads: 5,
+            carrots: 68,
             cards: Vec::new(),
             // last_move: None,
             last_move_type: None
