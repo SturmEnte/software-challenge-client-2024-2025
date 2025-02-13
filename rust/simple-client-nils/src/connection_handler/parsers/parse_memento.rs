@@ -22,13 +22,13 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                                 }
                                 self.bord = Some(self.parse_board(&mut parser)?);
                             },
-                            "lastGameMove" => {
+                            "lastMove" => {
                                 if self.last_move_was_our {
                                     self.last_move_was_our = false;
                                     break;
                                 }
                                 let mov = self.parse_last_move(parser, attributes)?;
-                                self.update_game_state(&mov)?;
+                                self.update_game_state(mov)?;
                                 break;
                             },
                             _ => {},

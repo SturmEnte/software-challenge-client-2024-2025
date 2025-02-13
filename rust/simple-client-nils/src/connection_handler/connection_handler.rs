@@ -51,7 +51,7 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
         return Ok(self.player.make_move(self.bord.as_ref().ok_or(ConnectionHandlerError::BordIsNone)?, self.game_state.as_ref().ok_or(ConnectionHandlerError::GameStateIsNone)?))
     }
 
-    pub(crate) fn update_game_state(&mut self, mov: &GameMove) -> Result<(), ConnectionHandlerError> {
+    pub(crate) fn update_game_state(&mut self, mov: GameMove) -> Result<(), ConnectionHandlerError> {
         self.game_state.as_mut().ok_or(ConnectionHandlerError::GameStateIsNone)?.update(self.bord.as_ref().ok_or(ConnectionHandlerError::BordIsNone)?, mov)?;
         Ok(())
     }
