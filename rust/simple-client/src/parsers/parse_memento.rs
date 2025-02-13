@@ -1,3 +1,4 @@
+use colored::Colorize;
 use quick_xml::Reader;
 use quick_xml::events::Event;
 use quick_xml::name::QName;
@@ -9,11 +10,13 @@ use crate::structs::game_data::GameData;
 use crate::structs::game_move::Move;
 use crate::structs::game_move::AdvanceMove;
 
+use crate::enums::card::string_to_card;
+
 pub fn parse_memento(message: &String, game_data: &mut GameData) {
      // Create the XML reader
      let mut reader = Reader::from_str(&message);
 
-    let mut currentTeam: Option<Team> = None;
+    let mut current_team: Option<Team> = None;  // The team of the hare that is currently being parsed 
 
      loop {
         match reader.read_event() {
@@ -23,6 +26,9 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         // Retreive the turn
                         if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"turn")) {
                             let turn: i8 = attr.unwrap().unescape_value().unwrap().parse().unwrap();
+                            if crate::DEBUGGING {
+                                println!("{}{}", "Turn: ".on_blue(), turn.to_string().on_yellow());
+                            }
                             game_data.turn = turn;
                         }
 
@@ -52,7 +58,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 team = Some(Team::Two);
                             }
 
-                            currentTeam = team.clone();
+                            current_team = team.clone();
                         }
 
                         // Retreive the position
@@ -86,6 +92,50 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                         } else {
                             println!("Hare: Missing attributes");
                         }
+
+                        // Iterate over the child elements of the board
+                        let mut cards = false;
+
+                        loop {
+                            match reader.read_event() {
+                                Ok(Event::Start(ref e)) | Ok(Event::Empty(ref e)) => {
+                                    
+                                    if e.name() == QName(b"cards") {
+                                        cards = true;
+
+                                        // Reset the card array of the current hare
+                                        if current_team == game_data.our_hare.team {
+                                            game_data.our_hare.cards = Vec::new();
+                                        } else {
+                                            game_data.enemy_hare.cards = Vec::new();
+                                        }
+                                        
+                                    } else if e.name() == QName(b"cards") {
+                                        cards = false;
+                                    } else if e.name() == QName(b"card") {
+                                        // Retrieve the text content of the card
+                                        if let Ok(Event::Text(e)) = reader.read_event() {
+                                            let card_text: String = e.unescape().unwrap().into_owned();
+                                            
+                                            if cards == true {
+                                                if current_team == game_data.our_hare.team {
+                                                    game_data.our_hare.cards.push(string_to_card(&card_text));
+                                                } else {
+                                                    game_data.enemy_hare.cards.push(string_to_card(&card_text));
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                Ok(Event::End(ref e)) if e.name() == QName(b"hare") => {
+                                    break;
+                                },
+                                Ok(Event::Eof) => {
+                                    break;
+                                },
+                                _ => (),
+                            }
+                        }
                     },
                     QName(b"lastAction") => {
                         // Retreiive the class of the last action
@@ -108,10 +158,7 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 }
                             }
                             
-                            if currentTeam == game_data.our_hare.team {
-                                game_data.our_hare.last_move = last_move;
-                                game_data.our_hare.last_move_type = last_move_type;
-                            } else {
+                            if current_team == game_data.our_hare.team {
                                 game_data.enemy_hare.last_move = last_move;
                                 game_data.enemy_hare.last_move_type = last_move_type;
                             }

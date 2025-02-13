@@ -1,3 +1,6 @@
+use std::vec::Vec;
+
+use crate::enums::card::Card;
 use crate::enums::move_type::MoveType;
 use crate::enums::team::Team;
 use crate::structs::game_move::Move;
@@ -7,6 +10,7 @@ pub struct Hare {
     pub position: u8,
     pub salads: u8,
     pub carrots: u16, 
+    pub cards: Vec<Card>,
     pub last_move: Option<Box<dyn Move>>,
     pub last_move_type: Option<MoveType>
 }
@@ -18,6 +22,7 @@ impl Hare {
             position: 0,
             salads: 0,
             carrots: 0,
+            cards: Vec::new(),
             last_move: None,
             last_move_type: None
         }        
