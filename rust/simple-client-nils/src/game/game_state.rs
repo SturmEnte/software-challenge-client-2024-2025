@@ -46,4 +46,12 @@ impl GameState {
             !self.start_team
         }
     }
+
+    pub fn get_next_team(&self) -> Team {
+        if (self.turn + 1) % 2 == 0 {
+            self.start_team
+        } else {
+            !self.start_team
+        }
+    }
 }
