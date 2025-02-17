@@ -49,7 +49,7 @@ impl JumpCardDetails {
     /// # Returns
     /// A JumpCardDetails instance based on the list of cards..
     pub fn from_card_list(card_list: &Vec<Card>) -> Self {
-        if card_list.len() <= 1 {
+        if card_list.len() < 1 {
             return JumpCardDetails::new(false, 0)
         } else {
             if card_list[0] == Card::HurryAhead {

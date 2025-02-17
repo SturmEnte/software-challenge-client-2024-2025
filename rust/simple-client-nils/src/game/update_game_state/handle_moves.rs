@@ -40,7 +40,7 @@ pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_h
         // true = hurry ahead
         // false = fall back
         let mut hurry_ahead_or_fall_back = jumps.is_first_card_hurry_ahead();
-        if jumps.get_number_of_jumps() % 2 != 0 {hurry_ahead_or_fall_back = !hurry_ahead_or_fall_back}
+        if jumps.get_number_of_jumps() % 2 == 0 {hurry_ahead_or_fall_back = !hurry_ahead_or_fall_back}
         if hurry_ahead_or_fall_back {
             current_hare.position = opponent_hare.position + 1;
         } else {
