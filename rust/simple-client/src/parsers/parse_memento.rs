@@ -92,6 +92,11 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 our_hares_move = true;
                             }
 
+                            if last_move.is_none() {
+                                println!("{}", "No last move\nThis check is to be removed later if all moves are implemented".red());
+                                continue;
+                            }
+
                             // Compute the new game data based on the last move and store it in the game data
                             let new_game_data: GameData = compute_new_game_data(&game_data, &(last_move.unwrap()), &our_hares_move);
                             *game_data = new_game_data;
