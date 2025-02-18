@@ -41,6 +41,13 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
         },
         MoveType::EatSalad => {
             current_hare.salads -= 1;
+            
+            // If the hare is first it gets 10 carrots else it gets 30 carrots
+            if current_hare.position > other_hare.position {
+                current_hare.carrots += 10;
+            } else {
+                current_hare.carrots += 30;
+            }
         },
         MoveType::ExchangeCarrots => {
             println!("{}", "Don't know how to simulate exchange carrots".red());
