@@ -40,6 +40,12 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
         }
     }
 
+    println!("---------");
+    current_hare.print();
+    println!("---------");
+    other_hare.print();
+    println!("---------");
+
     if *our_hares_move {
         new_game_data.our_hare = current_hare;
         new_game_data.enemy_hare = other_hare;
