@@ -50,7 +50,8 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
             }
         },
         MoveType::ExchangeCarrots => {
-            println!("{}", "Don't know how to simulate exchange carrots".red());
+            let exchange_carrots_move = m.as_any().downcast_ref::<ExchangeCarrotsMove>().unwrap();
+            current_hare.carrots = ((current_hare.carrots as i16 + exchange_carrots_move.amount as i16)).try_into().unwrap();
         },
         MoveType::Fallback => {
             println!("{}", "Don't know how to simulate fallback".red());
