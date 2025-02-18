@@ -54,7 +54,15 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
             current_hare.carrots = ((current_hare.carrots as i16 + exchange_carrots_move.amount as i16)).try_into().unwrap();
         },
         MoveType::Fallback => {
-            println!("{}", "Don't know how to simulate fallback".red());
+            // Unwrap is safe to use here, because there must be a hedgehog field behind the current hare, otherwise there is something weird going on
+            let nearest_hedghehog_field = get_nearest_hedgehog_field(&current_hare.position).unwrap();
+            
+            // The hare gets 10 carrots for each field it moves back
+            current_hare.carrots += (current_hare.position as u16 - *nearest_hedghehog_field as u16) * 10;
+
+            println!("Gained carrots because of fallback: {}" ,(current_hare.position as u16 - *nearest_hedghehog_field as u16) * 10);
+
+            current_hare.position = *nearest_hedghehog_field;
         }
     }
 
