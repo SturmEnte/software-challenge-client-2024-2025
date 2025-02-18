@@ -18,12 +18,22 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
         current_hare.carrots += 30;
     }
 
+    // Simulate different move types
     match m.get_type() {
         MoveType::Advance => {
             let advance_move = m.as_any().downcast_ref::<AdvanceMove>().unwrap();
             
             current_hare.position += advance_move.distance;
             current_hare.carrots -= triangular_number(advance_move.distance.into());
+
+            println!("Advance Move | Distance: {} | Cost: {}", advance_move.distance, triangular_number(advance_move.distance.into()));
+
+            // Subtract 10 carrots if the hare is on a market field after the advance move
+            if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Market {
+                current_hare.carrots -= 10;
+                println!("Market Field | Cost: 10");
+                println!("{}", "Card is not read".red());
+            }
 
             if advance_move.card.is_some() {
                 println!("{}", "Don't know how to simulate a card".red());
