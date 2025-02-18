@@ -1,6 +1,6 @@
 use colored::Colorize;
 
-use crate::{enums::{field_type::FieldType, move_type::MoveType}, structs::{game_data::GameData, game_move::{AdvanceMove, Move}, hare::Hare}, utils::triangular_number::triangular_number};
+use crate::{enums::{field_type::FieldType, move_type::MoveType}, structs::{game_data::GameData, game_move::{AdvanceMove, ExchangeCarrotsMove, Move}, hare::Hare}, utils::{get_nearest_hedgehog_field::get_nearest_hedgehog_field, triangular_number::triangular_number}};
 
 pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_move: &bool) -> GameData {
     let mut new_game_data: GameData = game_data.clone();
