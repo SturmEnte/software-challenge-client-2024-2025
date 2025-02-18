@@ -29,4 +29,8 @@ impl Hare {
             last_move_type: None
         }        
     }
+
+    pub fn print(&self) {
+        println!("Hare\nTeam: {:?}\nPosition: {}\nSalads: {}\nCarrots: {}\nCards: {:?}\nLast Move Type: {:?}", self.team, self.position, self.salads, self.carrots, self.cards, self.last_move_type);
+    }
 }
