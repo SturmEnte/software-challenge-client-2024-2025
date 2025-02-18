@@ -1,16 +1,22 @@
 use colored::Colorize;
 
-use crate::{enums::move_type::MoveType, structs::{game_data::GameData, game_move::{AdvanceMove, Move}, hare::Hare}, utils::triangular_number::triangular_number};
+use crate::{enums::{field_type::FieldType, move_type::MoveType}, structs::{game_data::GameData, game_move::{AdvanceMove, Move}, hare::Hare}, utils::triangular_number::triangular_number};
 
 pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_move: &bool) -> GameData {
     let mut new_game_data: GameData = game_data.clone();
 
-    // let current_hare: &mut Hare = if *our_hares_move { &mut new_game_data.our_hare } else { &mut new_game_data.enemy_hare };
-    // let other_hare: &mut Hare = if *our_hares_move { &mut new_game_data.enemy_hare } else { &mut new_game_data.our_hare };
-
     let mut current_hare: Hare = if *our_hares_move { new_game_data.our_hare.clone() } else { new_game_data.enemy_hare.clone() };
     let mut other_hare: Hare = if *our_hares_move { new_game_data.enemy_hare.clone() } else { new_game_data.our_hare.clone() };
 
+    // If the hare is on a position 1 field and it is the first hare, then it will get 10 carrots  
+    if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Position1 && current_hare.position > other_hare.position {
+        current_hare.carrots += 10;
+    }
+
+    // If the hare is on a position 2 field and it is the second hare, then it will get 30 carrots  
+    if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Position2 && current_hare.position < other_hare.position {
+        current_hare.carrots += 30;
+    }
 
     match m.get_type() {
         MoveType::Advance => {
