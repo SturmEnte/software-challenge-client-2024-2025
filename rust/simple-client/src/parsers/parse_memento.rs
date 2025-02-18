@@ -74,7 +74,13 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                     last_move = Some(Box::new(FallbackMove::new()));
                                 },
                                 "exchangecarrots" => {
-                                    //last_move = Some(Box::new(ExchangeCarrotsMove::new()));
+                                    if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"amount")) {
+                                        let amount: i8 = attr.unwrap().unescape_value().unwrap().parse().unwrap();
+                                        
+                                        // TBD Check for cards
+
+                                        last_move = Some(Box::new(ExchangeCarrotsMove::new(amount)));
+                                    }
                                 },
                                 _ => {
                                     println!("{}{}", "Unknown last move class: ".red(), class);
