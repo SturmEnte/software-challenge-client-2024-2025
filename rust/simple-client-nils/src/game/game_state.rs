@@ -3,9 +3,10 @@ use super::{hare::Hare, moves::GameMove, team::Team};
 
 #[derive(Debug)]
 pub struct GameState {
-    pub turn: u8,
     pub team: Team,
     pub start_team: Team,
+    pub turn: u8,
+    pub last_carrot_swap: u8,
     pub last_move: Option<GameMove>,
     pub your_hare: Hare,
     pub opponent_hare: Hare,
@@ -16,6 +17,7 @@ impl GameState {
         GameState {
             your_hare: Hare::new(),
             opponent_hare: Hare::new(),
+            last_carrot_swap: 0,
             turn: 1,
             team: team,
             start_team: Team::One,

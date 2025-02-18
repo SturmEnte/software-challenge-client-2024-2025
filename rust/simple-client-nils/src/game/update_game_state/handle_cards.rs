@@ -19,7 +19,8 @@ pub(super) fn handle_card_eat_salad(current_hare: &mut Hare, opponent_position: 
     Ok(())
 }
 
-pub(super) fn handle_card_swap_carrots(current_hare: &mut Hare, opponent_hare: &mut Hare) -> Result<(), GameError> {
+pub(super) fn handle_card_swap_carrots(current_hare: &mut Hare, opponent_hare: &mut Hare, last_carrot_swap: &mut u8, current_turn: &u8) -> Result<(), GameError> {
+    *last_carrot_swap = *current_turn;
     let current_hare_carrots = current_hare.carrots;
     current_hare.carrots = opponent_hare.carrots;
     opponent_hare.carrots = current_hare_carrots;

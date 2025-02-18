@@ -33,7 +33,7 @@ impl GameState {
                 handle_move_advance(current_hare, distance)?;
             },
             GameMove::AdvanceWithCards(distance, ref jumps, ref last_card) => {
-                handle_move_advance_with_cards(current_hare, opponent_hare, bord, distance, jumps, last_card)?;
+                handle_move_advance_with_cards(current_hare, opponent_hare, bord, distance, jumps, last_card, &self.turn, &mut self.last_carrot_swap)?;
             },
         }
 

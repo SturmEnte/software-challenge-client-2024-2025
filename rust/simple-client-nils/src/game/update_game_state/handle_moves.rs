@@ -32,7 +32,7 @@ pub(super) fn handle_move_advance(current_hare: &mut Hare, distance: u8) -> Resu
     Ok(())
 }
 
-pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_hare: &mut Hare, bord: &[FieldType; 65], distance: u8, jumps: &JumpCardDetails, last_card: &Card) -> Result<(), GameError> {
+pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_hare: &mut Hare, bord: &[FieldType; 65], distance: u8, jumps: &JumpCardDetails, last_card: &Card, current_turn: &u8, last_carrot_swap: &mut u8) -> Result<(), GameError> {
     current_hare.advance(distance)?;
 
     if jumps.get_number_of_jumps() > 0 {
@@ -56,7 +56,7 @@ pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_h
         FieldType::Hare =>  {
             match last_card {
                 Card::SwapCarrots => {
-                    handle_card_swap_carrots(current_hare, opponent_hare)?;
+                    handle_card_swap_carrots(current_hare, opponent_hare, last_carrot_swap, current_turn)?;
                 },
                 Card::EatSalad => {
                     handle_card_eat_salad(current_hare, opponent_hare.position)?;
