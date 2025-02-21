@@ -31,7 +31,7 @@ class Move():
         self.type = "exchangecarrots"
         self.parameters["amount"] = str(amount)
     
-    def play_card(self, type: str):
+    def append_card(self, type: str):
         self.cards.append(type)
     
     def __repr__(self) -> str:

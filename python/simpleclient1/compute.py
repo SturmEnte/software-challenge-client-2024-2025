@@ -51,7 +51,7 @@ def get_possible_moves(state, use_opponent=False):
         pmvs.append(move)
     
     # exchange carrots move
-    if state.board.get_field(player.position).type == "CARROT":
+    if state.board.get_field(player.position).type == "CARROTS":
         move = Move()
         move.exchange_carrots(10)
         pmvs.append(move)
@@ -79,7 +79,14 @@ def get_possible_moves(state, use_opponent=False):
         if field.type == "HARE": #TODO: check hare field conditions
             continue
 
-        if field.type == "MARKET": #TODO: check market field conditions
+        if field.type == "MARKET":
+            if player.carrots < 10 + needed_carrots:
+                continue
+            for card in ("SWAP_CARROTS", "EAT_SALAD", "HURRY_AHEAD", "FALL_BACK"):
+                move = Move()
+                move.advance(i - player.position)
+                move.append_card(card)
+                pmvs.append(move)
             continue
 
         if (needed_carrots <= player.carrots):
