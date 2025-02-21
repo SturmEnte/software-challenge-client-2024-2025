@@ -35,7 +35,7 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
                 println!("{}", "Card is not read".red());
             }
 
-            if advance_move.card.is_some() {
+            if advance_move.cards.is_some() {
                 println!("{}", "Don't know how to simulate a card".red());
             }
         },
