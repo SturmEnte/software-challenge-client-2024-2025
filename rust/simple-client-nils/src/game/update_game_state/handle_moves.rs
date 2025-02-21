@@ -1,4 +1,4 @@
-use crate::game::{cards::Card, field_type::FieldType, game_error::GameError, hare::Hare, moves::{CarrotsToExchange, JumpCardDetails}};
+use crate::game::{board::Board, cards::Card, field_type::FieldType, game_error::GameError, hare::Hare, moves::{CarrotsToExchange, JumpCardDetails}};
 
 use super::handle_cards::*;
 
@@ -15,11 +15,11 @@ pub(super) fn handle_move_exchange_carrots(current_hare: &mut Hare, carrots_to_e
     }
 }
 
-pub fn handle_move_fall_back(current_hare: &mut Hare, bord: &[FieldType; 65]) {
+pub fn handle_move_fall_back(current_hare: &mut Hare, board: &Board) {
     let mut hedgehog_position = current_hare.position;
     while hedgehog_position > 0 {
         hedgehog_position -= 1;
-        if bord[hedgehog_position as usize] == FieldType::Hedgehog {
+        if board.board[hedgehog_position as usize] == FieldType::Hedgehog {
             current_hare.carrots += (current_hare.position - hedgehog_position) as u16 * 10;
             current_hare.position = hedgehog_position;
             break;
@@ -32,7 +32,7 @@ pub(super) fn handle_move_advance(current_hare: &mut Hare, distance: u8) -> Resu
     Ok(())
 }
 
-pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_hare: &mut Hare, bord: &[FieldType; 65], distance: u8, jumps: &JumpCardDetails, last_card: &Card, current_turn: &u8, last_carrot_swap: &mut u8) -> Result<(), GameError> {
+pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_hare: &mut Hare, board: &Board, distance: u8, jumps: &JumpCardDetails, last_card: &Card, current_turn: &u8, last_carrot_swap: &mut u8) -> Result<(), GameError> {
     current_hare.advance(distance)?;
 
     if jumps.get_number_of_jumps() > 0 {
@@ -48,7 +48,7 @@ pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_h
         }
     }
 
-    match bord[current_hare.position as usize] {
+    match board.board[current_hare.position as usize] {
         FieldType::Market => {
             current_hare.carrots -= 10;
             current_hare.add_card(last_card);

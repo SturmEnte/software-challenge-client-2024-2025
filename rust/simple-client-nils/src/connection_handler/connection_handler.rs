@@ -1,11 +1,11 @@
 use std::net::{TcpStream, ToSocketAddrs};
-use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{field_type::FieldType, game_state::GameState, moves::GameMove}};
+use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, moves::GameMove}};
 
 pub struct ConnectionHandler<C: ComputerPlayer> {
     pub(super) connected: bool,
     pub(super) connection: TcpStream,
     pub(super) room_id: Option<Box<str>>,
-    pub(super) bord:Option<[FieldType; 65]>,
+    pub(super) bord:Option<Board>,
     pub(super) game_state: Option<GameState>,
     pub(super) player: C,
     pub(super) last_move_was_our: bool,

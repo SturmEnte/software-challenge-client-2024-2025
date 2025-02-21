@@ -1,9 +1,9 @@
-use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{field_type::FieldType, game_state::GameState}};
+use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{board::Board, field_type::FieldType, game_state::GameState}};
 
 use super::connection_handler::ConnectionHandler;
 
 impl<C: ComputerPlayer> ConnectionHandler<C> {
-    pub(crate) fn get_bord(&self) -> Result<&[FieldType; 65], ConnectionHandlerError> {
+    pub(crate) fn get_bord(&self) -> Result<&Board, ConnectionHandlerError> {
         return self.bord.as_ref().ok_or(ConnectionHandlerError::BordIsNone);
     }
 

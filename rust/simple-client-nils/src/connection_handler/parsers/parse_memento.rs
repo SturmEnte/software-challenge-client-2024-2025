@@ -1,6 +1,6 @@
 use xml::{reader::XmlEvent, EventReader};
 
-use crate::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, error::ConnectionHandlerError, game::{game_state::GameState, team::Team}, utils::get_attribute::get_attribute};
+use crate::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, team::Team}, utils::get_attribute::get_attribute};
 
 impl<C: ComputerPlayer> ConnectionHandler<C> {
     pub(super) fn parse_memento(&mut self, mut parser: EventReader<&[u8]>) -> Result<(), ConnectionHandlerError> {
@@ -20,7 +20,7 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                                     parser.skip()?;
                                     continue;
                                 }
-                                self.bord = Some(self.parse_board(&mut parser)?);
+                                self.bord = Some(Board::new(self.parse_board(&mut parser)?));
                             },
                             "lastMove" => {
                                 if self.last_move_was_our {

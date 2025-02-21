@@ -8,3 +8,4 @@ pub mod game_error;
 pub mod update_game_state_checked;
 pub mod update_game_state;
 pub mod legal_moves;
+pub mod board;

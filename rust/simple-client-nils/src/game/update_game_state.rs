@@ -1,4 +1,4 @@
-use super::{field_type::FieldType, game_error::GameError, game_state::GameState, moves::GameMove};
+use super::{board::Board, game_error::GameError, game_state::GameState, moves::GameMove};
 use handle_moves::*;
 use position_reward::give_position_field_reward;
 
@@ -8,7 +8,7 @@ mod position_reward;
 
 impl GameState {
     /// A Function that updates the GameState based on a `GameMove`.
-    pub fn update(&mut self, bord: &[FieldType; 65], mov: GameMove) -> Result<(), GameError> {
+    pub fn update(&mut self, board: &Board, mov: GameMove) -> Result<(), GameError> {
         self.turn += 1;
         let current_team = self.get_current_team();
         let (current_hare, opponent_hare) = if current_team == self.team {
@@ -21,7 +21,7 @@ impl GameState {
         
         match mov {
             GameMove::FallBack => {
-                handle_move_fall_back(current_hare, bord);
+                handle_move_fall_back(current_hare, board);
             },
             GameMove::EatSalad => {
                 handle_move_eat_salad(current_hare, opponent_hare.position)?
@@ -33,11 +33,11 @@ impl GameState {
                 handle_move_advance(current_hare, distance)?;
             },
             GameMove::AdvanceWithCards(distance, ref jumps, ref last_card) => {
-                handle_move_advance_with_cards(current_hare, opponent_hare, bord, distance, jumps, last_card, &self.turn, &mut self.last_carrot_swap)?;
+                handle_move_advance_with_cards(current_hare, opponent_hare, board, distance, jumps, last_card, &self.turn, &mut self.last_carrot_swap)?;
             },
         }
 
-        give_position_field_reward(bord, opponent_hare, current_hare.position);
+        give_position_field_reward(board, opponent_hare, current_hare.position);
 
         self.last_move = Some(mov);
         println!("{:?}", self);
