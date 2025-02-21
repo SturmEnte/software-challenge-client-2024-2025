@@ -7,7 +7,7 @@ from compute import compute_move, get_possible_moves
 #TODO: make it work with entire replay and specify turn per variable/input
 #      this has to be done to correctly get the last move for eat_salad calculation and for last use of exchange carrots card
 
-with open("../test/memento0.xml", "r") as msg:
+with open("../test/memento1.xml", "r") as msg:
     msg = msg.read()
     print("\nNEW MESSAGE:\n" + msg + "\n" + "-"*35)
 
