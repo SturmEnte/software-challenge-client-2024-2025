@@ -1,3 +1,4 @@
+use crate::enums::card;
 use crate::enums::card::Card;
 use crate::enums::card::card_to_string;
 use crate::enums::move_type::MoveType;
@@ -11,14 +12,14 @@ pub trait Move {
 // Advance Move
 pub struct AdvanceMove {
     pub distance: u8,
-    pub card: Option<Card>,
+    pub cards: Option<Vec<Card>>,
 }
 
 impl AdvanceMove {
-    pub fn new(distance: u8, card: Option<Card>) -> AdvanceMove {
+    pub fn new(distance: u8, cards: Option<Vec<Card>>) -> AdvanceMove {
         AdvanceMove {
             distance: distance,
-            card: card,
+            cards: cards,
         }
     }
 }
@@ -26,8 +27,14 @@ impl AdvanceMove {
 impl Move for AdvanceMove {
     fn to_string(&self) -> String {
 
-        if self.card.is_some() {
-            return format!("<data class=\"advance\" distance=\"{}\"><card>{}</card></data>", self.distance, card_to_string(self.card.as_ref().unwrap()));
+        if self.cards.is_some() {
+            let mut cards_string = String::new();
+
+            for card in self.cards.as_ref().unwrap() {
+                cards_string.push_str(&card_to_string(card));
+            }
+
+            return format!("<data class=\"advance\" distance=\"{}\">{}</data>", self.distance, cards_string);
         }
 
         format!("<data class=\"advance\" distance=\"{}\"/>", self.distance)
