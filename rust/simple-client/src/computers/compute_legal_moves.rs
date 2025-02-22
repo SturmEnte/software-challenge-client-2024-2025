@@ -115,10 +115,10 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             // If the field is a market field does our hare has too have at least an aditional 10 carrots
             FieldType::Market => {
                 if game_data.our_hare.carrots >= move_carrot_price + 10 {
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::EatSalad))));
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::FallBack))));
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::HurryAhead))));
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::EatSalad]))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::FallBack]))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::HurryAhead]))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::SwapCarrots]))));
                 }
             },
             // If the field is a hare field check if the hare has cards and if they are legal to be played
@@ -131,7 +131,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                     match card {
                         Card::EatSalad => {
                             if game_data.our_hare.salads > 0 {
-                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::EatSalad))));
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::EatSalad]))));
                             }
                         },
                         // Card::SwapCarrots => {
