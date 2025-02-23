@@ -6,11 +6,11 @@ use crate::{enums::{field_type::FieldType, move_type::MoveType}, structs::{game_
 
 use crate::enums::card::Card;
 
-pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_move: &bool) -> GameData {
-    let mut new_game_data: GameData = game_data.clone();
+pub fn compute_new_game_data(old_game_data: &GameData, m: &Box<dyn Move>, our_hares_move: &bool) -> GameData {
+    let mut game_data: GameData = old_game_data.clone();
 
-    let mut current_hare: Hare = if *our_hares_move { new_game_data.our_hare.clone() } else { new_game_data.enemy_hare.clone() };
-    let mut other_hare: Hare = if *our_hares_move { new_game_data.enemy_hare.clone() } else { new_game_data.our_hare.clone() };
+    let mut current_hare: Hare = if *our_hares_move { game_data.our_hare.clone() } else { game_data.enemy_hare.clone() };
+    let mut other_hare: Hare = if *our_hares_move { game_data.enemy_hare.clone() } else { game_data.our_hare.clone() };
 
     // If the hare is on a position 1 field and it is the first hare, then it will get 10 carrots  
     if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Position1 && current_hare.position > other_hare.position {
@@ -64,7 +64,7 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
                             current_hare.carrots = other_hare.carrots;
                             other_hare.carrots = temp;
 
-                            new_game_data.last_swap_carrots_usage = game_data.turn as i8;
+                            game_data.last_swap_carrots_usage = game_data.turn as i8;
                         }
                     }
                 }    
@@ -117,12 +117,12 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
     println!("---------");
 
     if *our_hares_move {
-        new_game_data.our_hare = current_hare;
-        new_game_data.enemy_hare = other_hare;
+        game_data.our_hare = current_hare;
+        game_data.enemy_hare = other_hare;
     } else {
-        new_game_data.our_hare = other_hare;
-        new_game_data.enemy_hare = current_hare;
+        game_data.our_hare = other_hare;
+        game_data.enemy_hare = current_hare;
     }
 
-    new_game_data
+    game_data
 }
