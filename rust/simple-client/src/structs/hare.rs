@@ -3,7 +3,6 @@ use std::vec::Vec;
 use crate::enums::card::Card;
 use crate::enums::move_type::MoveType;
 use crate::enums::team::Team;
-use crate::structs::game_move::Move;
 
 #[derive(Clone)]
 pub struct Hare {

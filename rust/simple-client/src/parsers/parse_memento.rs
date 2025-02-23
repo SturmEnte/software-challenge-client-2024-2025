@@ -4,11 +4,10 @@ use quick_xml::events::Event;
 use quick_xml::name::QName;
 
 use crate::computers::compute_new_game_data::compute_new_game_data;
-use crate::enums::card::Card;
-use crate::enums::move_type::MoveType;
-use crate::enums::team::Team;
-use crate::structs::game_data::GameData;
 
+use crate::enums::card::Card;
+
+use crate::structs::game_data::GameData;
 use crate::structs::game_move::EatSaladMove;
 use crate::structs::game_move::ExchangeCarrotsMove;
 use crate::structs::game_move::FallbackMove;
