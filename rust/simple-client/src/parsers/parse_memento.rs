@@ -4,6 +4,7 @@ use quick_xml::events::Event;
 use quick_xml::name::QName;
 
 use crate::computers::compute_new_game_data::compute_new_game_data;
+use crate::enums::card::Card;
 use crate::enums::move_type::MoveType;
 use crate::enums::team::Team;
 use crate::structs::game_data::GameData;
@@ -61,10 +62,34 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                                 "advance" => {
                                     if let Some(attr) = e.attributes().find(|a| a.as_ref().unwrap().key == QName(b"distance")) {
                                         let distance: u8 = attr.unwrap().unescape_value().unwrap().parse().unwrap();
-                                        
-                                        // TBD Check for cards
-
-                                        last_move = Some(Box::new(AdvanceMove::new(distance, None)));
+                                        let mut cards: Vec<Card> = Vec::new();
+                                
+                                        // Read nested card elements
+                                        loop {
+                                            match reader.read_event() {
+                                                Ok(Event::Start(ref e)) | Ok(Event::Empty(ref e)) => {
+                                                    if e.name() == QName(b"card") {
+                                                        if let Ok(Event::Text(e)) = reader.read_event() {
+                                                            let card_text: String = e.unescape().unwrap().into_owned();
+                                                            cards.push(string_to_card(&card_text));
+                                                        }
+                                                    }
+                                                },
+                                                Ok(Event::End(ref e)) if e.name() == QName(b"lastMove") => {
+                                                    break;
+                                                },
+                                                Ok(Event::Eof) => {
+                                                    break;
+                                                },
+                                                _ => (),
+                                            }
+                                        }
+                                
+                                        if cards.len() > 0 {
+                                            last_move = Some(Box::new(AdvanceMove::new(distance, Some(cards))));
+                                        } else {
+                                            last_move = Some(Box::new(AdvanceMove::new(distance, None)));
+                                        }
                                     }
                                 },
                                 "eatsalad" => {
