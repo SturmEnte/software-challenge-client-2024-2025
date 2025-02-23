@@ -63,6 +63,8 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
                             let temp = current_hare.carrots;
                             current_hare.carrots = other_hare.carrots;
                             other_hare.carrots = temp;
+
+                            new_game_data.last_swap_carrots_usage = game_data.turn as i8;
                         }
                     }
                 }    
