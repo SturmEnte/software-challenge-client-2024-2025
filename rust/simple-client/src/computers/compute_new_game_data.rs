@@ -1,6 +1,10 @@
 use colored::Colorize;
 
+// Fix this
+// v 
 use crate::{enums::{field_type::FieldType, move_type::MoveType}, structs::{game_data::GameData, game_move::{AdvanceMove, ExchangeCarrotsMove, Move}, hare::Hare}, utils::{get_nearest_hedgehog_field::get_nearest_hedgehog_field, triangular_number::triangular_number}};
+
+use crate::enums::card::Card;
 
 pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_move: &bool) -> GameData {
     let mut new_game_data: GameData = game_data.clone();
@@ -25,6 +29,44 @@ pub fn compute_new_game_data(game_data: &GameData, m: &Box<dyn Move>, our_hares_
             
             current_hare.position += advance_move.distance;
             current_hare.carrots -= triangular_number(advance_move.distance.into());
+
+            if advance_move.cards.is_some() {
+                
+                for card in advance_move.cards.as_ref().unwrap() {
+                    
+                    // Check if the card is for a market field purchase
+                    // If so subtract 10 carrots from the hare and add the card to the hare's cards
+                    if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Market {
+                        current_hare.carrots -= 10;
+                        current_hare.cards.push(card.clone());
+                        continue;
+                    }
+                    
+                    // Otehrwise match the card an simulate the execution of the card
+                    match card {
+                        Card::EatSalad => {
+                            current_hare.salads -= 1;
+                            
+                            if current_hare.position > other_hare.position {
+                                current_hare.carrots += 10;
+                            } else {
+                                current_hare.carrots += 30;
+                            }
+                        },
+                        Card::FallBack => {
+                            current_hare.position = other_hare.position - 1;
+                        },
+                        Card::HurryAhead => {
+                            current_hare.position = other_hare.position + 1;
+                        },
+                        Card::SwapCarrots => {
+                            let temp = current_hare.carrots;
+                            current_hare.carrots = other_hare.carrots;
+                            other_hare.carrots = temp;
+                        }
+                    }
+                }    
+            }
 
             println!("Advance Move | Distance: {} | Cost: {}", advance_move.distance, triangular_number(advance_move.distance.into()));
 
