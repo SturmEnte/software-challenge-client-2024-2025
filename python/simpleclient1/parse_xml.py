@@ -21,12 +21,19 @@ def parse_players(received_players):
     players = []
     for received_player in received_players:
 
+        cards = []
+        cards_tag = received_player.find('cards')
+        for card_tag in cards_tag.findall('card'):
+            cards.append(card_tag.text)
+
         player = Player(
             received_player.attrib['team'],
             int(received_player.attrib['position']),
             int(received_player.attrib['salads']),
             int(received_player.attrib['carrots'])
         )
+
+        player.cards = cards
 
         players.append(player)
     

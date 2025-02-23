@@ -180,7 +180,7 @@ Team:       {player.team}
 Position:   {player.position}
 Salads:     {player.salads}
 Carrots:    {player.carrots}
-Cards:
+Cards:      {player.cards}
 """
 
         print(out)
