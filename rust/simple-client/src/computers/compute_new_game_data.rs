@@ -67,6 +67,11 @@ pub fn compute_new_game_data(old_game_data: &GameData, m: &Box<dyn Move>, our_ha
                             game_data.last_swap_carrots_usage = game_data.turn as i8;
                         }
                     }
+
+                    // Remove the card from the hare's cards
+                    if let Some(pos) = current_hare.cards.iter().position(|c| c == card) {
+                        current_hare.cards.remove(pos);
+                    }
                 }    
             }
 
