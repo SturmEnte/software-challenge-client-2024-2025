@@ -9,7 +9,7 @@ pub struct GameData {
     pub our_hare: Hare,
     pub enemy_hare: Hare,
     pub start_team: Option<Team>,
-    pub turn: i8,
+    pub turn: u8,
     pub game_over: bool,
 }
 
