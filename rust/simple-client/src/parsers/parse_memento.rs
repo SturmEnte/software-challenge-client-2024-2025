@@ -114,11 +114,8 @@ pub fn parse_memento(message: &String, game_data: &mut GameData) {
                             // This does not state if it's our turn but if the last move given in the memento is our hare's move
                             let mut our_hares_move: bool = false;
 
-                            // If our team starts and it's an odd turn, then it's our hare's move
-                            if game_data.our_hare.team == game_data.start_team && game_data.turn % 2 != 0 {         
-                                our_hares_move = true;
-                            // If our team doesn't start and it's an even turn, then it's our hare's move
-                            } else if game_data.our_hare.team != game_data.start_team && game_data.turn % 2 == 0 {
+                            // If our team starts and it's an odd turn, then it's our hare's move or if our team doesn't start and it's an even turn, then it's also our hare's move
+                            if (game_data.our_hare.team == game_data.start_team && game_data.turn % 2 != 0) || (game_data.our_hare.team != game_data.start_team && game_data.turn % 2 == 0) {         
                                 our_hares_move = true;
                             }
 
