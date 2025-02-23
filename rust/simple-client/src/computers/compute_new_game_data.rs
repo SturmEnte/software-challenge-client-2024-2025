@@ -72,13 +72,6 @@ pub fn compute_new_game_data(old_game_data: &GameData, m: &Box<dyn Move>, our_ha
 
             println!("Advance Move | Distance: {} | Cost: {}", advance_move.distance, triangular_number(advance_move.distance.into()));
 
-            // Subtract 10 carrots if the hare is on a market field after the advance move
-            if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Market {
-                current_hare.carrots -= 10;
-                println!("Market Field | Cost: 10");
-                println!("{}", "Card is not read".red());
-            }
-
             if advance_move.cards.is_some() {
                 println!("{}", "Don't know how to simulate a card".red());
             }
