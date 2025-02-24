@@ -5,19 +5,20 @@ use crate::enums::move_type::MoveType;
 pub trait Move {
     fn to_string(&self) -> String; 
     fn get_type(&self) -> MoveType;
+    fn as_any(&self) -> &dyn std::any::Any;
 }
 
 // Advance Move
 pub struct AdvanceMove {
     pub distance: u8,
-    pub card: Option<Card>,
+    pub cards: Option<Vec<Card>>,
 }
 
 impl AdvanceMove {
-    pub fn new(distance: u8, card: Option<Card>) -> AdvanceMove {
+    pub fn new(distance: u8, cards: Option<Vec<Card>>) -> AdvanceMove {
         AdvanceMove {
             distance: distance,
-            card: card,
+            cards: cards,
         }
     }
 }
@@ -25,8 +26,14 @@ impl AdvanceMove {
 impl Move for AdvanceMove {
     fn to_string(&self) -> String {
 
-        if self.card.is_some() {
-            return format!("<data class=\"advance\" distance=\"{}\"><card>{}</card></data>", self.distance, card_to_string(self.card.as_ref().unwrap()));
+        if self.cards.is_some() {
+            let mut cards_string = String::new();
+
+            for card in self.cards.as_ref().unwrap() {
+                cards_string.push_str(format!("<card>{}</card>", card_to_string(card)).as_str());
+            }
+
+            return format!("<data class=\"advance\" distance=\"{}\">{}</data>", self.distance, cards_string);
         }
 
         format!("<data class=\"advance\" distance=\"{}\"/>", self.distance)
@@ -34,6 +41,10 @@ impl Move for AdvanceMove {
 
     fn get_type(&self) -> MoveType {
         MoveType::Advance
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
 
@@ -54,6 +65,10 @@ impl Move for FallbackMove {
     fn get_type(&self) -> MoveType {
         MoveType::Fallback
     }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
 }
 
 // Eat Salad Move
@@ -72,6 +87,10 @@ impl Move for EatSaladMove {
 
     fn get_type(&self) -> MoveType {
         MoveType::EatSalad
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
 
@@ -93,5 +112,9 @@ impl Move for ExchangeCarrotsMove {
 
     fn get_type(&self) -> MoveType {
         MoveType::ExchangeCarrots
+    }
+
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
