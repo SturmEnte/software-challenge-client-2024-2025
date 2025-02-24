@@ -1,3 +1,4 @@
+use std::fmt::Display;
 
 use crate::utils::triangular_numbers::calculate_triangular_number;
 
@@ -13,6 +14,20 @@ pub struct Hare {
     pub card_eat_salad: u8,
     pub card_fall_back: u8,
     pub card_hurry_ahead: u8,
+}
+
+impl Display for Hare {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "  📍Position: {}\n", self.position)?;
+        write!(f, "  🥕Carrots: {}\n", self.carrots)?;
+        write!(f, "  🥬Salads: {}\n", self.salads)?;
+        write!(f, "  😋Ate Salad Last Round: {}\n", self.ate_salad_last_round)?;
+        write!(f, "  🔃Card Swap Carrots: {}\n", self.card_swap_carrots)?;
+        write!(f, "  🍽️Eat Salad Cards: {}\n", self.card_eat_salad)?;
+        write!(f, "  🏃🏻‍♀️Fall Back Cards: {}\n", self.card_fall_back)?;
+        write!(f, "  🏃🏻‍♀️‍➡️Hurry Ahead Cards: {}", self.card_hurry_ahead)?;
+        Ok(())
+    }
 }
 
 impl Hare {

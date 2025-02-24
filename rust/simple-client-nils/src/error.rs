@@ -24,4 +24,5 @@ pub enum ConnectionHandlerError {
     ParseIntError(#[from] core::num::ParseIntError),
     #[error(transparent)]
     GameError(#[from] crate::game::game_error::GameError)
+    
 }
