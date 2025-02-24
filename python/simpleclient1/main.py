@@ -54,8 +54,11 @@ while True:
                 start_team, board, players = parse_memento_start(xmlState)
                 state = State(conn.team, turn, start_team, board, players)
             else:
-                players = parse_memento(xmlState)
-                state.set_data(turn, players)
+                last_move = parse_memento(xmlState)
+                own_move = False
+                if (turn % 2 == 1 and state.start_team == state.player.team) or (turn % 2 == 0 and state.start_team == state.opponent.team):
+                    own_move = True
+                state.apply_move(last_move, own_move)
             t2 = time()
             print(f"Zeit: {t2-t1}   Zug: {turn}")
             state.print_state()

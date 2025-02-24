@@ -77,6 +77,10 @@ def get_possible_moves(state, use_opponent=False):
                 continue
 
         if field.type == "HARE": #TODO: check hare field conditions
+            if len(player.cards) < 1:
+                pass
+            if "SWAP_CARROTS" in player.cards:
+                pass
             continue
 
         if field.type == "MARKET":

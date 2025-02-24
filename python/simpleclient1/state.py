@@ -10,6 +10,7 @@ class State():
         self.game_over = False
         self.winner = None
         self.last_move = Move()
+        self.last_swap_carrots_turn = -2
 
         if self.team == "ONE":
             self.opponent_team = "TWO"
@@ -36,7 +37,7 @@ class State():
             self.opponent = players[0]
     
     def market_or_hare_field(self, move, player, other_player):
-        new_field = self.board.getField(player.position)
+        new_field = self.board.get_field(player.position)
 
         # if the accessed field is a hare field (card has to be played)
         if new_field.type == "HARE":
@@ -47,13 +48,14 @@ class State():
             self.buy_card(move, player)
     
     def buy_card(self, move, player):
-        card = move.cards.pop(1)
+        card = move.cards.pop(0)
 
         player.carrots -= 10
         player.cards.append(card)
     
     def play_card(self, move, player, other_player):
-        card = move.cards.pop(1)
+        card = move.cards.pop(0)
+        player.cards.remove(card)
 
         if card == "EAT_SALAD":
             player.salads -= 1
@@ -73,6 +75,8 @@ class State():
             carrots = player.carrots
             player.carrots = other_player.carrots
             other_player.carrots = carrots
+
+            self.last_swap_carrots_turn = self.turn
         
         # check for market or hare field
         if card == "HURRY_AHEAD" or card == "FALL_BACK":
@@ -91,13 +95,14 @@ class State():
             player = self.opponent
             other_player = self.player
 
-        current_field = self.board.getField(player.position)
+        current_field = self.board.get_field(player.position)
 
         # add carrots, if a contition for a position 1 / 2 field is met
-        if current_field.type == "POSITION_1" and other_player.position < player.position:
-            player.carrots += 10
-        elif current_field.type == "POSITION_2" and other_player.position > player.position:
-            player.carrots += 30
+        if (self.turn % 2 == 1 and self.start_team == player.team) or (self.turn % 2 == 0 and self.start_team == other_player.team):
+            if current_field.type == "POSITION_1" and other_player.position < player.position:
+                player.carrots += 10
+            elif current_field.type == "POSITION_2" and other_player.position > player.position:
+                player.carrots += 30
 
         # apply the given move
         if move.type == "advance":
