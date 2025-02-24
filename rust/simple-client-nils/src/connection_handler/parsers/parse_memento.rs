@@ -21,6 +21,8 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                                     continue;
                                 }
                                 self.bord = Some(Board::new(self.parse_board(&mut parser)?));
+                                #[cfg(feature = "debug_board_info")]
+                                println!("{}", self.bord.as_ref().unwrap());
                             },
                             "lastMove" => {
                                 if self.last_move_was_our {

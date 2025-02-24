@@ -23,7 +23,6 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                 _ => {},
             }
         }
-        println!("{}", board_index);
         if board_index < 65 {return Err(ConnectionHandlerError::MissingElement(String::from("field")));}
         return Ok(board);
     }
