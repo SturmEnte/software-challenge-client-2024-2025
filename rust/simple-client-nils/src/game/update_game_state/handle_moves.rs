@@ -1,4 +1,4 @@
-use crate::game::{board::Board, cards::Card, field_type::FieldType, game_error::GameError, hare::Hare, moves::{CarrotsToExchange, JumpCardDetails}};
+use crate::game::{board::{Board, HEDGEHOG_FIELDS}, cards::Card, field_type::FieldType, game_error::GameError, hare::Hare, moves::{CarrotsToExchange, JumpCardDetails}};
 
 use super::handle_cards::*;
 
@@ -15,16 +15,18 @@ pub(super) fn handle_move_exchange_carrots(current_hare: &mut Hare, carrots_to_e
     }
 }
 
-pub fn handle_move_fall_back(current_hare: &mut Hare, board: &Board) {
-    let mut hedgehog_position = current_hare.position;
-    while hedgehog_position > 0 {
-        hedgehog_position -= 1;
-        if board.board[hedgehog_position as usize] == FieldType::Hedgehog {
-            current_hare.carrots += (current_hare.position - hedgehog_position) as u16 * 10;
-            current_hare.position = hedgehog_position;
-            break;
-        }   
-    };
+pub fn handle_move_fall_back(current_hare: &mut Hare) {
+    match HEDGEHOG_FIELDS.binary_search(&current_hare.position) {
+        Err(i) => {
+            current_hare.carrots += (current_hare.position - HEDGEHOG_FIELDS[(i - 1) as usize]) as u16 * 10;
+            current_hare.position = HEDGEHOG_FIELDS[(i - 1) as usize];
+        }
+        Ok(i) if i > 0 => {
+            current_hare.carrots += (current_hare.position - HEDGEHOG_FIELDS[(i - 1) as usize]) as u16 * 10;
+            current_hare.position = HEDGEHOG_FIELDS[(i - 1) as usize]
+        },
+        _ => {}
+    }
 }
 
 pub(super) fn handle_move_advance(current_hare: &mut Hare, distance: u8) -> Result<(), GameError> {

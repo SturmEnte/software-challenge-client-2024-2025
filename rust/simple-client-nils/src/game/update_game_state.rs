@@ -21,7 +21,7 @@ impl GameState {
         
         match mov {
             GameMove::FallBack => {
-                handle_move_fall_back(current_hare, board);
+                handle_move_fall_back(current_hare);
             },
             GameMove::EatSalad => {
                 handle_move_eat_salad(current_hare, opponent_hare.position)?
