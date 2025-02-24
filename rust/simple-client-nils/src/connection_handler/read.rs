@@ -1,5 +1,8 @@
 use std::io::Read;
 
+#[cfg(feature = "log_incoming_xml")]
+use std::io::Write;
+
 use crate::error::ConnectionHandlerError;
 use super::connection_handler::ConnectionHandler;
 use crate::computer_player::ComputerPlayer;
