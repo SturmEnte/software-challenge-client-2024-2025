@@ -28,11 +28,11 @@ pub struct JumpCardDetails {
 impl Display for GameMove {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            GameMove::FallBack => write!(f, "⏪Fall back"),
-            GameMove::EatSalad => write!(f, "🍴Eat salad"),
-            GameMove::ExchangeCarrots(carrots_to_exchange) => write!(f, "🔄Carrots to exchange: {}", carrots_to_exchange),
-            GameMove::Advance(i) => write!(f, "⏩Advance by: {}", i),
-            GameMove::AdvanceWithCards(i, jump_card_details, card) => write!(f, "⏭Advanced by {} with {}\n with last card: {}", i, jump_card_details, card),
+            GameMove::FallBack => write!(f, "⏪ Fall back"),
+            GameMove::EatSalad => write!(f, "🍴 Eat salad"),
+            GameMove::ExchangeCarrots(carrots_to_exchange) => write!(f, "🔄 Carrots to exchange: {}", carrots_to_exchange),
+            GameMove::Advance(i) => write!(f, "⏩ Advance by: {}", i),
+            GameMove::AdvanceWithCards(i, jump_card_details, card) => write!(f, "⏭ Advanced by {} with {}\n with last card: {}", i, jump_card_details, card),
         }
     }
 }

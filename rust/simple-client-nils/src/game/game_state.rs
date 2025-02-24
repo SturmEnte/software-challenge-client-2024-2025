@@ -16,19 +16,19 @@ pub struct GameState {
 impl Display for GameState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Game State:\n")?;
-        write!(f, "  🩷Our Team: {}\n", self.team)?;
-        write!(f, "  🔰Starting Team: {}\n", self.start_team)?;
-        write!(f, "  🎲Turn: {}\n", self.turn)?;
-        write!(f, "  💱Last Carrot Swap: {}\n", self.last_carrot_swap)?;
+        write!(f, "  🩷 Our Team: {}\n", self.team)?;
+        write!(f, "  🔰 Starting Team: {}\n", self.start_team)?;
+        write!(f, "  🎲 Turn: {}\n", self.turn)?;
+        write!(f, "  💱 Last Carrot Swap: {}\n", self.last_carrot_swap)?;
         
         if let Some(last_move) = &self.last_move {
-            write!(f, "  🎞Last Move: {}\n", last_move)?;
+            write!(f, "  🎞 Last Move: {}\n", last_move)?;
         } else {
-            write!(f, "  ❌Last Move: None\n")?;
+            write!(f, "  ❌ Last Move: None\n")?;
         }
         
-        write!(f, "  🟢Your Hare:[\n{}]\n", self.your_hare)?;
-        write!(f, "  🔴Opponent Hare:[\n{}]\n", self.opponent_hare)?;
+        write!(f, "  🟢 Your Hare:[\n{}]\n", self.your_hare)?;
+        write!(f, "  🔴 Opponent Hare:[\n{}]\n", self.opponent_hare)?;
         
         Ok(())
     }
