@@ -32,7 +32,7 @@ impl Display for GameMove {
             GameMove::EatSalad => write!(f, "🍴 Eat salad"),
             GameMove::ExchangeCarrots(carrots_to_exchange) => write!(f, "🔄 Carrots to exchange: {}", carrots_to_exchange),
             GameMove::Advance(i) => write!(f, "⏩ Advance by: {}", i),
-            GameMove::AdvanceWithCards(i, jump_card_details, card) => write!(f, "⏭ Advanced by {} with {}\n with last card: {}", i, jump_card_details, card),
+            GameMove::AdvanceWithCards(i, jump_card_details, card) => write!(f, "⏭ Advanced by {} with {} \n  with last card: {}", i, jump_card_details, card),
         }
     }
 }
@@ -49,7 +49,8 @@ impl Display for CarrotsToExchange {
 
 impl Display for JumpCardDetails {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Jump Cards: {}", self.get_number_of_jumps())?;
+        write!(f, "Jump Cards: {} ", self.get_number_of_jumps())?;
+        if self.get_number_of_jumps() == 0 {return Ok(())}
         write!(f, "First card is: {}", if self.is_first_card_hurry_ahead() {"hurry ahead"} else {"fall back"})?;
         Ok(())
     }
