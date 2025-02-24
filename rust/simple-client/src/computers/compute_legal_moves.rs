@@ -100,7 +100,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
         }
 
         // Get the field on which the hare would be after moving the current distance
-        let new_field: FieldType = game_data.board.get_field((game_data.our_hare.position + distance) as usize).unwrap();
+        let new_field: FieldType = game_data.board.get_field(&((game_data.our_hare.position + distance) as usize)).unwrap();
 
         // Match the type of the field
         match new_field {

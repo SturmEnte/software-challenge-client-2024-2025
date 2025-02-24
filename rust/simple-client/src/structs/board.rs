@@ -10,8 +10,8 @@ impl Board {
 		Board { board: [None; crate::FIELD_COUNT] }
 	}
 
-	pub fn get_field(&self, x: usize) -> Option<FieldType> {
-		self.board[x]
+	pub fn get_field(&self, x: &usize) -> Option<FieldType> {
+		self.board[*x]
 	}
 
 	pub fn set_field(&mut self, x: usize, field_string: &str) {

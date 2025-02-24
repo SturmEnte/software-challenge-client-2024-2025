@@ -13,12 +13,12 @@ pub fn compute_new_game_data(old_game_data: &GameData, m: &Box<dyn Move>, our_ha
     let mut other_hare: Hare = if *our_hares_move { game_data.enemy_hare.clone() } else { game_data.our_hare.clone() };
 
     // If the hare is on a position 1 field and it is the first hare, then it will get 10 carrots  
-    if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Position1 && current_hare.position > other_hare.position {
+    if game_data.board.get_field(&current_hare.position.into()).unwrap() == FieldType::Position1 && current_hare.position > other_hare.position {
         current_hare.carrots += 10;
     }
 
     // If the hare is on a position 2 field and it is the second hare, then it will get 30 carrots  
-    if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Position2 && current_hare.position < other_hare.position {
+    if game_data.board.get_field(&current_hare.position.into()).unwrap() == FieldType::Position2 && current_hare.position < other_hare.position {
         current_hare.carrots += 30;
     }
 
@@ -36,7 +36,7 @@ pub fn compute_new_game_data(old_game_data: &GameData, m: &Box<dyn Move>, our_ha
                     
                     // Check if the card is for a market field purchase
                     // If so subtract 10 carrots from the hare and add the card to the hare's cards
-                    if game_data.board.get_field(current_hare.position.into()).unwrap() == FieldType::Market {
+                    if game_data.board.get_field(&current_hare.position.into()).unwrap() == FieldType::Market {
                         current_hare.carrots -= 10;
                         current_hare.cards.push(card.clone());
                         continue;
