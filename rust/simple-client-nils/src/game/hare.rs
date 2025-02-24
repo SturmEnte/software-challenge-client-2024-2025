@@ -1,7 +1,7 @@
 
 use crate::utils::triangular_numbers::calculate_triangular_number;
 
-use super::{cards::Card, field_type::FieldType, game_error::GameError};
+use super::{cards::Card, game_error::GameError};
 
 #[derive(Debug)]
 pub struct Hare {
@@ -62,22 +62,6 @@ impl Hare {
                 self.card_hurry_ahead -=1
             },
         }
-    }
-
-    pub fn can_stand_on_without_cards(&self, field: &FieldType, carrot_cost: u16) -> Result<(), GameError> {
-        match field {
-            FieldType::Start => return Err(GameError::CanNotReturnToStart),
-            FieldType::Hedgehog => return Err(GameError::EnterdHedgehogFieldWhileMovingForward),
-            FieldType::Salad => if self.salads < 1 {return Err(GameError::NoSalads);},
-            FieldType::Market => return Err(GameError::NoCardPurchased),
-            FieldType::Hare => return Err(GameError::NoCardPlayd),
-            FieldType::Goal => {
-                if self.salads > 0 {return Err(GameError::TooManySalads);}
-                if self.carrots > 10 - carrot_cost {return Err(GameError::TooManyCarrots);}
-            },
-            _ => {}
-        }
-        return Ok(());
     }
 
     /// Makes the `Hare` eat a salad and  gives it carrots based on its and its opponent's position.
