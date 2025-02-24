@@ -1,10 +1,10 @@
-use super::{board::Board, game_error::GameError, game_state::GameState, moves::GameMove};
-use handle_moves::*;
-use position_reward::give_position_field_reward;
-
 mod handle_moves;
 pub(super) mod handle_cards;
 mod position_reward;
+
+use super::{board::Board, game_error::GameError, game_state::GameState, moves::GameMove};
+use handle_moves::*;
+use position_reward::give_position_field_reward;
 
 impl GameState {
     /// A Function that updates the GameState based on a `GameMove`.
