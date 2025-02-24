@@ -10,8 +10,6 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
             let mut buffer = [0; 3500];
             let last_none_zero_index = self.read_full_message_to_buffer(&mut buffer)?;
 
-            println!("{}", String::from_utf8_lossy(&buffer[..=last_none_zero_index]));
-
             let parser = EventReader::new(&buffer[..=last_none_zero_index]);
 
             match self.parse_message(parser) {

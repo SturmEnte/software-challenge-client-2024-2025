@@ -1,3 +1,6 @@
+#[cfg(feature = "log_incoming_xml")]
+use std::{fs::{OpenOptions, File}, env};
+
 use std::net::{TcpStream, ToSocketAddrs};
 use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, moves::GameMove}};
 
@@ -9,6 +12,8 @@ pub struct ConnectionHandler<C: ComputerPlayer> {
     pub(super) game_state: Option<GameState>,
     pub(super) player: C,
     pub(super) last_move_was_our: bool,
+    #[cfg(feature = "log_incoming_xml")]
+    pub(super) xml_input_file: Option<File> // This field is locked behind the feature flag log_incoming_xml.
 }
 
 impl <C: ComputerPlayer> ConnectionHandler<C> {
@@ -22,6 +27,13 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
                 bord: None,
                 game_state: None,
                 last_move_was_our: false,
+                #[cfg(feature = "log_incoming_xml")]
+                xml_input_file: OpenOptions::new()
+                    .write(true)
+                    .read(false)
+                    .create(true)
+                    .truncate(true)
+                    .open(env::var("XML_LOG_DIR").unwrap_or("".to_string()) + "incoming_xml_log.txt").ok()
             }
         )
     }
@@ -35,6 +47,13 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
                 bord: None,
                 game_state: None,
                 last_move_was_our: false,
+                #[cfg(feature = "log_incoming_xml")]
+                xml_input_file: OpenOptions::new()
+                    .write(true)
+                    .read(false)
+                    .create(true)
+                    .truncate(true)
+                    .open(env::var("XML_LOG_DIR").unwrap_or("".to_string()) + "incoming_xml_log.txt").ok()
             }
         )
     }

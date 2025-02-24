@@ -23,4 +23,4 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
         }
         return Ok(())
     }
-}
+} 

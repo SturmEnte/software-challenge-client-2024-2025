@@ -11,7 +11,14 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
             Ok(0) => {
                 return Err(ConnectionHandlerError::ZeroBytesReadToBuffer);
             },
-            Ok(b) => return Ok(b),
+            Ok(b) => {
+                #[cfg(feature = "log_incoming_xml")]
+                if self.xml_input_file.is_some() {
+                    self.xml_input_file.as_mut().unwrap().write(&buffer[..=b - 1])?;
+                }
+
+                return Ok(b)
+            },
             Err(e) => return Err(ConnectionHandlerError::Io(e)),
         }
     }

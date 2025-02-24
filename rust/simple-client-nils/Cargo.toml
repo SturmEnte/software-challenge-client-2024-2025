@@ -6,3 +6,7 @@ edition = "2021"
 [dependencies]
 thiserror = "2.0.3"
 xml = "0.8.20"
+
+[features]
+#Writes the xml to a file. The dir of the file can be changed with XML_LOG_DIR.
+log_incoming_xml = []
