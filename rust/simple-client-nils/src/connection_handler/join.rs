@@ -17,7 +17,9 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
 
         let last_none_zero_index = self.read_to_buffer(&mut buffer)? -1;
 
-        if !buffer.starts_with(b"<protocol>") {return Err(ConnectionHandlerError::MissingElement(String::from("protocol")));}
+        if buffer.is_empty() {return Err(ConnectionHandlerError::ZeroBytesReadToBuffer);}
+
+        if !buffer.starts_with(b"<protocol>"){return Err(ConnectionHandlerError::MissingElement(String::from("protocol")));}
 
         let parser = EventReader::new(&buffer[10..=last_none_zero_index]);
         
