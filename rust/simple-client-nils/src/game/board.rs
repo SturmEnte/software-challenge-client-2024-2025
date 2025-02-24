@@ -21,9 +21,11 @@ impl Board {
 
 impl Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Board: [")?;
         for (i, field) in self.board.iter().enumerate() {
             write!(f, "[{}|{}]", i, field)?;
         }
+        write!(f, "]\n")?;
         Ok(())
     } 
 
