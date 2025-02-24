@@ -4,6 +4,9 @@ use crate::enums::card::card_to_string;
 use crate::enums::field_type::FieldType;
 use crate::enums::move_type::MoveType;
 
+use crate::structs::board;
+use crate::structs::board::Board;
+use crate::structs::hare::Hare;
 use crate::utils::triangular_number::triangular_number;
 use crate::GameData;
 
@@ -19,16 +22,6 @@ const LAST_SALAD_FIELD: u8 = 57;
 
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
-
-    // if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad {
-    //     println!("We are on a salad field");
-    //     if game_data.our_hare.last_move_type.is_some() {
-    //         println!("We have a last move");
-    //         if game_data.our_hare.last_move_type == Some(MoveType::Advance) {
-    //             println!("Our last move was an advance move");
-    //         }
-    //     }
-    // }  
 
     // Eat salad move
     // Check if the last move was an advance move and if the hare is on a salad field
@@ -126,9 +119,7 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             // If the field is a hare field check if the hare has cards and if they are legal to be played
             FieldType::Hare => {
                 for card in &game_data.our_hare.cards {
-                    println!("{:?}", card_to_string(&card));
-                    println!("{}{}", "Hare move not implemented. Distance: ".red(), distance);
-                    // TBD
+                    println!("{:?}", card_to_string(&card).as_str().blue());
 
                     match card {
                         Card::EatSalad => {
@@ -141,12 +132,21 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                                 legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::SwapCarrots]))));
                             }
                         },
-                        // Card::FallBack => {
-                        // },
-                        // Card::HurryAhead => {
-                        // },
-                        _ => {
-                            println!("{}{:?}", "Invalid / Unimplemented card: ".red(), card);
+                        Card::FallBack => {
+                            if game_data.our_hare.position > game_data.enemy_hare.position && 
+                               is_allowed_to_go_on_field(&game_data.our_hare, &game_data.enemy_hare.position, &(game_data.our_hare.position - 1), &game_data.board) {
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::FallBack]))));
+                            }
+
+                            // Compute complicated fallback
+                        },
+                        Card::HurryAhead => {
+                            if game_data.our_hare.position < game_data.enemy_hare.position && 
+                               is_allowed_to_go_on_field(&game_data.our_hare, &game_data.enemy_hare.position, &(game_data.our_hare.position + 1), &game_data.board) {
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::HurryAhead]))));
+                            }
+
+                            // Compute complicated hurry ahead
                         }
                     }
                 }
@@ -166,4 +166,185 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     }
 
     legal_moves
+}
+
+// Returns if a hare is allowed on a curtain field (ignoring hare fields)
+fn is_allowed_to_go_on_field(hare: &Hare, other_hares_position: &u8, position: &u8, board: &Board) -> bool {
+
+    let new_field: FieldType = board.get_field(&(*position as usize)).unwrap();
+
+    if position == other_hares_position && new_field != FieldType::Goal {
+        return false;
+    }
+
+    let mut allowed: bool = false;
+
+    match new_field {
+        // If the field is a pos. 1, pos. 2 or carrots field is the move always possible
+        FieldType::Position1 | FieldType::Position2 | FieldType::Carrots => {
+            allowed = true;
+        },
+        // If the field is a salad field does our hare has too have at least one salad
+        FieldType::Salad => {
+            if hare.salads > 0 {
+                allowed = true;
+            }
+        },
+        // If the field is a market field does our hare has too have at least an aditional 10 carrots
+        FieldType::Market => {
+            if hare.carrots >= 10 {
+                allowed = true;
+            }
+        },
+        // If the field is a goal field check if our hare has at most 10 carrots and no salads
+        FieldType::Goal => {
+            if hare.carrots <= 10 && hare.salads == 0 {
+                allowed = true;
+            }
+        }
+        _ => {
+            // You are not allowed to go on a start field after leaving it
+            // You can only go on a hedgehog field with a fallback move not the fallback card
+            // Hare fields are ignored in this function
+            allowed = false; // This should be unnecicary but it isnt for some reason I dont know yet
+        }
+    }
+    
+    allowed
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{enums::{card::Card, field_type::FieldType, move_type::MoveType, team::Team}, structs::{board::Board, game_data::GameData, game_move::{AdvanceMove, Move}, hare::Hare}};
+
+    use super::compute_legal_moves;
+
+    #[test]
+    fn test_compute_legal_moves() {
+        let mut game_data = GameData::new();
+
+        game_data.turn = 1;
+        game_data.start_team = Some(Team::One);
+
+        game_data.board = Board::new();
+        game_data.board.board = [
+            Some(FieldType::Start),
+            Some(FieldType::Market),
+            Some(FieldType::Position1),
+            Some(FieldType::Hare),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hare),
+            Some(FieldType::Carrots),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hare),
+            Some(FieldType::Position2),
+            Some(FieldType::Salad),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Carrots),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hare),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Position2),
+            Some(FieldType::Market),
+            Some(FieldType::Position1),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Carrots),
+            Some(FieldType::Carrots),
+            Some(FieldType::Position2),
+            Some(FieldType::Salad),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Market),
+            Some(FieldType::Hare),
+            Some(FieldType::Position2),
+            Some(FieldType::Carrots),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Position2),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hare),
+            Some(FieldType::Position1),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hare),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Carrots),
+            Some(FieldType::Position2),
+            Some(FieldType::Hare),
+            Some(FieldType::Carrots),
+            Some(FieldType::Salad),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hare),
+            Some(FieldType::Position1),
+            Some(FieldType::Position2),
+            Some(FieldType::Market),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Hare),
+            Some(FieldType::Carrots),
+            Some(FieldType::Market),
+            Some(FieldType::Position2),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hedgehog),
+            Some(FieldType::Salad),
+            Some(FieldType::Hare),
+            Some(FieldType::Carrots),
+            Some(FieldType::Position1),
+            Some(FieldType::Carrots),
+            Some(FieldType::Hare),
+            Some(FieldType::Carrots),
+            Some(FieldType::Goal)
+        ];
+
+        game_data.our_hare = Hare::new();
+
+        game_data.enemy_hare = Hare::new();
+
+        let legal_moves = compute_legal_moves(&game_data);
+
+        let mut i = 1;
+
+        for m in legal_moves {
+            print!("{} {:?}", i, m.get_type());
+
+            if m.get_type() == MoveType::Advance {
+                let advance_move = m.as_any().downcast_ref::<AdvanceMove>().unwrap();
+                
+                print!(" {} ", advance_move.distance);
+
+                if advance_move.cards.is_some() {
+
+                    print!("with cards: ");
+
+                    for card in advance_move.cards.as_ref().unwrap() {
+                        print!("{:?} ", card);
+                    }
+                    
+                }
+
+                println!();
+            }
+
+            i += 1;
+        }
+
+        let expected_moves: Vec<Box<dyn Move>> = vec![
+            Box::new(AdvanceMove::new(1, Some(vec![Card::EatSalad]))),
+            Box::new(AdvanceMove::new(1, Some(vec![Card::FallBack]))),
+            Box::new(AdvanceMove::new(1, Some(vec![Card::HurryAhead]))),
+            Box::new(AdvanceMove::new(1, Some(vec![Card::SwapCarrots]))),
+            Box::new(AdvanceMove::new(2, None)),
+            Box::new(AdvanceMove::new(2, None)),
+            Box::new(AdvanceMove::new(6, None)),
+            Box::new(AdvanceMove::new(7, None)),
+            Box::new(AdvanceMove::new(9, None)),
+            Box::new(AdvanceMove::new(10, None)),
+        ];
+
+        let equal = true;
+
+        // Check if all moves that are in the valid moves vector are also inside the excpected moves vector
+        // If there are missing moves, then set missing_moves to true
+
+        assert_eq!(equal, true);
+    }
 }
