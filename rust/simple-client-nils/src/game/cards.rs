@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(PartialEq, Debug)]
 pub enum Card {
     SwapCarrots,
@@ -18,8 +20,19 @@ impl Card {
     }
 }
 
-impl ToString for Card {
-    fn to_string(&self) -> String {
+impl Display for Card {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Card::SwapCarrots => write!(f, "🔃Card: Swap Carrots"),
+            Card::EatSalad => write!(f, "🍽️Card: Eat Salad"),
+            Card::FallBack => write!(f, " 🏃🏻‍♀️Card: Fall Back"),
+            Card::HurryAhead => write!(f, "🏃🏻‍♀️‍➡️Card: Hurry Ahead"),
+        }
+    }
+}
+
+impl Card {
+    pub fn convert_to_string(&self) -> String {
         match self {
             Card::SwapCarrots => String::from("SWAP_CARROTS"),
             Card::EatSalad => String::from("EAT_SALAD"),
