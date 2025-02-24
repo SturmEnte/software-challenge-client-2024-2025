@@ -15,6 +15,8 @@ use crate::structs::game_move::ExchangeCarrotsMove;
 
 use crate::enums::card::Card;
 
+const LAST_SALAD_FIELD: u8 = 57;
+
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
 
@@ -134,11 +136,11 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                                 legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::EatSalad]))));
                             }
                         },
-                        // Card::SwapCarrots => {
-                        //     if game_data.our_hare.carrots >= move_carrot_price + 10 {
-                        //         legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
-                        //     }
-                        // },
+                        Card::SwapCarrots => {
+                            if game_data.last_swap_carrots_usage + 2 < game_data.turn as i8 && game_data.our_hare.position < LAST_SALAD_FIELD && game_data.enemy_hare.position < LAST_SALAD_FIELD {
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::SwapCarrots]))));
+                            }
+                        },
                         // Card::FallBack => {
                         // },
                         // Card::HurryAhead => {
