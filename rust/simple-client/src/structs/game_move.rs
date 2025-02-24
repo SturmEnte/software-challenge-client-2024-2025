@@ -30,7 +30,7 @@ impl Move for AdvanceMove {
             let mut cards_string = String::new();
 
             for card in self.cards.as_ref().unwrap() {
-                cards_string.push_str(&card_to_string(card));
+                cards_string.push_str(format!("<card>{}</card>", card_to_string(card)).as_str());
             }
 
             return format!("<data class=\"advance\" distance=\"{}\">{}</data>", self.distance, cards_string);
