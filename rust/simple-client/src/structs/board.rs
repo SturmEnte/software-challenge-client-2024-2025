@@ -1,13 +1,13 @@
 use crate::enums::field_type::FieldType;
 
+#[derive(Clone)]
 pub struct Board {
 	pub board: [Option<FieldType>; crate::FIELD_COUNT],
-	pub initialized: bool,
 }
 
 impl Board {
 	pub fn new() -> Board {
-		Board { board: [None; crate::FIELD_COUNT], initialized: false }
+		Board { board: [None; crate::FIELD_COUNT] }
 	}
 
 	pub fn get_field(&self, x: usize) -> Option<FieldType> {

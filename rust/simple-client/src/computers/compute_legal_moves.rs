@@ -15,24 +15,26 @@ use crate::structs::game_move::ExchangeCarrotsMove;
 
 use crate::enums::card::Card;
 
+const LAST_SALAD_FIELD: u8 = 57;
+
 pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
     let mut legal_moves: Vec<Box<dyn Move>> = Vec::new();
 
-    if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad {
-        println!("We are on a salad field");
-        if game_data.our_hare.last_move.is_some() {
-            println!("We have a last move");
-            if game_data.our_hare.last_move_type == Some(MoveType::Advance) {
-                println!("Our last move was an advance move");
-            }
-        }
-    }  
+    // if game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad {
+    //     println!("We are on a salad field");
+    //     if game_data.our_hare.last_move_type.is_some() {
+    //         println!("We have a last move");
+    //         if game_data.our_hare.last_move_type == Some(MoveType::Advance) {
+    //             println!("Our last move was an advance move");
+    //         }
+    //     }
+    // }  
 
     // Eat salad move
     // Check if the last move was an advance move and if the hare is on a salad field
     // If so, is the hare forced to eat a salad
     if  game_data.board.board[game_data.our_hare.position as usize].unwrap() == FieldType::Salad    // Check if the current field is a salad field
-        && game_data.our_hare.last_move.is_some()                                                   // Check if the hare has a last move
+        && game_data.our_hare.last_move_type.is_some()                                              // Check if the hare has a last move
         && game_data.our_hare.last_move_type == Some(MoveType::Advance) {                           // Check if the hare's last move was an advance move    
 
         legal_moves.push(Box::new(EatSaladMove::new()));
@@ -115,10 +117,10 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             // If the field is a market field does our hare has too have at least an aditional 10 carrots
             FieldType::Market => {
                 if game_data.our_hare.carrots >= move_carrot_price + 10 {
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::EatSalad))));
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::FallBack))));
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::HurryAhead))));
-                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::EatSalad]))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::FallBack]))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::HurryAhead]))));
+                    legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::SwapCarrots]))));
                 }
             },
             // If the field is a hare field check if the hare has cards and if they are legal to be played
@@ -131,14 +133,14 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
                     match card {
                         Card::EatSalad => {
                             if game_data.our_hare.salads > 0 {
-                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::EatSalad))));
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::EatSalad]))));
                             }
                         },
-                        // Card::SwapCarrots => {
-                        //     if game_data.our_hare.carrots >= move_carrot_price + 10 {
-                        //         legal_moves.push(Box::new(AdvanceMove::new(distance, Some(Card::SwapCarrots))));
-                        //     }
-                        // },
+                        Card::SwapCarrots => {
+                            if game_data.last_swap_carrots_usage + 2 < game_data.turn as i8 && game_data.our_hare.position < LAST_SALAD_FIELD && game_data.enemy_hare.position < LAST_SALAD_FIELD {
+                                legal_moves.push(Box::new(AdvanceMove::new(distance, Some(vec![Card::SwapCarrots]))));
+                            }
+                        },
                         // Card::FallBack => {
                         // },
                         // Card::HurryAhead => {
