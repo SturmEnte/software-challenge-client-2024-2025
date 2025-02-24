@@ -12,3 +12,5 @@ xml = "0.8.20"
 log_incoming_xml = []
 #Prints information about the game board.
 debug_board_info = []
+#Prints information about the game game state.
+debug_game_state_info = []
