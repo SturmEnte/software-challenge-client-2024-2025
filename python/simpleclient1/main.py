@@ -50,6 +50,7 @@ while True:
             t1 = time()
             xmlState = data.find('state')
             turn = int(xmlState.attrib['turn'])
+            print("MEMENTO", turn)
             if turn == 0:
                 start_team, board, players = parse_memento_start(xmlState)
                 state = State(conn.team, turn, start_team, board, players)

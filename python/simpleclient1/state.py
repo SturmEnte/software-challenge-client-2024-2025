@@ -86,6 +86,8 @@ class State():
         '''Applies a move to the board using the selected team.'''
 
         self.turn += 1
+        
+        print("APPLY MOVE", self.turn)
 
         # select player to apply move for
         if own_player:

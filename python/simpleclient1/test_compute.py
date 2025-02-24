@@ -3,11 +3,14 @@ from time import time
 from state import State
 from xml.etree.ElementTree import fromstring
 from compute import compute_move, get_possible_moves
+from move import Move
 
 #TODO: make it work with entire replay and specify turn per variable/input
 #      this has to be done to correctly get the last move for eat_salad calculation and for last use of exchange carrots card
 
-with open("../test/memento1.xml", "r") as msg:
+ate_salad = True
+
+with open("../test/memento5.xml", "r") as msg:
     msg = msg.read()
     print("\nNEW MESSAGE:\n" + msg + "\n" + "-"*35)
 
@@ -22,6 +25,11 @@ with open("../test/memento1.xml", "r") as msg:
 
     start_team, board, players = parse_memento_start(xmlState)
     state = State("TWO", turn, start_team, board, players)
+
+    if ate_salad:
+        salad_move = Move()
+        salad_move.eat_salad()
+        state.last_move = salad_move
 
     move = compute_move(state)
 
