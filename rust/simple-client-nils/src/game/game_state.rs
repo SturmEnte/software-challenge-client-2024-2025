@@ -27,8 +27,8 @@ impl Display for GameState {
             write!(f, "  ❌Last Move: None\n")?;
         }
         
-        write!(f, "  🟢Your Hare:\n[{}]", self.your_hare)?;
-        write!(f, "  🔴Opponent Hare:\n[{}]", self.opponent_hare)?;
+        write!(f, "  🟢Your Hare:[\n{}]\n", self.your_hare)?;
+        write!(f, "  🔴Opponent Hare:[\n{}]\n", self.opponent_hare)?;
         
         Ok(())
     }
