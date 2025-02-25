@@ -1,6 +1,7 @@
 from board import Board
 from field import Field
 from player import Player
+from move import Move
 from xml.etree import ElementTree
 
 def parse_board(board_tag):
@@ -21,12 +22,19 @@ def parse_players(received_players):
     players = []
     for received_player in received_players:
 
+        cards = []
+        cards_tag = received_player.find('cards')
+        for card_tag in cards_tag.findall('card'):
+            cards.append(card_tag.text)
+
         player = Player(
             received_player.attrib['team'],
             int(received_player.attrib['position']),
             int(received_player.attrib['salads']),
             int(received_player.attrib['carrots'])
         )
+
+        player.cards = cards
 
         players.append(player)
     
@@ -44,11 +52,34 @@ def parse_memento_start(state):
 
     return start_team, board, players
 
-def parse_memento(state):
-    # parse players
-    players = parse_players(state.findall('hare'))
+def parse_last_move(last_move):
+    move = Move()
+    
+    move_type = last_move.attrib['class']
+    if move_type == "advance":
+        move.advance(int(last_move.attrib['distance']))
 
-    return players
+        for card in last_move.findall('card'):
+            move.append_card(card.text)
+    
+    elif move_type == "fallback":
+        move.fallback()
+
+    elif move_type == "eatsalad":
+        move.eat_salad()
+    
+    elif move_type == "exchangecarrots":
+        move.exchange_carrots(int(last_move.attrib['amount']))
+    
+    return move
+
+def parse_memento(state):
+    # parse last move
+    last_move = state.find('lastMove')
+    move = parse_last_move(last_move)
+
+    return move
+
 
 def parse_result(data, state):
     score_one = data.find('scores').findall('entry')[0]
