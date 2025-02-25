@@ -84,8 +84,8 @@ fn number_of_hurry_ahead_cards(jumps: u8, first_jump_card_hurry_ahead: bool) -> 
 
 fn number_of_fall_back_cards(jumps: u8, first_jump_card_hurry_ahead: bool) -> u8 {
     if first_jump_card_hurry_ahead {
-        (jumps as f64 / 2.0).ceil() as u8
-    } else {
         (jumps as f64 / 2.0).floor() as u8
+    } else {
+        (jumps as f64 / 2.0).ceil() as u8
     }
 }
