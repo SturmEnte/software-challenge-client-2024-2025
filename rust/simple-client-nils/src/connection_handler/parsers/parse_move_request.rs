@@ -44,7 +44,6 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                 }
                 message += "\n  </data>";
                 message += MESSAGE_END;
-                println!("{}", message);
                 message
             },
         }.as_bytes())?;
