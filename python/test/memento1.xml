@@ -1,0 +1,84 @@
+<room roomId="21fe074c-a122-4ffe-8f78-e22e930269d4">
+  <data class="memento">
+    <state class="state" startTeam="ONE" turn="55">
+      <board>
+        <field>START</field>
+        <field>POSITION_2</field>
+        <field>POSITION_1</field>
+        <field>CARROTS</field>
+        <field>MARKET</field>
+        <field>HARE</field>
+        <field>HARE</field>
+        <field>CARROTS</field>
+        <field>CARROTS</field>
+        <field>HARE</field>
+        <field>SALAD</field>
+        <field>HEDGEHOG</field>
+        <field>CARROTS</field>
+        <field>CARROTS</field>
+        <field>HARE</field>
+        <field>HEDGEHOG</field>
+        <field>POSITION_2</field>
+        <field>POSITION_1</field>
+        <field>MARKET</field>
+        <field>HEDGEHOG</field>
+        <field>CARROTS</field>
+        <field>CARROTS</field>
+        <field>SALAD</field>
+        <field>POSITION_2</field>
+        <field>HEDGEHOG</field>
+        <field>CARROTS</field>
+        <field>POSITION_2</field>
+        <field>HARE</field>
+        <field>CARROTS</field>
+        <field>MARKET</field>
+        <field>HEDGEHOG</field>
+        <field>HARE</field>
+        <field>POSITION_2</field>
+        <field>CARROTS</field>
+        <field>HARE</field>
+        <field>CARROTS</field>
+        <field>POSITION_1</field>
+        <field>HEDGEHOG</field>
+        <field>HARE</field>
+        <field>CARROTS</field>
+        <field>POSITION_2</field>
+        <field>CARROTS</field>
+        <field>SALAD</field>
+        <field>HEDGEHOG</field>
+        <field>MARKET</field>
+        <field>HARE</field>
+        <field>POSITION_1</field>
+        <field>CARROTS</field>
+        <field>POSITION_2</field>
+        <field>CARROTS</field>
+        <field>HEDGEHOG</field>
+        <field>CARROTS</field>
+        <field>CARROTS</field>
+        <field>POSITION_2</field>
+        <field>HARE</field>
+        <field>MARKET</field>
+        <field>HEDGEHOG</field>
+        <field>SALAD</field>
+        <field>HARE</field>
+        <field>CARROTS</field>
+        <field>POSITION_1</field>
+        <field>CARROTS</field>
+        <field>HARE</field>
+        <field>CARROTS</field>
+        <field>GOAL</field>
+      </board>
+      <hare team="ONE" position="56" salads="3" carrots="143">
+        <lastAction class="fallback"/>
+        <cards>
+          <card>FALL_BACK</card>
+        </cards>
+      </hare>
+      <hare team="TWO" position="63" salads="4" carrots="104">
+        <lastAction class="advance" distance="7"/>
+        <cards/>
+      </hare>
+      <lastMove class="fallback"/>
+    </state>
+  </data>
+</room>

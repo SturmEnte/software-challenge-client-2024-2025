@@ -22,7 +22,7 @@ class Field():
             
             available field types:
             - START
-            - CARROT
+            - CARROTS
             - HARE
             - POSITION_1
             - POSITION_2
