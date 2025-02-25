@@ -40,7 +40,7 @@ impl GameState {
             your_hare: Hare::new(),
             opponent_hare: Hare::new(),
             last_carrot_swap: 0,
-            turn: 1,
+            turn: 0,
             team: team,
             start_team: Team::One,
             last_move: None,
@@ -64,7 +64,7 @@ impl GameState {
     }
 
     pub fn get_current_team(&self) -> Team {
-        if self.turn % 2 == 0 {
+        if self.turn % 2 != 0 {
             self.start_team
         } else {
             !self.start_team
@@ -72,7 +72,7 @@ impl GameState {
     }
 
     pub fn get_next_team(&self) -> Team {
-        if (self.turn + 1) % 2 == 0 {
+        if (self.turn + 1) % 2 != 0 {
             self.start_team
         } else {
             !self.start_team
