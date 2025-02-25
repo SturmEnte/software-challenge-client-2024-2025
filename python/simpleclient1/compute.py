@@ -58,7 +58,7 @@ def get_moves_recursive(state, player, opponent, index, incomplete_move):
         if len(player.cards) < 1:
             return []
         if "SWAP_CARROTS" in player.cards:
-            if player.position < LAST_SALAD_FIELD and opponent.position < LAST_SALAD_FIELD and state.turn - state.last_swap_carrots_turn > 2:
+            if index < LAST_SALAD_FIELD and opponent.position < LAST_SALAD_FIELD and state.turn - state.last_swap_carrots_turn > 2:
                 move = deepcopy(incomplete_move)
                 move.append_card("SWAP_CARROTS")
                 moves.append(move)
@@ -150,7 +150,7 @@ def get_possible_moves(state, use_opponent=False):
             if len(player.cards) < 1:
                 continue
             if "SWAP_CARROTS" in player.cards:
-                if player.position < LAST_SALAD_FIELD and opponent.position < LAST_SALAD_FIELD and state.turn - state.last_swap_carrots_turn > 2 and needed_carrots <= player.carrots:
+                if i < LAST_SALAD_FIELD and opponent.position < LAST_SALAD_FIELD and state.turn - state.last_swap_carrots_turn > 2 and needed_carrots <= player.carrots:
                     move = Move()
                     move.advance(i - player.position)
                     move.append_card("SWAP_CARROTS")
