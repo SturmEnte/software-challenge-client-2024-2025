@@ -28,7 +28,7 @@ pub fn calculate_legal_moves(game_state: &GameState, board: &Board) -> Vec<GameM
 
     if is_exchange_carrots_legal(current_hare.position, board) {
         legal_moves.push(GameMove::ExchangeCarrots(CarrotsToExchange::PlusTen));
-        if current_hare.carrots >= 10 {legal_moves.push(GameMove::ExchangeCarrots(CarrotsToExchange::PlusTen));}
+        if current_hare.carrots >= 10 {legal_moves.push(GameMove::ExchangeCarrots(CarrotsToExchange::MinusTen));}
     }
 
     //println!("carrots: {}", current_hare.carrots);
