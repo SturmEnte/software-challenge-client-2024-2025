@@ -4,7 +4,6 @@ use crate::enums::card::card_to_string;
 use crate::enums::field_type::FieldType;
 use crate::enums::move_type::MoveType;
 
-use crate::structs::board;
 use crate::structs::board::Board;
 use crate::structs::hare::Hare;
 use crate::utils::triangular_number::triangular_number;
