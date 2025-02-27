@@ -11,9 +11,20 @@ pub struct ConnectionHandler<C: ComputerPlayer> {
     pub(super) bord:Option<Board>,
     pub(super) game_state: Option<GameState>,
     pub(super) player: C,
-    pub(super) last_move_was_our: bool,
+    pub(super) last_game_message: GameMessage,
     #[cfg(feature = "log_incoming_xml")]
     pub(super) xml_input_file: Option<File> // This field is locked behind the feature flag log_incoming_xml.
+}
+
+#[derive(PartialEq)]
+pub(super) enum GameMessage {
+    StartMessage,
+    OurLastMove,
+    OurLastMoveOpponentTurnSkipped,
+    OpponentLastMove,
+    OpponentLastMoveOurTurnSkipped,
+    MoveRequest,
+    MoveRequestOpponentTurnSkipped,
 }
 
 impl <C: ComputerPlayer> ConnectionHandler<C> {
@@ -26,7 +37,7 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
                 player: player,
                 bord: None,
                 game_state: None,
-                last_move_was_our: false,
+                last_game_message: GameMessage::StartMessage,
                 #[cfg(feature = "log_incoming_xml")]
                 xml_input_file: OpenOptions::new()
                     .write(true)
@@ -46,7 +57,7 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
                 player: player,
                 bord: None,
                 game_state: None,
-                last_move_was_our: false,
+                last_game_message: GameMessage::StartMessage,
                 #[cfg(feature = "log_incoming_xml")]
                 xml_input_file: OpenOptions::new()
                     .write(true)
@@ -73,5 +84,31 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
     pub(crate) fn update_game_state(&mut self, mov: GameMove) -> Result<(), ConnectionHandlerError> {
         self.game_state.as_mut().ok_or(ConnectionHandlerError::GameStateIsNone)?.update(self.bord.as_ref().ok_or(ConnectionHandlerError::BordIsNone)?, mov)?;
         Ok(())
+    }
+}
+
+impl GameMessage {
+    pub(super) fn last_move_receive(&mut self) {
+        *self = match self {
+            GameMessage::StartMessage => Self::OpponentLastMove,
+            GameMessage::OurLastMove => Self::OpponentLastMove,
+            GameMessage::OurLastMoveOpponentTurnSkipped => Self::OpponentLastMove,
+            GameMessage::OpponentLastMove => Self::OpponentLastMoveOurTurnSkipped,
+            GameMessage::OpponentLastMoveOurTurnSkipped => Self::OpponentLastMove,
+            GameMessage::MoveRequest => Self::OurLastMove,
+            GameMessage::MoveRequestOpponentTurnSkipped => Self::OurLastMoveOpponentTurnSkipped,
+        }
+    }
+
+    pub(super) fn move_request_receive(&mut self) {
+        *self = match self {
+            GameMessage::StartMessage => Self::MoveRequest,
+            GameMessage::OurLastMove => Self::MoveRequestOpponentTurnSkipped,
+            GameMessage::OurLastMoveOpponentTurnSkipped => Self::MoveRequest,
+            GameMessage::OpponentLastMove => Self::MoveRequest,
+            GameMessage::OpponentLastMoveOurTurnSkipped => Self::MoveRequest,
+            GameMessage::MoveRequest => Self::MoveRequestOpponentTurnSkipped,
+            GameMessage::MoveRequestOpponentTurnSkipped => Self::MoveRequest,
+        }
     }
 }
