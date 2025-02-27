@@ -87,8 +87,8 @@ pub fn compute_legal_moves(game_data: &GameData) -> Vec<Box<dyn Move>> {
             break; // All moves after this one will also be too expensive
         }
 
-        // Check if the enemy hare is on the new field after the move
-        if game_data.our_hare.position + distance == game_data.enemy_hare.position {
+        // Check if the enemy hare is on the new field after the move and the new field is not the goal
+        if game_data.our_hare.position + distance == game_data.enemy_hare.position && game_data.board.get_field(&((game_data.our_hare.position + distance) as usize)).unwrap() != FieldType::Goal {
             continue;
         }
 
