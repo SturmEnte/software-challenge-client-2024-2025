@@ -83,6 +83,8 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
 
     pub(crate) fn update_game_state(&mut self, mov: GameMove) -> Result<(), ConnectionHandlerError> {
         self.game_state.as_mut().ok_or(ConnectionHandlerError::GameStateIsNone)?.update(self.bord.as_ref().ok_or(ConnectionHandlerError::BordIsNone)?, mov)?;
+        #[cfg(feature = "debug_game_state_info")]
+        println!("{}", self.game_state.as_ref().unwrap());
         Ok(())
     }
 }

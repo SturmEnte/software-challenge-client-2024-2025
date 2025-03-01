@@ -40,9 +40,6 @@ impl GameState {
         give_position_field_reward(board, opponent_hare, current_hare.position);
 
         self.last_move = Some(mov);
-        
-        #[cfg(feature = "debug_game_state_info")]
-        println!("{}", self);
 
         return Ok(());
     }
