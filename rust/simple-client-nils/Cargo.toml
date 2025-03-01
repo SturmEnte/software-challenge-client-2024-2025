@@ -8,7 +8,7 @@ thiserror = "2.0.3"
 xml = "0.8.20"
 
 [features]
-#Writes the xml to a file. The dir of the file can be changed with XML_LOG_DIR.
+#Writes the incoming xml to a file. The dir of the file can be changed with XML_LOG_DIR.
 log_incoming_xml = []
 #Prints information about the game board.
 debug_board_info = []
