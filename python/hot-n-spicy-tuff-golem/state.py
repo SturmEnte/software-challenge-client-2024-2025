@@ -1,4 +1,5 @@
 from compute import get_hedgehog_field, get_needed_carrots
+from copy import deepcopy
 from move import Move
 
 class State():
@@ -35,6 +36,9 @@ class State():
         else:
             self.player = players[1]
             self.opponent = players[0]
+    
+    def copy(self):
+        return deepcopy(self)
     
     def market_or_hare_field(self, move, player, other_player):
         new_field = self.board.get_field(player.position)
@@ -151,6 +155,9 @@ class State():
             # if the opponent reached the goal
             else:
                 self.winner = self.opponent_team
+    
+    def static_evaluation(self):
+        return ((5 - self.player.salads) * 100) + (self.player.position * 2) - ((5 - self.opponent.salads) * 100) + (self.opponent.position * 2)
             
     def print_board(self):
         

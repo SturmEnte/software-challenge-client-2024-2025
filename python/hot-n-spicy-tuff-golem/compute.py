@@ -205,6 +205,34 @@ def get_possible_moves(state, use_opponent=False):
 def get_random_move(state):
     pmvs = get_possible_moves(state)
     return choice(pmvs)
+
+def minimax(state, depth, alpha, beta, maximizing_player, start_time):
+    if depth == 0 or state.game_over or time() - start_time >= TIME_LIMIT:
+        return state.static_evaluation()
+    
+    if maximizing_player:
+        max_eval = -2147483648 #minimum i32 value
+        for mv in get_possible_moves(state, False):
+            new_state = state.copy()
+            new_state.apply_move(mv)
+            eval = minimax(state, depth-1, alpha, beta, False, start_time) #TODO: skip our move, when we cant make a move
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta <= alpha:
+                break
+        return max_eval
+    
+    else:
+        min_eval = 2147483647 #maximum i32 value
+        for mv in get_possible_moves(state, True):
+            new_state = state.copy()
+            new_state.apply_move(mv)
+            eval = minimax(state, depth-1, alpha, beta, True, start_time) #TODO: skip oppponent move, when he cant make a move
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta <= alpha:
+                break
+        return min_eval
    
 def get_best_move(state):
     pass # TODO: implement a cool algorithm like minimax
