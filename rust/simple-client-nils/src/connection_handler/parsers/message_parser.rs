@@ -12,10 +12,6 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                             self.parse_data(parser, &attributes)?;
                             break;
                         },
-                        "left" => {
-                            self.leave();
-                            break;
-                        },
                         _ => {}
                     }
                 }
