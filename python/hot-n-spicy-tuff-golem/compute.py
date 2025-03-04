@@ -108,7 +108,7 @@ def get_possible_moves(state, use_opponent=False):
     pmvs = []
 
     # eat salad move
-    if state.board.get_field(player.position).type == "SALAD" and player.last_move.type != "eatsalad" and player.salads > 0:
+    if state.board.get_field(player.position).type == "SALAD" and player.last_move.type != "eatsalad":
         move = Move()
         move.eat_salad()
         pmvs.append(move)
@@ -142,6 +142,9 @@ def get_possible_moves(state, use_opponent=False):
             continue
 
         if opponent.position == i and field.type != "GOAL":
+            continue
+
+        if field.type == "SALAD" and player.salads < 1:
             continue
 
         if field.type == "GOAL":
@@ -237,14 +240,12 @@ def minimax(state, depth, alpha, beta, maximizing_player, start_time):
         return min_eval
    
 def get_best_move(state):
-    print("GET BEST MOVE ENGAGED!!!!!!!!")
     minimax_depth = 0
     start_time = time()
     possible_moves = get_possible_moves(state)
     rated_moves= []
     fully_rated_moves = []
     while True:
-        print("PMVS!!!", possible_moves)
         for mv in possible_moves:
             new_state = state.copy()
             new_state.apply_move(deepcopy(mv))
@@ -260,11 +261,10 @@ def get_best_move(state):
             fully_rated_moves.append(mv)
         
         minimax_depth += 1
-        print(f"Tiefe {minimax_depth} erreicht!")
         if minimax_depth >= 10:
             break
         
-    #best_mv = Move()
+    best_mv = fully_rated_moves[0][0]
     best_mv_rating = -2147483648 #minimum i32 value
     for rated_mv in fully_rated_moves:
         if rated_mv[1] > best_mv_rating:
@@ -272,7 +272,6 @@ def get_best_move(state):
             best_mv_rating = rated_mv[1]
     
     print("\nBest Move ------------")
-    print(best_mv)
     print(f"Rating: {best_mv_rating}\n")
 
     return best_mv

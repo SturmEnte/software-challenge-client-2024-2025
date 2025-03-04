@@ -10,7 +10,7 @@ from move import Move
 
 ate_salad = True
 
-with open("../test/memento6.xml", "r") as msg:
+with open("../test/memento9.xml", "r") as msg:
     msg = msg.read()
     print("\nNEW MESSAGE:\n" + msg + "\n" + "-"*35)
 

@@ -88,13 +88,7 @@ class State():
     def apply_move(self, move, own_player=True):
         '''Applies a move to the board using the selected team.'''
 
-        self.print_state()
-        print(move)
-        print(f"Own player: {own_player}\n")
-
         self.turn += 1
-        
-        print("APPLY MOVE", self.turn)
 
         # select player to apply move for
         if own_player:
@@ -162,7 +156,7 @@ class State():
                 self.winner = self.opponent_team
     
     def static_evaluation(self):
-        return ((5 - self.player.salads) * 100) + (self.player.position * 2) - ((5 - self.opponent.salads) * 100) + (self.opponent.position * 2)
+        return (((5 - self.player.salads) * 100) + (self.player.position * 2) + self.player.in_goal() * 1000000) - (((5 - self.opponent.salads) * 100) + (self.opponent.position * 2) + self.opponent.in_goal() * 1000000)
             
     def print_board(self):
         

@@ -39,6 +39,11 @@ class Player():
     def get_position(self):
         return self.position
     
+    def in_goal(self):
+        if self.position == 64:
+            return 1
+        return 0
+    
     def __str__(self):
         out = ""
 
