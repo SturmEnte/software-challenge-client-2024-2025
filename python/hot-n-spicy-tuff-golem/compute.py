@@ -86,6 +86,8 @@ def get_moves_recursive(state, player, opponent, index, incomplete_move):
                 new_player.cards += player.cards
                 new_player.cards.remove("FALL_BACK")
                 moves += get_moves_recursive(state, new_player, opponent, opponent.position - 1, move)
+        
+        
 
 
         return moves
@@ -106,7 +108,7 @@ def get_possible_moves(state, use_opponent=False):
     pmvs = []
 
     # eat salad move
-    if state.board.get_field(player.position).type == "SALAD" and state.last_move.type != "eatsalad":
+    if state.board.get_field(player.position).type == "SALAD" and player.last_move.type != "eatsalad" and player.salads > 0:
         move = Move()
         move.eat_salad()
         pmvs.append(move)
@@ -214,8 +216,8 @@ def minimax(state, depth, alpha, beta, maximizing_player, start_time):
         max_eval = -2147483648 #minimum i32 value
         for mv in get_possible_moves(state, False):
             new_state = state.copy()
-            new_state.apply_move(mv)
-            eval = minimax(state, depth-1, alpha, beta, False, start_time) #TODO: skip our move, when we cant make a move
+            new_state.apply_move(mv, True)
+            eval = minimax(new_state, depth-1, alpha, beta, False, start_time) #TODO: skip our move, when we cant make a move
             max_eval = max(max_eval, eval)
             alpha = max(alpha, eval)
             if beta <= alpha:
@@ -226,8 +228,8 @@ def minimax(state, depth, alpha, beta, maximizing_player, start_time):
         min_eval = 2147483647 #maximum i32 value
         for mv in get_possible_moves(state, True):
             new_state = state.copy()
-            new_state.apply_move(mv)
-            eval = minimax(state, depth-1, alpha, beta, True, start_time) #TODO: skip oppponent move, when he cant make a move
+            new_state.apply_move(mv, False)
+            eval = minimax(new_state, depth-1, alpha, beta, True, start_time) #TODO: skip oppponent move, when he cant make a move
             min_eval = min(min_eval, eval)
             beta = min(beta, eval)
             if beta <= alpha:
@@ -235,11 +237,50 @@ def minimax(state, depth, alpha, beta, maximizing_player, start_time):
         return min_eval
    
 def get_best_move(state):
-    pass # TODO: implement a cool algorithm like minimax
+    print("GET BEST MOVE ENGAGED!!!!!!!!")
+    minimax_depth = 0
+    start_time = time()
+    possible_moves = get_possible_moves(state)
+    rated_moves= []
+    fully_rated_moves = []
+    while True:
+        print("PMVS!!!", possible_moves)
+        for mv in possible_moves:
+            new_state = state.copy()
+            new_state.apply_move(deepcopy(mv))
+            rating = minimax(new_state, minimax_depth, -2147483648, 2147483647, False, start_time)
+            rated_moves.append((mv, rating))
+        
+        if time() - start_time >= TIME_LIMIT:
+            print(f"GAME OVER!! DEPTH: {minimax_depth}")
+            break
+        
+        fully_rated_moves = []
+        for mv in rated_moves:
+            fully_rated_moves.append(mv)
+        
+        minimax_depth += 1
+        print(f"Tiefe {minimax_depth} erreicht!")
+        if minimax_depth >= 10:
+            break
+        
+    #best_mv = Move()
+    best_mv_rating = -2147483648 #minimum i32 value
+    for rated_mv in fully_rated_moves:
+        if rated_mv[1] > best_mv_rating:
+            best_mv = rated_mv[0]
+            best_mv_rating = rated_mv[1]
+    
+    print("\nBest Move ------------")
+    print(best_mv)
+    print(f"Rating: {best_mv_rating}\n")
+
+    return best_mv
 
 def compute_move(state):
     #t_start = time()
-    move = get_random_move(state)
+    #move = get_random_move(state)
+    move = get_best_move(state)
     
     print(move)
 

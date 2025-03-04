@@ -45,7 +45,6 @@ while True:
         if msgType == "moveRequest":
             move = compute_move(state)
             conn.sendMove(move)
-            state.last_move = move
         elif msgType == "memento":
             t1 = time()
             xmlState = data.find('state')

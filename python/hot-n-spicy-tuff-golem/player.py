@@ -1,3 +1,5 @@
+from move import Move
+
 try:
     from colorama import Back
     RED = Back.RED
@@ -29,6 +31,7 @@ class Player():
         self.salads = salads
         self.carrots = carrots
         self.cards = []
+        self.last_move = Move()
     
     def set_position(self, x):
         self.position = x

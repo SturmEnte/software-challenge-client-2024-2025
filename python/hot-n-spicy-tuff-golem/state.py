@@ -10,7 +10,6 @@ class State():
         self.board = board
         self.game_over = False
         self.winner = None
-        self.last_move = Move()
         self.last_swap_carrots_turn = -2
 
         if self.team == "ONE":
@@ -89,6 +88,10 @@ class State():
     def apply_move(self, move, own_player=True):
         '''Applies a move to the board using the selected team.'''
 
+        self.print_state()
+        print(move)
+        print(f"Own player: {own_player}\n")
+
         self.turn += 1
         
         print("APPLY MOVE", self.turn)
@@ -100,6 +103,8 @@ class State():
         else:
             player = self.opponent
             other_player = self.player
+
+        player.last_move = move
 
         current_field = self.board.get_field(player.position)
 
