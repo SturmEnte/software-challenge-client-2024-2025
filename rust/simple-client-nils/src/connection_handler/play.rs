@@ -5,6 +5,12 @@ use super::connection_handler::ConnectionHandler;
 use crate::computer_player::ComputerPlayer;
 
 impl<C: ComputerPlayer> ConnectionHandler<C> {
+    /// Enters the main game loop, processing messages from the server.
+    ///
+    /// # Notes
+    ///
+    /// This method will block and run indefinitely until the connection is closed or an error
+    /// occurs. It is expected that the `ConnectionHandler` has joined a game using `join()`,
     pub fn play(&mut self) -> Result<(), ConnectionHandlerError> {
         while self.is_connected() {
             let mut buffer = [0; 3500];

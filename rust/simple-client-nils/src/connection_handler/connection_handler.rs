@@ -4,6 +4,18 @@ use std::{fs::{OpenOptions, File}, env};
 use std::net::{TcpStream, ToSocketAddrs};
 use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, moves::GameMove}};
 
+/// A struct who manages the communication with the game server.
+/// /// # Example
+///
+/// ```
+/// // Assuming `MyComputerPlayer` implements the `ComputerPlayer` trait
+/// let player = MyComputerPlayer::new();
+/// let mut connectionhandler = ConnectionHandler::new(player).unwrap();
+///
+/// 
+/// connectionhandler.join(Some("reservation_code")).unwrap();
+/// connectionhandler.play().unwrap();
+/// ```
 pub struct ConnectionHandler<C: ComputerPlayer> {
     pub(super) connected: bool,
     pub(super) connection: TcpStream,
@@ -28,6 +40,15 @@ pub(super) enum GameMessage {
 }
 
 impl <C: ComputerPlayer> ConnectionHandler<C> {
+        /// Creates a new `ConnectionHandler` connected to the default address.
+        ///
+        /// # Arguments
+        ///
+        /// * `player` - A struct which implements `ComputerPlayer`.
+        ///
+        /// # Returns
+        ///
+        /// * `Result<Self, ConnectionHandlerError>` - A result containing the new `ConnectionHandler` 
     pub fn new(player: C) -> Result<Self, ConnectionHandlerError>{
         Ok(
             ConnectionHandler{
@@ -48,6 +69,16 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
             }
         )
     }
+    /// Creates a new `ConnectionHandler` connectied to a given address.
+    ///
+    /// # Arguments
+    ///
+    /// * `player` - A struct which implements `ComputerPlayer`.
+    /// * `addr` - The address to connect to, which implements `ToSocketAddrs`.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self, ConnectionHandlerError>` - A result containing the new `ConnectionHandler` 
     pub fn from_addres(player: C, addr: &impl ToSocketAddrs) -> Result<Self, ConnectionHandlerError>{
         Ok(
             ConnectionHandler{

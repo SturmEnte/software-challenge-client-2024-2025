@@ -7,6 +7,28 @@ use super::connection_handler::ConnectionHandler;
 use crate::computer_player::ComputerPlayer;
 
 impl<C: ComputerPlayer> ConnectionHandler<C> {
+    /// Attempts to join a game using an optional reservation code.
+    ///
+    /// # Arguments
+    ///
+    /// * `reservation_code` - An optional string slice that holds the reservation code for a game.
+    ///
+    /// # Errors
+    ///
+    /// This method can return the following errors:
+    /// - `ConnectionHandlerError::ZeroBytesReadToBuffer` if no data was read into the buffer.
+    /// - `ConnectionHandlerError::MissingElement` if the expected `<protocol>` element is not found
+    ///   in the response from the server.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// let mut connectionhandler = ConnectionHandler::new(player).unwrap();
+    /// match connectionhandler.join(None)) {
+    ///     Ok(()) => println!("Successfully joined the game room."),
+    ///     Err(e) => eprintln!("Failed to join the game room: {:?}", e),
+    /// }
+    /// ```
     pub fn join(&mut self, reservation_code: Option<&str>) -> Result<(), ConnectionHandlerError> {
         let mut buffer = [0; 200];
 
