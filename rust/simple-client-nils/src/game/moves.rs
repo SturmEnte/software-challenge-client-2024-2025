@@ -3,7 +3,7 @@ use std::fmt::Display;
 use super::cards::Card;
 
 /// Enum representing different types of moves
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum GameMove {
     FallBack,
     EatSalad,
@@ -12,7 +12,7 @@ pub enum GameMove {
     AdvanceWithCards(u8, JumpCardDetails, Card)
 }
 /// Enum representing the types of carrot exchanges that are possible.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum CarrotsToExchange {
     MinusTen,
     PlusTen,
@@ -20,7 +20,7 @@ pub enum CarrotsToExchange {
 
 /// Struct that holds details about the number and sequence of jump cards played in a move 
 /// (By jump cards we mean the "Hurry Ahead" and "Fall Back" cards as these allow the player to jump forwards or backwards).
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct JumpCardDetails {
     first_card_and_number_of_cards: u8 // A single byte that stores both if the first card is a "Hurry Ahead" card or a "Fall Back" card in it's MSB and the number of jump cards in the rest of the bits.
 }

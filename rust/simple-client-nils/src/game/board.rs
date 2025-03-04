@@ -7,6 +7,7 @@ pub const SALAD_FIELDS: [u8; 4] = [10, 22, 42, 57];
 pub const FIRST_HEADGEHOG: u8 = 11;
 pub const LAST_SALAD: u8 = 57;
 
+#[derive(Clone)]
 pub struct Board {
     pub board: [FieldType; 65]
 }

@@ -4,7 +4,7 @@ use crate::utils::triangular_numbers::calculate_triangular_number;
 
 use super::{cards::Card, game_error::GameError};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Hare {
     pub ate_salad_last_round: bool,
     pub position: u8,

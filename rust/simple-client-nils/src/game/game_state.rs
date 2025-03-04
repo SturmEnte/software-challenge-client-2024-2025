@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use super::{hare::Hare, moves::GameMove, team::Team};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GameState {
     pub team: Team,
     pub start_team: Team,
