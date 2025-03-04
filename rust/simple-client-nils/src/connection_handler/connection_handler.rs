@@ -4,7 +4,7 @@ use std::{fs::{OpenOptions, File}, env};
 use std::net::{TcpStream, ToSocketAddrs};
 use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, moves::GameMove}};
 
-/// A struct who manages the communication with the game server.
+/// A struct which manages the communication with the game server.
 /// /// # Example
 ///
 /// ```
