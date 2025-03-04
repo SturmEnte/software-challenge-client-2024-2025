@@ -1,20 +1,7 @@
 [package]
-name = "hase_und_igel_client"
+name = "sweet-paprika-copper-golem"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-thiserror = "2.0.3"
-xml = "0.8.20"
-
-[features]
-#Writes the incoming xml to a file. The dir of the file can be changed with XML_LOG_DIR.
-log_incoming_xml = []
-#Prints information about the game board.
-debug_board_info = []
-#Prints information about the game game state.
-debug_game_state_info = []
-#Prints Debug information
-debug_info = ["debug_board_info", "debug_game_state_info"]
-#Logs xtml and prints Debug information.
-dal = ["log_incoming_xml", "debug_info"]
+hase_und_igel_client = { path="../simple-client-nils" }
