@@ -1,4 +1,4 @@
-use hase_und_igel_client::prelude::*;
+use hase_und_igel_client::{game, prelude::*};
 
 fn main() {
     let player: SweetPaprikaCopperGolem = SweetPaprikaCopperGolem {};
@@ -13,6 +13,8 @@ struct SweetPaprikaCopperGolem {
 
 impl ComputerPlayer for SweetPaprikaCopperGolem {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
-        todo!()
+        let mut moves: Vec<GameMove> = calculate_legal_moves(game_state, board);
+
+        moves.pop().unwrap()
     }
 }
