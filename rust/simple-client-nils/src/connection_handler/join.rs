@@ -17,7 +17,7 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
     ///
     /// ```
     /// let mut connectionhandler = ConnectionHandler::new(player).unwrap();
-    /// match connectionhandler.join(None)) {
+    /// match connectionhandler.join((None)) {
     ///     Ok(()) => println!("Successfully joined the game room."),
     ///     Err(e) => eprintln!("Failed to join the game room: {:?}", e),
     /// }
