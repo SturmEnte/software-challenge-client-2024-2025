@@ -1,6 +1,6 @@
 use xml::{reader::XmlEvent, EventReader};
 
-use crate::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, error::ConnectionHandlerError, game::{game_state::GameState, team::Team}, utils::get_attribute::get_attribute};
+use crate::{computer_player::ComputerPlayer, connection_handler::connection_handler::{ConnectionHandler, GameMessage}, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, team::Team}, utils::get_attribute::get_attribute};
 
 impl<C: ComputerPlayer> ConnectionHandler<C> {
     pub(super) fn parse_memento(&mut self, mut parser: EventReader<&[u8]>) -> Result<(), ConnectionHandlerError> {
@@ -20,15 +20,19 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                                     parser.skip()?;
                                     continue;
                                 }
-                                self.bord = Some(self.parse_board(&mut parser)?);
+                                self.bord = Some(Board::new(self.parse_board(&mut parser)?));
+                                #[cfg(feature = "debug_board_info")]
+                                println!("{}", self.bord.as_ref().unwrap());
                             },
-                            "lastGameMove" => {
-                                if self.last_move_was_our {
-                                    self.last_move_was_our = false;
-                                    break;
+                            "lastMove" => {
+                                if !(self.last_game_message == GameMessage::MoveRequest || self.last_game_message == GameMessage::MoveRequestOpponentTurnSkipped) {
+                                    if self.last_game_message == GameMessage::OpponentLastMove {
+                                        self.game_state.as_mut().unwrap().turn += 1;
+                                    }
+                                    let mov = self.parse_last_move(parser, attributes)?;
+                                    self.update_game_state(mov)?;
                                 }
-                                let mov = self.parse_last_move(parser, attributes)?;
-                                self.update_game_state(&mov)?;
+                                self.last_game_message.last_move_receive();
                                 break;
                             },
                             _ => {},

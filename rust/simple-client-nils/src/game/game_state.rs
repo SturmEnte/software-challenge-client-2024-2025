@@ -1,14 +1,37 @@
+use std::fmt::Display;
 
 use super::{hare::Hare, moves::GameMove, team::Team};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GameState {
-    pub turn: u8,
     pub team: Team,
     pub start_team: Team,
+    pub turn: u8,
+    pub last_carrot_swap: u8,
     pub last_move: Option<GameMove>,
     pub your_hare: Hare,
     pub opponent_hare: Hare,
+}
+
+impl Display for GameState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Game State:\n")?;
+        write!(f, "  🩷 Our Team: {}\n", self.team)?;
+        write!(f, "  🔰 Starting Team: {}\n", self.start_team)?;
+        write!(f, "  🎲 Turn: {}\n", self.turn)?;
+        write!(f, "  💱 Last Carrot Swap: {}\n", self.last_carrot_swap)?;
+        
+        if let Some(last_move) = &self.last_move {
+            write!(f, "  🎞 Last Move: {}\n", last_move)?;
+        } else {
+            write!(f, "  ❌ Last Move: None\n")?;
+        }
+        
+        write!(f, "  🟢 Your Hare:[\n{}]\n", self.your_hare)?;
+        write!(f, "  🔴 Opponent Hare:[\n{}]\n", self.opponent_hare)?;
+        
+        Ok(())
+    }
 }
 
 impl GameState {
@@ -16,7 +39,8 @@ impl GameState {
         GameState {
             your_hare: Hare::new(),
             opponent_hare: Hare::new(),
-            turn: 1,
+            last_carrot_swap: 0,
+            turn: 0,
             team: team,
             start_team: Team::One,
             last_move: None,
@@ -40,7 +64,15 @@ impl GameState {
     }
 
     pub fn get_current_team(&self) -> Team {
-        if self.turn % 2 == 0 {
+        if self.turn % 2 != 0 {
+            self.start_team
+        } else {
+            !self.start_team
+        }
+    }
+
+    pub fn get_next_team(&self) -> Team {
+        if (self.turn + 1) % 2 != 0 {
             self.start_team
         } else {
             !self.start_team

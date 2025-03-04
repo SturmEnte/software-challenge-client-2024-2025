@@ -4,3 +4,5 @@ pub mod join;
 pub mod play;
 mod parsers;
 pub(crate) mod get;
+
+pub use connection_handler::ConnectionHandler;

@@ -1,5 +1,6 @@
 use xml::{attribute::OwnedAttribute, EventReader};
 
+use crate::connection_handler::connection_handler::GameMessage;
 use crate::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, utils::get_attribute::get_attribute};
 use crate::error::ConnectionHandlerError;
 
@@ -13,8 +14,11 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                 self.parse_memento(parser)?;
             },
             "moveRequest" => {
+                if self.last_game_message == GameMessage::OurLastMove {
+                    self.game_state.as_mut().unwrap().turn += 1;
+                }
                 self.parse_move_request()?;
-                self.last_move_was_our = true;
+                self.last_game_message.move_request_receive();
             },
             "result" => {
                 self.leave();
@@ -23,4 +27,4 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
         }
         return Ok(())
     }
-}
+} 

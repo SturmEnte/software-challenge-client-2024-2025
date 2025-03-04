@@ -1,7 +1,10 @@
+use std::fmt::Display;
 
-use super::{cards::Card, field_type::FieldType, game_error::GameError};
+use crate::utils::triangular_numbers::calculate_triangular_number;
 
-#[derive(Debug)]
+use super::{cards::Card, game_error::GameError};
+
+#[derive(Debug, Clone)]
 pub struct Hare {
     pub ate_salad_last_round: bool,
     pub position: u8,
@@ -11,6 +14,20 @@ pub struct Hare {
     pub card_eat_salad: u8,
     pub card_fall_back: u8,
     pub card_hurry_ahead: u8,
+}
+
+impl Display for Hare {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "    📍 Position: {}\n", self.position)?;
+        write!(f, "    🥕 Carrots: {}\n", self.carrots)?;
+        write!(f, "    🥬 Salads: {}\n", self.salads)?;
+        write!(f, "    😋 Ate Salad Last Round: {}\n", self.ate_salad_last_round)?;
+        write!(f, "    🔃 Card Swap Carrots: {}\n", self.card_swap_carrots)?;
+        write!(f, "    🍽️ Eat Salad Cards: {}\n", self.card_eat_salad)?;
+        write!(f, "    ⏪ Fall Back Cards: {}\n", self.card_fall_back)?;
+        write!(f, "    ⏩ Hurry Ahead Cards: {}", self.card_hurry_ahead)?;
+        Ok(())
+    }
 }
 
 impl Hare {
@@ -36,33 +53,30 @@ impl Hare {
         }
     }
 
-    pub fn use_card(&mut self, card: &Card) -> Result<(), GameError> {
+    /// Consumes a specified card, decrementing its count in the game state.
+    ///
+    /// This function makes the Hare to consume one of its cards (depending on the card parameter).
+    /// This function dose not check if the Hare hase cards.
+    /// This function ony reduces the number of one of the card types that the Hare has by one.
+    ///
+    /// # Parameters
+    ///
+    /// - `card`: A reference to the `Card` enum that represents the card to be consumed.
+    pub fn consume_card(&mut self, card: &Card) {
         match card {
             Card::SwapCarrots => {
-                if self.card_swap_carrots == 0 {return Err(GameError::MissingCardSwapCarrots)}
                 self.card_swap_carrots -= 1;
             },
-            Card::EatSalad => self.card_eat_salad -= 1,
-            Card::FallBack => self.card_fall_back -= 1,
-            Card::HurryAhead => self.card_hurry_ahead -=1,
-        }
-        Ok(())
-    }
-
-    pub fn can_stand_on_without_cards(&self, field: &FieldType, carrot_cost: u16) -> Result<(), GameError> {
-        match field {
-            FieldType::Start => return Err(GameError::CanNotReturnToStart),
-            FieldType::Hedgehog => return Err(GameError::EnterdHedgehogFieldWhileMovingForward),
-            FieldType::Salad => if self.salads < 1 {return Err(GameError::NoSalads);},
-            FieldType::Market => return Err(GameError::NoCardPurchased),
-            FieldType::Hare => return Err(GameError::NoCardPlayd),
-            FieldType::Goal => {
-                if self.salads > 0 {return Err(GameError::TooManySalads);}
-                if self.carrots > 10 - carrot_cost {return Err(GameError::TooManyCarrots);}
+            Card::EatSalad => {
+                self.card_eat_salad -= 1
             },
-            _ => {}
+            Card::FallBack => {
+                self.card_fall_back -= 1
+            },
+            Card::HurryAhead => {
+                self.card_hurry_ahead -=1
+            },
         }
-        return Ok(());
     }
 
     /// Makes the `Hare` eat a salad and  gives it carrots based on its and its opponent's position.
@@ -98,4 +112,28 @@ impl Hare {
         }
         return Ok(())
     }
+
+    /// Advances the position of the Hare by a distance.
+    /// 
+    /// Increases the position of the Hare by the distance and deducts carrots accordingly.
+    /// This function does not check whether the player can stand on the new field!
+    ///
+    /// # Parameters
+    /// - `distance`: A `u8` representing the distance to advance. This value must be
+    ///   within the bounds of the game board.
+    ///
+    /// # Returns
+    /// - `Result<(), GameError>`: Returns `Ok(())` if the advancement is successful.
+    ///   - `GameError::OutOfBounce`: Returned if advancing the position would exceed
+    ///     the maximum position of 64 on the game board.
+    ///   - `GameError::NotEnoughCarrots`: Returned if the Hare does not have enough
+    ///     carrots to pay for the advancement.
+    pub fn advance(&mut self, distance: u8) -> Result<(), GameError> {
+        if self.position + distance > 64 {return Err(GameError::OutOfBounce);}
+        if calculate_triangular_number(distance as u16) > self.carrots {return Err(GameError::NotEnoughCarrots);}
+        self.position += distance;
+        self.carrots -= calculate_triangular_number(distance as u16);
+        Ok(())
+    }
 }
+

@@ -40,15 +40,15 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                             message += "\n    <card>FALL_BACK</card>";
                         }
                     }
+                    message += &format!("\n    <card>{}</card>", last_card.to_string());
                 }
                 message += "\n  </data>";
                 message += MESSAGE_END;
-                println!("{}", message);
                 message
             },
         }.as_bytes())?;
 
-        self.update_game_state(&mov)?;
+        self.update_game_state(mov)?;
 
         return Ok(());
     }

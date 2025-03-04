@@ -1,7 +1,9 @@
+use std::fmt::Display;
+
 use super::cards::Card;
 
 /// Enum representing different types of moves
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum GameMove {
     FallBack,
     EatSalad,
@@ -9,9 +11,8 @@ pub enum GameMove {
     Advance(u8),
     AdvanceWithCards(u8, JumpCardDetails, Card)
 }
-
 /// Enum representing the types of carrot exchanges that are possible.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum CarrotsToExchange {
     MinusTen,
     PlusTen,
@@ -19,9 +20,40 @@ pub enum CarrotsToExchange {
 
 /// Struct that holds details about the number and sequence of jump cards played in a move 
 /// (By jump cards we mean the "Hurry Ahead" and "Fall Back" cards as these allow the player to jump forwards or backwards).
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct JumpCardDetails {
     first_card_and_number_of_cards: u8 // A single byte that stores both if the first card is a "Hurry Ahead" card or a "Fall Back" card in it's MSB and the number of jump cards in the rest of the bits.
+}
+
+impl Display for GameMove {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            GameMove::FallBack => write!(f, "⏪ Fall back"),
+            GameMove::EatSalad => write!(f, "🍴 Eat salad"),
+            GameMove::ExchangeCarrots(carrots_to_exchange) => write!(f, "🔄 Carrots to exchange: {}", carrots_to_exchange),
+            GameMove::Advance(i) => write!(f, "⏩ Advance by: {}", i),
+            GameMove::AdvanceWithCards(i, jump_card_details, card) => write!(f, "⏭ Advanced by {} with {} \n  with last card: {}", i, jump_card_details, card),
+        }
+    }
+}
+
+impl Display for CarrotsToExchange {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", match self {
+            CarrotsToExchange::MinusTen => "-10",
+            CarrotsToExchange::PlusTen => "+10",
+        })?;
+        Ok(())
+    }
+}
+
+impl Display for JumpCardDetails {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Jump Cards: {} ", self.get_number_of_jumps())?;
+        if self.get_number_of_jumps() == 0 {return Ok(())}
+        write!(f, "First card is: {}", if self.is_first_card_hurry_ahead() {"hurry ahead"} else {"fall back"})?;
+        Ok(())
+    }
 }
 
 
@@ -49,7 +81,7 @@ impl JumpCardDetails {
     /// # Returns
     /// A JumpCardDetails instance based on the list of cards..
     pub fn from_card_list(card_list: &Vec<Card>) -> Self {
-        if card_list.len() <= 1 {
+        if card_list.len() < 1 {
             return JumpCardDetails::new(false, 0)
         } else {
             if card_list[0] == Card::HurryAhead {

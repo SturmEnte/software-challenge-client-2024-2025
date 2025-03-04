@@ -1,4 +1,6 @@
-#[derive(PartialEq, Debug)]
+use std::fmt::Display;
+
+#[derive(PartialEq, Debug, Clone)]
 pub enum Card {
     SwapCarrots,
     EatSalad,
@@ -18,13 +20,13 @@ impl Card {
     }
 }
 
-impl ToString for Card {
-    fn to_string(&self) -> String {
+impl Display for Card {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Card::SwapCarrots => String::from("SWAP_CARROTS"),
-            Card::EatSalad => String::from("EAT_SALAD"),
-            Card::FallBack => String::from("FALL_BACK"),
-            Card::HurryAhead => String::from("HURRY_AHEAD"),
+            Card::SwapCarrots => write!(f, "SWAP_CARROTS"),
+            Card::EatSalad => write!(f, "EAT_SALAD"),
+            Card::FallBack => write!(f, "FALL_BACK"),
+            Card::HurryAhead => write!(f, "HURRY_AHEAD"),
         }
     }
 }

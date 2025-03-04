@@ -1,7 +1,7 @@
-use hase_und_igel_client::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, game::{cards::Card, field_type::FieldType, game_state::GameState, moves::{CarrotsToExchange, JumpCardDetails, GameMove}}, utils::triangular_numbers::calculate_triangular_number};
+use hase_und_igel_client::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, game::{board::Board, cards::Card, field_type::FieldType, game_state::GameState, moves::{CarrotsToExchange, GameMove, JumpCardDetails}}, utils::triangular_numbers::calculate_triangular_number};
 
 fn main() {
-    println!("{}", size_of::<GameMove>());
+
     let mut connection_handler =ConnectionHandler::new(ExampleComputerPlayer::new()).unwrap();
     match connection_handler.join(None) {
         Ok(()) => {},
@@ -22,12 +22,12 @@ impl ExampleComputerPlayer {
 }
 
 impl ComputerPlayer for ExampleComputerPlayer {
-    fn make_move(&mut self, bord: &[FieldType; 65], game_state: &GameState) -> GameMove {
+    fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
         let mut i: u8 = 0;
         let mut mov = GameMove::Advance(1);
 
         loop {
-            if bord[game_state.your_hare.position as usize] == FieldType::Salad && !game_state.your_hare.ate_salad_last_round {
+            if board.board[game_state.your_hare.position as usize] == FieldType::Salad && !game_state.your_hare.ate_salad_last_round {
                 mov = GameMove::EatSalad;
                 break;
             }
@@ -49,7 +49,7 @@ impl ComputerPlayer for ExampleComputerPlayer {
 
             if game_state.your_hare.position + i == game_state.opponent_hare.position {continue;}
 
-            match bord[(i + game_state.your_hare.position) as usize] {
+            match board.board[(i + game_state.your_hare.position) as usize] {
                 FieldType::Start => continue,
                 FieldType::Carrots => if game_state.your_hare.carrots < 30 {
                     mov = GameMove::Advance(i);
