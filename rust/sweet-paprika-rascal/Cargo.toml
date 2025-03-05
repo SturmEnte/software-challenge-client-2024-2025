@@ -1,0 +1,7 @@
+[package]
+name = "sweet-paprika-rascal"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hase_und_igel_client = {path = "../simple-client-nils"}
