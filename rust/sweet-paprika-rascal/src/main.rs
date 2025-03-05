@@ -1,8 +1,7 @@
 use hase_und_igel_client::prelude::*;
 fn main() {
-    let mut connection_handler = ConnectionHandler::new(TestPlayer {}).unwrap();
-    let _ = connection_handler.join(None);
-    let _ = connection_handler.play();
+    let mut connection_handler = ConnectionHandler::from_commandline_args_and_join(SweetPaprikaRascal{}).unwrap();
+    connection_handler.play().unwrap();
 }
 
 struct SweetPaprikaRascal{}
@@ -18,7 +17,7 @@ impl ComputerPlayer for SweetPaprikaRascal {
         for (new_game_state, evaluation) in game_states.iter().zip(evaluations.iter_mut())  {
             *evaluation += new_game_state.your_hare.salads as i32 * -400 + 2000;
             *evaluation += new_game_state.your_hare.position as i32 - game_state.your_hare.position as i32 * 10;
-            if new_game_state.your_hare.position >= 64 {*evaluation += 10000;}
+            if new_game_state.your_hare.position == 64 {*evaluation += 100000;}
             if new_game_state.your_hare.position >= 60 {*evaluation += 100 - new_game_state.your_hare.carrots as i32;}
             if new_game_state.your_hare.salads != 0 && new_game_state.your_hare.card_eat_salad > game_state.your_hare.card_eat_salad {*evaluation += 30000000;}
         }
