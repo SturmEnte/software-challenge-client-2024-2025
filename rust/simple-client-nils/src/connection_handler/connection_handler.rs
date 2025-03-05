@@ -2,7 +2,7 @@
 use std::{fs::{OpenOptions, File}, env};
 
 use std::net::{TcpStream, ToSocketAddrs};
-use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, moves::GameMove}};
+use crate::{computer_player::ComputerPlayer, error::ConnectionHandlerError, game::{board::Board, game_state::GameState, moves::GameMove}, utils::competition_system_parameters};
 
 /// A struct which manages the communication with the game server.
 /// /// # Example
@@ -49,7 +49,7 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
         /// # Returns
         ///
         /// * `Result<Self, ConnectionHandlerError>` - A result containing the new `ConnectionHandler` 
-    pub fn new(player: C) -> Result<Self, ConnectionHandlerError>{
+    pub fn new(player: C) -> Result<Self, ConnectionHandlerError>{ 
         Ok(
             ConnectionHandler{
                 connected: false,
@@ -98,6 +98,30 @@ impl <C: ComputerPlayer> ConnectionHandler<C> {
                     .open(env::var("XML_LOG_DIR").unwrap_or("".to_string()) + "incoming_xml_log.txt").ok()
             }
         )
+    }
+
+    pub fn from_commandline_args_and_join(player: C) -> Result<Self, ConnectionHandlerError> {
+        let cmd_args = competition_system_parameters::get_competition_system_parameters();
+
+        let host = if let Some(host) = cmd_args.0 {
+            host
+        } else {
+            Box::from("127.0.0.1")
+        };
+
+        let port = if let Some(port) = cmd_args.1 {
+            port
+        } else {
+            Box::from("13050")
+        };
+
+        let address = format!("{}:{}", host, port);
+
+        let mut connection_handler = ConnectionHandler::from_addres(player, &address)?;
+
+        connection_handler.join(cmd_args.2.as_deref())?;
+
+        return Ok(connection_handler);
     }
 
     pub fn is_connected(&self) -> bool {
