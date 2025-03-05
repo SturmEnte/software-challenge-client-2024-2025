@@ -1,16 +1,19 @@
-use hase_und_igel_client::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, game::{board::Board, cards::Card, field_type::FieldType, game_state::GameState, moves::{CarrotsToExchange, GameMove, JumpCardDetails}}, utils::triangular_numbers::calculate_triangular_number};
+use hase_und_igel_client::{computer_player::ComputerPlayer, connection_handler::{self, connection_handler::ConnectionHandler}, game::{board::Board, cards::Card, field_type::FieldType, game_state::GameState, moves::{CarrotsToExchange, GameMove, JumpCardDetails}}, utils::triangular_numbers::calculate_triangular_number};
 
 fn main() {
 
-    let mut connection_handler =ConnectionHandler::new(ExampleComputerPlayer::new()).unwrap();
-    match connection_handler.join(None) {
-        Ok(()) => {},
-        Err(e) => eprint!("{}", e),
-    }
-    match connection_handler.play() {
-        Err(error) => eprintln!("{}", error),
-        Ok(_) => {}
-    }
+    // let mut connection_handler =ConnectionHandler::new(ExampleComputerPlayer::new()).unwrap();
+    // match connection_handler.join(None) {
+    //     Ok(()) => {},
+    //     Err(e) => eprint!("{}", e),
+    // }
+    // match connection_handler.play() {
+    //     Err(error) => eprintln!("{}", error),
+    //     Ok(_) => {}
+    // }
+
+    let mut connection_handler = connection_handler::ConnectionHandler::from_commandline_args_and_join(ExampleComputerPlayer::new()).unwrap();
+    connection_handler.play().unwrap();
 }
 
 pub struct ExampleComputerPlayer {}
