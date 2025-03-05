@@ -5,9 +5,9 @@ fn main() {
     let _ = connection_handler.play();
 }
 
-struct TestPlayer{}
+struct SweetPaprikaRascal{}
 
-impl ComputerPlayer for TestPlayer {
+impl ComputerPlayer for SweetPaprikaRascal {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
         let mut legal_moves = calculate_legal_moves(game_state, board);
         let mut game_states = vec![game_state.clone(); legal_moves.len()];
