@@ -13,13 +13,17 @@ struct SweetPaprikaCopperGolem {
 
 impl ComputerPlayer for SweetPaprikaCopperGolem {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
+        println!("Move");
         let moves: Vec<GameMove> = calculate_legal_moves(game_state, board);
 
         let mut best_move: Option<GameMove> = None;
         let mut best_moves_eval: i32 = std::i32::MIN;
 
         for mov in moves {
-            let eval: i32 = minimax(&mov, game_state.clone(), board, 2, false); // I need to check later if false is correct
+            // let mut new_game_state = game_state.clone();
+            // new_game_state.update(board, mov.clone()).unwrap();
+
+            let eval: i32 = minimax(&mov, game_state.clone(), board, 3, false); // I need to check later if false is correct
             
             println!("{}", eval);
             
@@ -41,25 +45,30 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
 }
 
 fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maximizing_player: bool) -> i32 {
+
+    let mut new_game_state: GameState = game_state.clone();
+    new_game_state.update(board, mov.clone()).unwrap();
+
     // Check if the game ended
     // I also need to check for a player in the goal and if the other player cant also go on it
     if depth == 0 {
-        return evaluate(&game_state, &mov); 
+        return evaluate(&game_state, board, &mov); 
     }
 
     if maximizing_player {
         let mut max_eval: i32 = std::i32::MIN;
-        let moves = calculate_legal_moves(&game_state, board);
+        let moves = calculate_legal_moves(&new_game_state, board);
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false);
+    
+            let eval: i32 = minimax(&new_mov, new_game_state.clone(), board, depth - 1, false);
             max_eval = std::cmp::max(max_eval, eval);
         }
         return max_eval;
     } else {
         let mut min_eval: i32 = std::i32::MAX;
-        let moves = calculate_legal_moves(&game_state, board);
+        let moves = calculate_legal_moves(&new_game_state, board);
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, true);
+            let eval: i32 = minimax(&new_mov, new_game_state.clone(), board, depth - 1, true);
             min_eval = std::cmp::min(min_eval, eval);
         }
         return min_eval;
