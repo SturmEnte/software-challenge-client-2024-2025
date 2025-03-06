@@ -108,4 +108,28 @@ impl JumpCardDetails {
     pub fn get_number_of_jumps(&self) -> u8 {
         self.first_card_and_number_of_cards & 0b01111111
     }
+
+    /// Calculates the number of "Hurry Ahead" cards.
+    ///   
+    /// # Returns
+    /// The number of "Hurry Ahead" cards as a u8.
+    pub fn number_of_hurry_ahead_cards(&self) -> u8 {
+        if  self.is_first_card_hurry_ahead() {
+            (self.get_number_of_jumps() as f64 / 2.0).ceil() as u8
+        } else {
+            (self.get_number_of_jumps() as f64 / 2.0).floor() as u8
+        }
+    }
+
+    /// Calculates the number of "Fall Back" cards.
+    ///
+    /// # Returns
+    /// The number of "Fall Back" cards as a u8.
+    pub fn number_of_fall_back_cards(self) -> u8 {
+        if  self.is_first_card_hurry_ahead() {
+            (self.get_number_of_jumps() as f64 / 2.0).floor() as u8
+        } else {
+            (self.get_number_of_jumps() as f64 / 2.0).ceil() as u8
+        }
+    }
 }
