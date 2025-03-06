@@ -25,10 +25,10 @@ pub fn legal_advance_moves(legal_moves: &mut Vec<GameMove>, current_hare: &Hare,
             FieldType::Carrots => legal_moves.push(GameMove::Advance(distance as u8)),
             FieldType::Salad => if current_hare.salads > 0 {legal_moves.push(GameMove::Advance(distance as u8));},
             FieldType::Market => if current_hare.carrots >= 10 + calculate_triangular_number(distance as u16) {
-                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::EatSalad));
-                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::SwapCarrots));
-                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::FallBack));
-                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::HurryAhead));
+                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(false, 0), Card::EatSalad));
+                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(false, 0), Card::SwapCarrots));
+                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(false, 0), Card::FallBack));
+                legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(false, 0), Card::HurryAhead));
             }
             FieldType::Hare => {
                 if current_hare.card_eat_salad != 0 && current_hare.salads != 0 {legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::EatSalad));}
