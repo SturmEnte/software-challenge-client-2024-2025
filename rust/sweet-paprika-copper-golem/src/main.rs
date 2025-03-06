@@ -26,18 +26,42 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
         let mut best_move: Option<GameMove> = None;
         let mut best_moves_eval: i32 = std::i32::MIN;
 
-        for mov in moves {
-            // let mut new_game_state = game_state.clone();
-            // new_game_state.update(board, mov.clone()).unwrap();
+        // The depth starts at 2 because that should always be possible
+        let mut depth: u8 = 2;
 
-            let eval: i32 = minimax(&mov, game_state.clone(), board, 5, false, &timestamp); // I need to check later if false is correct
-            
-            println!("{}", eval);
-            
-            if eval > best_moves_eval {
-                best_moves_eval = eval;
-                best_move = Some(mov)
+        while (current_timestamp_millis() - timestamp) < COMPUTION_MILLIS {
+
+            let mut local_best_move: Option<GameMove> = None;
+            let mut local_best_moves_eval: i32 = std::i32::MIN;
+
+            for mov in moves.clone() {
+
+                let eval: i32 = minimax(&mov, game_state.clone(), board, depth, false, &timestamp); // I need to check later if false is correct
+                
+                //println!("{}", eval);
+                
+                if eval > local_best_moves_eval {
+                    local_best_moves_eval = eval;
+                    local_best_move = Some(mov)
+                }
+
+                // This is to preven an unfinished layer to be processed
+                if (current_timestamp_millis() - timestamp) >= COMPUTION_MILLIS {
+                    break;
+                }
             }
+            
+            // This is to preven an unfinished layer to be processed
+            if (current_timestamp_millis() - timestamp) >= COMPUTION_MILLIS {
+                break;
+            }
+
+            if local_best_moves_eval > best_moves_eval {
+                best_moves_eval = local_best_moves_eval;
+                best_move = local_best_move;
+            }
+
+            depth += 1;
         }
 
         // Return the best move if there was one
