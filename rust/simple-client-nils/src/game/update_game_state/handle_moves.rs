@@ -48,6 +48,8 @@ pub(super) fn handle_move_advance_with_cards(current_hare: &mut Hare, opponent_h
         } else {
             current_hare.position = opponent_hare.position - 1;
         }
+        current_hare.card_hurry_ahead -= jumps.number_of_hurry_ahead_cards();
+        current_hare.card_fall_back -= jumps.number_of_fall_back_cards();
     }
 
     match board.board[current_hare.position as usize] {

@@ -125,7 +125,7 @@ impl JumpCardDetails {
     ///
     /// # Returns
     /// The number of "Fall Back" cards as a u8.
-    pub fn number_of_fall_back_cards(self) -> u8 {
+    pub fn number_of_fall_back_cards(&self) -> u8 {
         if  self.is_first_card_hurry_ahead() {
             (self.get_number_of_jumps() as f64 / 2.0).floor() as u8
         } else {
