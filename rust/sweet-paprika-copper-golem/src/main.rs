@@ -31,6 +31,8 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
 
         while (current_timestamp_millis() - timestamp) < COMPUTION_MILLIS {
 
+            println!("Depth: {}", depth);
+
             let mut local_best_move: Option<GameMove> = None;
             let mut local_best_moves_eval: i32 = std::i32::MIN;
 
