@@ -19,9 +19,7 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
         println!("Move");
         
-        let now = SystemTime::now();
-        let since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-        let timestamp: u128 = since_epoch.as_millis();
+        let timestamp: u128 = current_timestamp_millis();
         
         let moves: Vec<GameMove> = calculate_legal_moves(game_state, board);
 
@@ -58,13 +56,9 @@ fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maxi
     let mut new_game_state: GameState = game_state.clone();
     new_game_state.update(board, mov.clone()).unwrap();
 
-    let now = SystemTime::now();
-    let since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-    let timestamp: u128 = since_epoch.as_millis();
-
     // Check if the game ended
     // I also need to check for a player in the goal and if the other player cant also go on it
-    if depth == 0 || start_timestamp + COMPUTION_MILLIS <= timestamp {
+    if depth == 0 || start_timestamp + COMPUTION_MILLIS <= current_timestamp_millis() {
         return evaluate(&game_state, board, &mov); 
     }
 
@@ -72,7 +66,6 @@ fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maxi
         let mut max_eval: i32 = std::i32::MIN;
         let moves = calculate_legal_moves(&new_game_state, board);
         for new_mov in moves {
-    
             let eval: i32 = minimax(&new_mov, new_game_state.clone(), board, depth - 1, false, start_timestamp);
             max_eval = std::cmp::max(max_eval, eval);
         }
@@ -116,4 +109,10 @@ fn evaluate(game_state: &GameState, board: &Board, m: &GameMove) -> i32 {
     }
 
     eval
+}
+
+fn current_timestamp_millis() -> u128 {
+    let now = SystemTime::now();
+    let since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
+    since_epoch.as_millis()
 }
