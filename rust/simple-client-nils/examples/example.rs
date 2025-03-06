@@ -1,16 +1,8 @@
-use hase_und_igel_client::{computer_player::ComputerPlayer, connection_handler::connection_handler::ConnectionHandler, game::{board::Board, cards::Card, field_type::FieldType, game_state::GameState, moves::{CarrotsToExchange, GameMove, JumpCardDetails}}, utils::triangular_numbers::calculate_triangular_number};
+use hase_und_igel_client::{game::{moves::CarrotsToExchange, Card, JumpCardDetails}, prelude::*, utils::triangular_numbers::calculate_triangular_number};
 
 fn main() {
-
-    let mut connection_handler =ConnectionHandler::new(ExampleComputerPlayer::new()).unwrap();
-    match connection_handler.join(None) {
-        Ok(()) => {},
-        Err(e) => eprint!("{}", e),
-    }
-    match connection_handler.play() {
-        Err(error) => eprintln!("{}", error),
-        Ok(_) => {}
-    }
+    let mut connection_handler = ConnectionHandler::from_commandline_args_and_join(ExampleComputerPlayer::new()).unwrap();
+    connection_handler.play().unwrap();
 }
 
 pub struct ExampleComputerPlayer {}
@@ -24,7 +16,7 @@ impl ExampleComputerPlayer {
 impl ComputerPlayer for ExampleComputerPlayer {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
         let mut i: u8 = 0;
-        let mut mov = GameMove::Advance(1);
+        let mut mov;
 
         loop {
             if board.board[game_state.your_hare.position as usize] == FieldType::Salad && !game_state.your_hare.ate_salad_last_round {

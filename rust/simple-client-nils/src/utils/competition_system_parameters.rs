@@ -24,9 +24,9 @@ pub fn get_competition_system_parameters() -> (Option<Box<str>>, Option<Box<str>
     println!("{:?}", args);
     for (i, arg) in args.iter().enumerate() {
         match arg.as_str() {
-            "h" | "host" => host = Some(Box::from(args[i + 1].as_str())),
-            "p" | "port" => port = Some(Box::from(args[i + 1].as_str())),
-            "r" | "reservation" => reservation = Some(Box::from(args[i + 1].as_str())),
+            "-h" | "--host" => host = Some(Box::from(args[i + 1].as_str())),
+            "-p" | "--port" => port = Some(Box::from(args[i + 1].as_str())),
+            "-r" | "--reservation" => reservation = Some(Box::from(args[i + 1].as_str())),
             _ => {}
         }
     }
