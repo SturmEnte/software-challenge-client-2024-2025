@@ -78,7 +78,14 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
 fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maximizing_player: bool, start_timestamp: &u128) -> i32 {
 
     let mut new_game_state: GameState = game_state.clone();
-    new_game_state.update(board, mov.clone()).unwrap();
+
+    match new_game_state.update(board, mov.clone()) {
+        Ok(_) => {},
+        Err(_) => {
+            println!("{:?}", mov);
+            return std::i32::MIN;
+        },
+    }
 
     // Check if the game ended
     // I also need to check for a player in the goal and if the other player cant also go on it
