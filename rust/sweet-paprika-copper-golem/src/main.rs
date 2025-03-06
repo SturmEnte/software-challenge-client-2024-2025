@@ -75,7 +75,30 @@ fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maxi
     }
 }
 
+// Constants for evaluation
+const SALAD_MULTIPLIER: i32 = 10;
+
 // Eveluate a game state
-fn evaluate(game_state: &GameState, m: &GameMove) -> i32 {
-    0
+fn evaluate(game_state: &GameState, board: &Board, m: &GameMove) -> i32 {
+    let mut eval: i32 = 0;
+
+    // Check if we are on the goal
+    if board.board[game_state.your_hare.position as usize] == FieldType::Goal {
+        return std::i32::MAX;
+    }
+
+    // Subtrackt from the score for the remainning salads
+    eval += -(game_state.your_hare.salads as i32) * SALAD_MULTIPLIER;
+
+    // Add for position
+    eval += game_state.your_hare.position as i32;
+
+    // Carrots
+    if game_state.your_hare.position > 63 {
+        eval -= game_state.your_hare.carrots as i32 - 10;
+    } else {
+        eval -= game_state.your_hare.carrots as i32 - 40;
+    }
+
+    eval
 }
