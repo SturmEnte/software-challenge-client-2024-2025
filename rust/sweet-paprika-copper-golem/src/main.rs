@@ -91,12 +91,15 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
     if maximizing_player {
         let mut max_eval: i32 = std::i32::MIN;
         let moves = calculate_legal_moves(&game_state, board);
+
+        let mut new_alpha = alpha;
+
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false, alpha, beta, start_timestamp);
+            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false, new_alpha, beta, start_timestamp);
             max_eval = std::cmp::max(max_eval, eval);
 
-            let alpha = std::cmp::max(alpha, max_eval);
-            if beta <= alpha {
+            new_alpha = std::cmp::max(new_alpha, max_eval);
+            if beta <= new_alpha {
                 break;
             }
         }
@@ -104,12 +107,15 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
     } else {
         let mut min_eval: i32 = std::i32::MAX;
         let moves = calculate_legal_moves(&game_state, board);
+
+        let mut new_beta = beta;
+
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, true, alpha, beta, start_timestamp);
+            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, true, alpha, new_beta, start_timestamp);
             min_eval = std::cmp::min(min_eval, eval);
 
-            let beta = std::cmp::min(beta, min_eval);
-            if beta <= alpha {
+            new_beta = std::cmp::min(new_beta, min_eval);
+            if new_beta <= alpha {
                 break;
             }
         }
