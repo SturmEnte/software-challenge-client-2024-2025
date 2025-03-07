@@ -70,8 +70,8 @@ pub fn is_fall_back_legal(current_hare_position: u8, opponent_position: u8) -> b
 /// # Returns
 ///
 /// Returns `true` if the carrot swap is legal, and `false` otherwise.
-pub fn is_carrot_swap_legal(hare_1: &Hare, hare_2: &Hare, last_carrot_swap: u8, turn: u8) -> bool {
-    if hare_1.position >= 57 || hare_2.position >= 57 {return false;}
+pub fn is_carrot_swap_legal(your_new_postion: u8, opponent_position: u8, last_carrot_swap: u8, turn: u8) -> bool {
+    if your_new_postion >= 57 || opponent_position >= 57 {return false;}
     if last_carrot_swap + 2 >= turn || last_carrot_swap == 0 {return false;}
     return true 
 }
