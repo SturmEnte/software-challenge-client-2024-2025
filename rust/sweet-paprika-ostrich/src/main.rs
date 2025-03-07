@@ -24,7 +24,7 @@ impl ComputerPlayer for SweetPaprikaOstrich {
 }
 
 fn minimax(game_state: &GameState, board: &Board, depth: usize, maximizing_player: bool) -> i32 {
-    if depth == 0 || (game_state.turn == 60) || (game_state.your_hare.position == 64 ||game_state.opponent_hare.position == 64) {return eval(game_state, board);}
+    if depth == 0 || (game_state.turn == 60) || (game_state.your_hare.position == 64 ||game_state.opponent_hare.position == 64) {return eval(game_state);}
 
     if maximizing_player {
         let legal_moves = calculate_legal_moves(game_state, board);
@@ -59,12 +59,11 @@ fn minimax(game_state: &GameState, board: &Board, depth: usize, maximizing_playe
             new_game_state.turn += 1;
             evaluations.push(minimax(&new_game_state, board, depth, true));
         }
-        println!("{:?}", evaluations);
         return *evaluations.iter().min().unwrap();
     }
 }
 
-fn eval(game_state: &GameState, board: &Board) -> i32 {
+fn eval(game_state: &GameState) -> i32 {
     if game_state.your_hare.position == 64 {return std::i32::MAX;}
     let mut eval = 0;
     if game_state.opponent_hare.position == 64 {eval -= 2000000}
