@@ -36,7 +36,7 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
 
             for mov in moves.clone() {
 
-                let eval: i32 = minimax(&mov, game_state.clone(), board, depth, false, &timestamp); // I need to check later if false is correct
+                let eval: i32 = minimax(&mov, game_state.clone(), board, depth, false, std::i32::MIN, std::i32::MAX, &timestamp); // I need to check later if false is correct
                 
                 if eval > local_best_moves_eval {
                     local_best_moves_eval = eval;
@@ -73,7 +73,7 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
     }
 }
 
-fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, maximizing_player: bool, start_timestamp: &u128) -> i32 {
+fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, maximizing_player: bool, alpha: i32, beta: i32, start_timestamp: &u128) -> i32 {
 
     match game_state.update(board, mov.clone()) {
         Ok(_) => {},
@@ -92,16 +92,26 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
         let mut max_eval: i32 = std::i32::MIN;
         let moves = calculate_legal_moves(&game_state, board);
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false, start_timestamp);
+            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false, alpha, beta, start_timestamp);
             max_eval = std::cmp::max(max_eval, eval);
+
+            let alpha = std::cmp::max(alpha, max_eval);
+            if beta <= alpha {
+                break;
+            }
         }
         return max_eval;
     } else {
         let mut min_eval: i32 = std::i32::MAX;
         let moves = calculate_legal_moves(&game_state, board);
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, true, start_timestamp);
+            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, true, alpha, beta, start_timestamp);
             min_eval = std::cmp::min(min_eval, eval);
+
+            let beta = std::cmp::min(beta, min_eval);
+            if beta <= alpha {
+                break;
+            }
         }
         return min_eval;
     }
