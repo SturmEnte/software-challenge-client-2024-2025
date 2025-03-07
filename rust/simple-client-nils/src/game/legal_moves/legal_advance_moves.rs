@@ -32,7 +32,7 @@ pub fn legal_advance_moves(legal_moves: &mut Vec<GameMove>, current_hare: &Hare,
             }
             FieldType::Hare => {
                 if current_hare.card_eat_salad != 0 && current_hare.salads != 0 {legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::EatSalad));}
-                if current_hare.card_swap_carrots != 0 && is_carrot_swap_legal(current_hare, opponent_hare, last_carrot_swap, turn) {legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::SwapCarrots));}
+                if current_hare.card_swap_carrots != 0 && is_carrot_swap_legal(new_position, opponent_hare.position, last_carrot_swap, turn) {legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::SwapCarrots));}
                 if current_hare.card_hurry_ahead != 0 && opponent_hare.position < 64 && opponent_hare.position > new_position {legal_advance_moves(legal_moves, current_hare, opponent_hare, board, distance, 1, true, last_carrot_swap, turn);}
                 if current_hare.card_fall_back != 0 && opponent_hare.position > 0 && opponent_hare.position < new_position {legal_advance_moves(legal_moves, current_hare, opponent_hare, board, distance, 1, false, last_carrot_swap, turn);}
             }
@@ -60,7 +60,7 @@ pub fn legal_advance_moves(legal_moves: &mut Vec<GameMove>, current_hare: &Hare,
             }
             FieldType::Hare => {
                 if current_hare.card_eat_salad != 0 && current_hare.salads != 0 {legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::EatSalad));}
-                if current_hare.card_swap_carrots != 0 && is_carrot_swap_legal(current_hare, opponent_hare, last_carrot_swap, turn) {legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::SwapCarrots));}
+                if current_hare.card_swap_carrots != 0 && is_carrot_swap_legal(new_position, opponent_hare.position, last_carrot_swap, turn) {legal_moves.push(GameMove::AdvanceWithCards(distance as u8, JumpCardDetails::new(first_jump_card_hurry_ahead, jumps), Card::SwapCarrots));}
                 if current_hare.card_hurry_ahead - number_of_hurry_ahead_cards(jumps, first_jump_card_hurry_ahead) != 0 && opponent_hare.position < 64 && opponent_hare.position > new_position {legal_advance_moves(legal_moves, current_hare, opponent_hare, board, distance, jumps + 1, first_jump_card_hurry_ahead, last_carrot_swap, turn);}
                 if current_hare.card_fall_back - number_of_fall_back_cards(jumps, first_jump_card_hurry_ahead) != 0 && opponent_hare.position > 0 && opponent_hare.position < new_position {legal_advance_moves(legal_moves, current_hare, opponent_hare, board, distance, jumps + 1, first_jump_card_hurry_ahead, last_carrot_swap, turn);}
             }
