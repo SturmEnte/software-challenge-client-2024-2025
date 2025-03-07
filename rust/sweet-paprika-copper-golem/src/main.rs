@@ -89,9 +89,8 @@ fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maxi
         },
     }
 
-    // Check if the game ended
-    // I also need to check for a player in the goal and if the other player cant also go on it
-    if depth == 0 || start_timestamp + COMPUTION_MILLIS <= current_timestamp_millis() {
+    // If the max depth is reached, the time is up or both hares are on the goal, then the game state is evaluated
+    if depth == 0 || start_timestamp + COMPUTION_MILLIS <= current_timestamp_millis() || (game_state.your_hare.position == 64 && game_state.opponent_hare.position == 64) {
         return evaluate(&game_state, board, &mov); 
     }
 
