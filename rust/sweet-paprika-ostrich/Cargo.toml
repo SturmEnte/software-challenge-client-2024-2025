@@ -1,7 +1,0 @@
-[package]
-name = "sweet-paprika-ostrich"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-hase_und_igel_client = {path = "../simple-client-nils"}
