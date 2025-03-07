@@ -1,4 +1,4 @@
-use hase_und_igel_client::{game::{board, team::Team}, prelude::*};
+use hase_und_igel_client::prelude::*;
 
 fn main() {
     let mut connection_handler = ConnectionHandler::from_commandline_args_and_join(SweetPaprikaOstrich{}).unwrap();
