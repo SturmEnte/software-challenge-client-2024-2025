@@ -9,9 +9,7 @@ fn main() {
     con_handler.play().unwrap();
 }
 
-struct SweetPaprikaCopperGolem {
-    
-}
+struct SweetPaprikaCopperGolem {}
 
 const COMPUTION_MILLIS: u128 = 1800;
 
@@ -39,8 +37,6 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
             for mov in moves.clone() {
 
                 let eval: i32 = minimax(&mov, game_state.clone(), board, depth, false, &timestamp); // I need to check later if false is correct
-                
-                //println!("{}", eval);
                 
                 if eval > local_best_moves_eval {
                     local_best_moves_eval = eval;
@@ -77,11 +73,9 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
     }
 }
 
-fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maximizing_player: bool, start_timestamp: &u128) -> i32 {
+fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, maximizing_player: bool, start_timestamp: &u128) -> i32 {
 
-    let mut new_game_state: GameState = game_state.clone();
-
-    match new_game_state.update(board, mov.clone()) {
+    match game_state.update(board, mov.clone()) {
         Ok(_) => {},
         Err(_) => {
             println!("{:?}", mov);
@@ -91,22 +85,22 @@ fn minimax(mov: &GameMove, game_state: GameState, board: &Board, depth: u8, maxi
 
     // If the max depth is reached, the time is up or both hares are on the goal, then the game state is evaluated
     if depth == 0 || start_timestamp + COMPUTION_MILLIS <= current_timestamp_millis() || (game_state.your_hare.position == 64 && game_state.opponent_hare.position == 64) {
-        return evaluate(&game_state, board, &mov); 
+        return evaluate(&game_state, board); 
     }
 
     if maximizing_player {
         let mut max_eval: i32 = std::i32::MIN;
-        let moves = calculate_legal_moves(&new_game_state, board);
+        let moves = calculate_legal_moves(&game_state, board);
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, new_game_state.clone(), board, depth - 1, false, start_timestamp);
+            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false, start_timestamp);
             max_eval = std::cmp::max(max_eval, eval);
         }
         return max_eval;
     } else {
         let mut min_eval: i32 = std::i32::MAX;
-        let moves = calculate_legal_moves(&new_game_state, board);
+        let moves = calculate_legal_moves(&game_state, board);
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, new_game_state.clone(), board, depth - 1, true, start_timestamp);
+            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, true, start_timestamp);
             min_eval = std::cmp::min(min_eval, eval);
         }
         return min_eval;
@@ -118,7 +112,7 @@ const SALAD_MULTIPLIER: i32 = 100;
 const CARROT_MULTIPLIER: i32 = 1;
 
 // Eveluate a game state
-fn evaluate(game_state: &GameState, board: &Board, m: &GameMove) -> i32 {
+fn evaluate(game_state: &GameState, board: &Board) -> i32 {
     let mut eval: i32 = 0;
 
     // Check if we are on the goal
