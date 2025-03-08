@@ -83,8 +83,12 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
         },
     }
 
+    // if game_state.your_hare.position == 64 {
+    //     println!("Winning move found");
+    // }
+
     // If the max depth is reached, the time is up or both hares are on the goal, then the game state is evaluated
-    if depth == 0 || start_timestamp + COMPUTION_MILLIS <= current_timestamp_millis() || (game_state.your_hare.position == 64 && game_state.opponent_hare.position == 64) {
+    if depth == 0 || start_timestamp + COMPUTION_MILLIS <= current_timestamp_millis() || (game_state.your_hare.position == 64 || game_state.opponent_hare.position == 64) {
         return evaluate(&game_state, board); 
     }
 
@@ -132,7 +136,7 @@ fn evaluate(game_state: &GameState, board: &Board) -> i32 {
     let mut eval: i32 = 0;
 
     // Check if we are on the goal
-    if board.board[game_state.your_hare.position as usize] == FieldType::Goal {
+    if game_state.your_hare.position == 64 {
         return std::i32::MAX;
     }
 
