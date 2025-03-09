@@ -44,7 +44,7 @@ fn minimax(game_state: &GameState, board: &Board, depth: usize, maximizing_playe
         }
         return *evaluations.iter().max().unwrap();
     } else {
-        let mut legal_moves = calculate_legal_moves(game_state, board);
+        let legal_moves = calculate_legal_moves(game_state, board);
         let length = legal_moves.len();
         let mut evaluations = vec![std::i32::MAX; length];
         let mut game_states = vec![game_state.clone(); length];
