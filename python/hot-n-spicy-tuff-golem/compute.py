@@ -260,6 +260,7 @@ def get_best_move(state):
         for mv in rated_moves:
             fully_rated_moves.append(mv)
         
+        print(f"Depth {minimax_depth} completed!")
         minimax_depth += 1
         if minimax_depth >= 10:
             break
