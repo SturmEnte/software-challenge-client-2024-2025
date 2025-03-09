@@ -11,7 +11,7 @@ fn main() {
 
 struct SweetPaprikaCopperGolem {}
 
-const COMPUTION_MILLIS: u128 = 1800;
+const COMPUTION_MILLIS: u128 = 1900;
 
 impl ComputerPlayer for SweetPaprikaCopperGolem {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
