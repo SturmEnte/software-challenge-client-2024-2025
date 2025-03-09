@@ -4,8 +4,7 @@ use hase_und_igel_client::prelude::*;
 
 fn main() {
     let player: SweetPaprikaCopperGolem = SweetPaprikaCopperGolem {};
-    let mut con_handler = ConnectionHandler::new(player).unwrap();
-    con_handler.join(None).unwrap();
+    let mut con_handler = ConnectionHandler::from_commandline_args_and_join(player).unwrap();
     con_handler.play().unwrap();
 }
 
