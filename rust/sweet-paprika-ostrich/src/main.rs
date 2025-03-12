@@ -44,7 +44,7 @@ fn minimax(game_state: &GameState, board: &Board, depth: usize, maximizing_playe
         }
         return *evaluations.iter().max().unwrap();
     } else {
-        let mut legal_moves = calculate_legal_moves(game_state, board);
+        let legal_moves = calculate_legal_moves(game_state, board);
         let length = legal_moves.len();
         let mut evaluations = vec![std::i32::MAX; length];
         let mut game_states = vec![game_state.clone(); length];
@@ -64,24 +64,30 @@ fn minimax(game_state: &GameState, board: &Board, depth: usize, maximizing_playe
 }
 
 fn eval(game_state: &GameState) -> i32 {
-    if game_state.your_hare.position == 64 {return std::i32::MAX;}
     let mut eval = 0;
+    if game_state.your_hare.position == 64 {
+        eval = std::i32::MAX;
+        eval -= game_state.turn as i32 * 11;
+        eval -= game_state.your_hare.carrots as i32;
+    }
     if game_state.opponent_hare.position == 64 {eval -= 2000000}
     eval += game_state.opponent_hare.salads as i32 * 5;
     eval -= game_state.your_hare.salads as i32 * 130;
-    if game_state.your_hare.salads != 0 {eval += match game_state.your_hare.card_eat_salad{
+    if game_state.your_hare.salads != 0 {
+        eval += match game_state.your_hare.card_eat_salad{
         0 => 0,
-        1 => 100,
-        2 => 150,
-        _ => 130
-    }} 
-    else {eval += game_state.your_hare.position as i32 * 5}
+        1 => 90,
+        2 => 130,
+        _ => 110
+        }
+    } else {
+        eval += game_state.your_hare.position as i32 * 5
+    }
     eval += match game_state.your_hare.position {
         0..20 => game_state.your_hare.position as i32,
         20..40 => game_state.your_hare.position as i32 * 5,
         40..64 => game_state.your_hare.position as i32 * 10,
         _ => 0,
     };
-    eval += game_state.turn as i32 * 10;
     eval
 }
