@@ -14,7 +14,7 @@ const COMPUTION_MILLIS: u128 = 1900;
 
 impl ComputerPlayer for SweetPaprikaCopperGolem {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
-        println!("Move");
+        println!("---Move Request---");
         
         let timestamp: u128 = current_timestamp_millis();
         
@@ -27,8 +27,6 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
         let mut depth: u8 = 2;
 
         while (current_timestamp_millis() - timestamp) < COMPUTION_MILLIS {
-
-            println!("Depth: {}", depth);
 
             let mut local_best_move: Option<GameMove> = None;
             let mut local_best_moves_eval: i32 = std::i32::MIN;
@@ -58,6 +56,8 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
                 best_move = local_best_move;
             }
 
+            println!("Finished calculating depth: {}", depth);
+
             depth += 1;
         }
 
@@ -82,13 +82,9 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
         },
     }
 
-    // if game_state.your_hare.position == 64 {
-    //     println!("Winning move found");
-    // }
-
     // If the max depth is reached, the time is up or both hares are on the goal, then the game state is evaluated
     if depth == 0 || start_timestamp + COMPUTION_MILLIS <= current_timestamp_millis() || (game_state.your_hare.position == 64 || game_state.opponent_hare.position == 64) {
-        return evaluate(&game_state, board); 
+        return evaluate(&game_state); 
     }
 
     if maximizing_player {
@@ -127,7 +123,7 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
 }
 
 // Eveluate a game state
-fn evaluate(game_state: &GameState, board: &Board) -> i32 {
+fn evaluate(game_state: &GameState) -> i32 {
     if game_state.your_hare.position == 64 {return std::i32::MAX;}
     let mut eval = 0;
     if game_state.opponent_hare.position == 64 {eval -= 2000000}
