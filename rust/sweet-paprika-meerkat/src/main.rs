@@ -89,9 +89,9 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
 
     if maximizing_player {
         let mut max_eval: i32 = std::i32::MIN;
-        let moves = calculate_legal_moves(&game_state, board);
+        let moves: Vec<GameMove> = calculate_legal_moves(&game_state, board);
 
-        let mut new_alpha = alpha;
+        let mut new_alpha: i32 = alpha;
 
         for new_mov in moves {
             let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false, new_alpha, beta, start_timestamp);
@@ -105,7 +105,7 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
         return max_eval;
     } else {
         let mut min_eval: i32 = std::i32::MAX;
-        let moves = calculate_legal_moves(&game_state, board);
+        let moves: Vec<GameMove> = calculate_legal_moves(&game_state, board);
 
         let mut new_beta = beta;
 
@@ -125,7 +125,7 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
 // Eveluate a game state
 fn evaluate(game_state: &GameState) -> i32 {
     if game_state.your_hare.position == 64 {return std::i32::MAX;}
-    let mut eval = 0;
+    let mut eval: i32 = 0;
     if game_state.opponent_hare.position == 64 {eval -= 2000000}
     eval += game_state.opponent_hare.salads as i32 * 5;
     eval -= game_state.your_hare.salads as i32 * 130;
@@ -147,7 +147,7 @@ fn evaluate(game_state: &GameState) -> i32 {
 }
 
 fn current_timestamp_millis() -> u128 {
-    let now = SystemTime::now();
+    let now: SystemTime = SystemTime::now();
     let since_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
     since_epoch.as_millis()
 }
