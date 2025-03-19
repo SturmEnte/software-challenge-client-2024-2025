@@ -1,4 +1,5 @@
 use hase_und_igel_client::prelude::*;
+use hase_und_igel_client::game::board::FIRST_HEADGEHOG;
 
 fn main() {
     let mut connection_handler = ConnectionHandler::from_commandline_args_and_join(SweetPaprikaOstrich{}).unwrap();
@@ -89,5 +90,6 @@ fn eval(game_state: &GameState) -> i32 {
         40..64 => game_state.your_hare.position as i32 * 10,
         _ => 0,
     };
+    if game_state.your_hare.carrots == 0 && game_state.your_hare.position <= FIRST_HEADGEHOG {eval = std::i32::MIN}
     eval
 }
