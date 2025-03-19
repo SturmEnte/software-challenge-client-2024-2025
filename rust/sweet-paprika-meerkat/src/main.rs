@@ -10,6 +10,7 @@ fn main() {
 
 struct SweetPaprikaCopperGolem {}
 
+const MAX_DEPTH: u8 = 50;
 const COMPUTION_MILLIS: u128 = 1900;
 
 impl ComputerPlayer for SweetPaprikaCopperGolem {
@@ -27,6 +28,11 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
         let mut depth: u8 = 2;
 
         while (current_timestamp_millis() - timestamp) < COMPUTION_MILLIS {
+
+            if depth > MAX_DEPTH {
+                println!("Max depth reached!");
+                break;
+            }
 
             let mut local_best_move: Option<GameMove> = None;
             let mut local_best_moves_eval: i32 = std::i32::MIN;
@@ -102,6 +108,7 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
                 break;
             }
         }
+
         return max_eval;
     } else {
         let mut min_eval: i32 = std::i32::MAX;
@@ -118,6 +125,8 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
                 break;
             }
         }
+
+
         return min_eval;
     }
 }
