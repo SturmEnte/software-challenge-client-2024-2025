@@ -40,7 +40,7 @@ fn minimax(game_state: &GameState, board: &Board, depth: usize, maximizing_playe
         if legal_moves.is_empty() {
             let mut new_game_state = game_state.clone();
             new_game_state.turn += 1;
-            evaluations.push(minimax(&new_game_state, board, depth, true));
+            evaluations.push(minimax(&new_game_state, board, depth, false));
         }
         return *evaluations.iter().max().unwrap();
     } else {
