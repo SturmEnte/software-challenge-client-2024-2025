@@ -39,7 +39,7 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
 
             for mov in moves.clone() {
 
-                let eval: i32 = minimax(&mov, game_state.clone(), board, depth, false, std::i32::MIN, std::i32::MAX, &timestamp); // I need to check later if false is correct
+                let eval: i32 = minimax(Some(&mov), game_state.clone(), board, depth, false, std::i32::MIN, std::i32::MAX, &timestamp); // I need to check later if false is correct
                 
                 if eval > local_best_moves_eval {
                     local_best_moves_eval = eval;
@@ -78,14 +78,16 @@ impl ComputerPlayer for SweetPaprikaCopperGolem {
     }
 }
 
-fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, maximizing_player: bool, alpha: i32, beta: i32, start_timestamp: &u128) -> i32 {
+fn minimax(mov: Option<&GameMove>, mut game_state: GameState, board: &Board, depth: u8, maximizing_player: bool, alpha: i32, beta: i32, start_timestamp: &u128) -> i32 {
 
-    match game_state.update(board, mov.clone()) {
-        Ok(_) => {},
-        Err(_) => {
-            println!("{:?}", mov);
-            return std::i32::MIN;
-        },
+    if mov.is_some() {
+        match game_state.update(board, mov.unwrap().clone()) {
+            Ok(_) => {},
+            Err(_) => {
+                println!("{:?}", mov);
+                return std::i32::MIN;
+            },
+        }    
     }
 
     // If the max depth is reached, the time is up or both hares are on the goal, then the game state is evaluated
@@ -97,10 +99,16 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
         let mut max_eval: i32 = std::i32::MIN;
         let moves: Vec<GameMove> = calculate_legal_moves(&game_state, board);
 
+        // Handle skipping rounds
+        if moves.is_empty() {
+            game_state.turn += 1;
+            return minimax(None, game_state, board, depth - 1, false, alpha, beta, start_timestamp);
+        }
+
         let mut new_alpha: i32 = alpha;
 
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, false, new_alpha, beta, start_timestamp);
+            let eval: i32 = minimax(Some(&new_mov), game_state.clone(), board, depth - 1, false, new_alpha, beta, start_timestamp);
             max_eval = std::cmp::max(max_eval, eval);
 
             new_alpha = std::cmp::max(new_alpha, max_eval);
@@ -114,10 +122,16 @@ fn minimax(mov: &GameMove, mut game_state: GameState, board: &Board, depth: u8, 
         let mut min_eval: i32 = std::i32::MAX;
         let moves: Vec<GameMove> = calculate_legal_moves(&game_state, board);
 
+        // Handle skipping rounds
+        if moves.is_empty() {
+            game_state.turn += 1;
+            return minimax(None, game_state, board, depth - 1, true, alpha, beta, start_timestamp);
+        }
+
         let mut new_beta = beta;
 
         for new_mov in moves {
-            let eval: i32 = minimax(&new_mov, game_state.clone(), board, depth - 1, true, alpha, new_beta, start_timestamp);
+            let eval: i32 = minimax(Some(&new_mov), game_state.clone(), board, depth - 1, true, alpha, new_beta, start_timestamp);
             min_eval = std::cmp::min(min_eval, eval);
 
             new_beta = std::cmp::min(new_beta, min_eval);
