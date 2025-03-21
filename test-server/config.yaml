@@ -1,0 +1,8 @@
+games: 2
+swap_after_half: true
+client_1:
+  start_command: "../rust/sweet-paprika-meerkat/target/release/sweet-paprika-meerkat --port 13051"
+  display_name: "Meerkat Client"
+client_2:
+  start_command: "java -jar software-challenge-server/defaultplayer.jar --port 13051"
+  display_name: "Standard Client"
