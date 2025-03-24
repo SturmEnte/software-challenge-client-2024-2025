@@ -29,7 +29,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "sweet-paprika-meerkat"
+name = "sweet-paprika-vulture"
 version = "0.1.0"
 dependencies = [
  "hase_und_igel_client",
