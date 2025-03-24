@@ -40,7 +40,7 @@ def start_clients(swapped=False):
 
 def print_result(stats):
     print("----------------------------------")
-    print(f"\nStats for {config["client_1"]["display_name"]} for the {games_played} games played:\n\n")
+    print(f"\nStats for {config['client_1']['display_name']} for the {games_played} games played:\n\n")
     print("Average values:\n")
     
     for stat in ("rounds", "position", "carrots", "salads"):
@@ -59,7 +59,7 @@ with open("config.yaml") as file:
 
 if not os.path.exists(RESULTS_FILE):
     with open(RESULTS_FILE, "w") as csv:
-        csv.write(f"Rounds,Turns,Winner,Regular,P1 Points,P1 Position,P1 Carrots,P1 Salads,P2 Points,P2 Position,P2 Carrots,P2 Salads,Winner Message\n")
+        csv.write("Rounds,Turns,Winner,Regular,P1 Points,P1 Position,P1 Carrots,P1 Salads,P2 Points,P2 Position,P2 Carrots,P2 Salads,Winner Message\n")
 
 played_games_stats = {"rounds": [], "position": [], "carrots": [], "salads": [], "irregular_results": 0, "games_won": 0}
 
@@ -149,7 +149,7 @@ for stdout_line in iter(log.stdout.readline, ""):
                 played_games_stats["games_won"] += 1
 
         with open(RESULTS_FILE, "a") as csv:
-            csv.write(f"{rounds},{turn},{winner},{regular},{player1["points"]},{player1["position"]},{player1["carrots"]},{player1["salads"]},{player2["points"]},{player2["position"]},{player2["carrots"]},{player2["salads"]},{winner_message}\n")
+            csv.write(f"{rounds},{turn},{winner},{regular},{player1['points']},{player1['position']},{player1['carrots']},{player1['salads']},{player2['points']},{player2['position']},{player2['carrots']},{player2['salads']},{winner_message}\n")
 
         games_played += 1
         print(f"Game {games_played} completed...")
