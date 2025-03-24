@@ -24,7 +24,7 @@ impl ComputerPlayer for SweetPaprikaVulture {
         let mut best_move: Option<GameMove> = None;
         let mut best_moves_eval: i32 = std::i32::MIN;
 
-        // The depth starts at 2 because that should always be possible
+        // The depth starts at 2 because that should always be possible to calculate
         let mut depth: u8 = 2;
 
         while (current_timestamp_millis() - timestamp) < COMPUTION_MILLIS {
