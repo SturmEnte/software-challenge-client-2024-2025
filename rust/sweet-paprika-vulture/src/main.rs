@@ -3,17 +3,17 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use hase_und_igel_client::prelude::*;
 
 fn main() {
-    let player: SweetPaprikaCopperGolem = SweetPaprikaCopperGolem {};
+    let player: SweetPaprikaVulture = SweetPaprikaVulture {};
     let mut con_handler = ConnectionHandler::from_commandline_args_and_join(player).unwrap();
     con_handler.play().unwrap();
 }
 
-struct SweetPaprikaCopperGolem {}
+struct SweetPaprikaVulture {}
 
 const MAX_DEPTH: u8 = 50;
 const COMPUTION_MILLIS: u128 = 1900;
 
-impl ComputerPlayer for SweetPaprikaCopperGolem {
+impl ComputerPlayer for SweetPaprikaVulture {
     fn make_move(&mut self, board: &Board, game_state: &GameState) -> GameMove {
         println!("---Move Request---");
         
