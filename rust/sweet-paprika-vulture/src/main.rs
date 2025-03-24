@@ -139,25 +139,41 @@ fn minimax(mut game_state: GameState, board: &Board, depth: u8, maximizing_playe
 
 // Eveluate a game state
 fn evaluate(game_state: &GameState) -> i32 {
-    if game_state.your_hare.position == 64 {return std::i32::MAX;}
     let mut eval: i32 = 0;
-    if game_state.opponent_hare.position == 64 {eval -= 2000000}
+
+    if game_state.your_hare.position == 64 {
+        eval = std::i32::MAX;
+        eval -= game_state.turn as i32 * 11;
+        eval -= game_state.your_hare.carrots as i32;
+    }
+
+    if game_state.opponent_hare.position == 64 {
+        eval -= 2000000
+    }
+    
     eval += game_state.opponent_hare.salads as i32 * 5;
     eval -= game_state.your_hare.salads as i32 * 130;
-    if game_state.your_hare.salads != 0 {eval += match game_state.your_hare.card_eat_salad{
-        0 => 0,
-        1 => 100,
-        2 => 150,
-        _ => 130
-    }} 
-    else {eval += game_state.your_hare.position as i32 * 5}
+    
+    if game_state.your_hare.salads != 0 { 
+        eval += match game_state.your_hare.card_eat_salad{
+            0 => 0,
+            1 => 100,
+            2 => 150,
+            _ => 130
+        }
+    } else {
+        eval += game_state.your_hare.position as i32 * 5
+    }
+    
     eval += match game_state.your_hare.position {
         0..20 => game_state.your_hare.position as i32,
         20..40 => game_state.your_hare.position as i32 * 5,
         40..64 => game_state.your_hare.position as i32 * 10,
         _ => 0,
     };
+
     eval += game_state.turn as i32 * 10;
+    
     eval
 }
 
