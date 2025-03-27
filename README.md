@@ -11,6 +11,7 @@
 | sweet-paprika-copper-golem | Rust | Minimax | Jonas | ND |
 | sweet-paprika-ostrich | Rust | Minimax | Nils | ND |
 | sweet-paprika-meerkat | Rust | Minimax | Jonas & Nils | ND |
+| sweet-paprika-vulture | Rust | Minimax | Jonas & Nils | ND |
 
 The average is calculated over ... rounds against ... with a starting team switch after half of the rounds
 
