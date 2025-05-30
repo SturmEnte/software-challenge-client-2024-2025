@@ -14,7 +14,7 @@ impl<C: ComputerPlayer> ConnectionHandler<C> {
                 self.parse_memento(parser)?;
             },
             "moveRequest" => {
-                if self.last_game_message == GameMessage::OurLastMove {
+                if self.last_game_message == GameMessage::OurLastMove || self.last_game_message == GameMessage::OurLastMoveOpponentTurnSkipped {
                     self.game_state.as_mut().unwrap().turn += 1;
                 }
                 self.parse_move_request()?;
